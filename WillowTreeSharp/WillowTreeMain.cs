@@ -18,14 +18,16 @@ namespace WillowTree
         private PluginComponentManager PluginManager = Services.PluginManager;
         private Control SelectedTabObject = null;
         private readonly IFile file;
+        private readonly IDirectory directory;
 
-        public WillowTreeMain(IFile file)
+        public WillowTreeMain(IFile file, IDirectory directory)
         {
             this.file = file;
+            this.directory = directory;
 
             GlobalSettings.Load();
 
-            if (!Directory.Exists(db.DataPath))
+            if (!this.directory.Exists(db.DataPath))
             {
                 MessageBox.Show("Couldn't find the 'Data' folder! Please make sure that WillowTree# and its data folder are in the same directory.");
                 Application.Exit();

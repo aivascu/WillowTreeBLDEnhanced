@@ -24,7 +24,8 @@ namespace WillowTree
                 Application.SetCompatibleTextRenderingDefault(false);
 
 
-                Application.Run(new WillowTreeMain(new FileWrapper(new FileSystem())));
+                FileSystem fileSystem = new FileSystem();
+                Application.Run(new WillowTreeMain(new FileWrapper(fileSystem), new DirectoryWrapper(fileSystem)));
             }
             catch (Exception e)
             {
