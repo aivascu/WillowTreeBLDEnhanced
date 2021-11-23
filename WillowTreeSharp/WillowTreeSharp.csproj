@@ -454,9 +454,10 @@
     <PackageReference Include="NLog.Config">
       <Version>4.7.12</Version>
     </PackageReference>
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>13.2.47</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CustomControls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

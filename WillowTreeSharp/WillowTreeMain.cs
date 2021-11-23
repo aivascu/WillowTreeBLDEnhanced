@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
 using WillowTree.CustomControls;
@@ -16,9 +17,12 @@ namespace WillowTree
         private WillowSaveGame CurrentWSG;
         private PluginComponentManager PluginManager = Services.PluginManager;
         private Control SelectedTabObject = null;
+        private readonly IFile file;
 
-        public WillowTreeMain()
+        public WillowTreeMain(IFile file)
         {
+            this.file = file;
+
             GlobalSettings.Load();
 
             if (!Directory.Exists(db.DataPath))
@@ -28,9 +32,9 @@ namespace WillowTree
                 return;
             }
 
-            if (!File.Exists(db.DataPath + "default.xml"))
+            if (!this.file.Exists(db.DataPath + "default.xml"))
             {
-                File.WriteAllText(db.DataPath + "default.xml", "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
+                this.file.WriteAllText(db.DataPath + "default.xml", "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
             }
 
             InitializeComponent();
@@ -378,17 +382,17 @@ namespace WillowTree
         {
             try
             {
-                File.Copy(CurrentWSG.OpenedWsg, CurrentWSG.OpenedWsg + ".bak0", true);
-                if (File.Exists(CurrentWSG.OpenedWsg + ".bak10") == true)
+                this.file.Copy(CurrentWSG.OpenedWsg, CurrentWSG.OpenedWsg + ".bak0", true);
+                if (this.file.Exists(CurrentWSG.OpenedWsg + ".bak10") == true)
                 {
-                    File.Delete(CurrentWSG.OpenedWsg + ".bak10");
+                    this.file.Delete(CurrentWSG.OpenedWsg + ".bak10");
                 }
 
                 for (int i = 9; i >= 0; i--)
                 {
-                    if (File.Exists(CurrentWSG.OpenedWsg + ".bak" + i) == true)
+                    if (this.file.Exists(CurrentWSG.OpenedWsg + ".bak" + i) == true)
                     {
-                        File.Move(CurrentWSG.OpenedWsg + ".bak" + i, CurrentWSG.OpenedWsg + ".bak" + (i + 1));
+                        this.file.Move(CurrentWSG.OpenedWsg + ".bak" + i, CurrentWSG.OpenedWsg + ".bak" + (i + 1));
                     }
                 }
             }

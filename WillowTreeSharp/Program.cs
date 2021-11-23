@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Windows.Forms;
+using System.IO.Abstractions;
 
 namespace WillowTree
 {
@@ -21,7 +22,9 @@ namespace WillowTree
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new WillowTreeMain());
+
+
+                Application.Run(new WillowTreeMain(new FileWrapper(new FileSystem())));
             }
             catch (Exception e)
             {
