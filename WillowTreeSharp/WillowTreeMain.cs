@@ -12,29 +12,10 @@ namespace WillowTree
 {
     public partial class WillowTreeMain : Form
     {
-        private PluginComponentManager PluginManager = Services.PluginManager;
-
+        public Font treeViewFont = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
         private WillowSaveGame CurrentWSG;
-
-        public WillowSaveGame SaveData
-        {
-            get { return CurrentWSG; }
-        }
-
-        private void SetUITreeStyles(bool UseColor)
-        {
-            TreeViewTheme theme;
-
-            if (UseColor)
-                theme = Services.AppThemes.treeViewTheme1;
-            else
-                theme = null;
-
-            db.ItemList.OnTreeThemeChanged(theme);
-            db.WeaponList.OnTreeThemeChanged(theme);
-            db.BankList.OnTreeThemeChanged(theme);
-            db.LockerList.OnTreeThemeChanged(theme);
-        }
+        private PluginComponentManager PluginManager = Services.PluginManager;
+        private Control SelectedTabObject = null;
 
         public WillowTreeMain()
         {
@@ -81,6 +62,11 @@ namespace WillowTree
             SetUITreeStyles(GlobalSettings.UseColor);
         }
 
+        public WillowSaveGame SaveData
+        {
+            get { return CurrentWSG; }
+        }
+
         public void CreatePluginAsTab(string tabTitle, Control plugin)
         {
             if (plugin is IPlugin)
@@ -90,6 +76,24 @@ namespace WillowTree
                 tabControl1.Controls.Add(plugin);
                 PluginManager.InitializePlugin(plugin as IPlugin);
             }
+        }
+
+        private void AdvancedInputDecimal_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.UseHexInAdvancedMode = false;
+            GlobalSettings.InputMode = InputMode.Advanced;
+        }
+
+        private void AdvancedInputHexadecimal_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.UseHexInAdvancedMode = true;
+            GlobalSettings.InputMode = InputMode.Advanced;
+        }
+
+        private void colorizeListsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.UseColor = !GlobalSettings.UseColor;
+            SetUITreeStyles(GlobalSettings.UseColor);
         }
 
         private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.Object
@@ -159,6 +163,128 @@ namespace WillowTree
             itmBank = null;
         }
 
+        private void DoWindowTitle()
+        {
+            ucGeneral eGeneral = PluginManager.GetPlugin(typeof(ucGeneral)) as ucGeneral;
+            if (eGeneral != null)
+                eGeneral.DoWindowTitle();
+        }
+
+        private void ExitWT_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.Save();
+            Application.Exit();
+        }
+
+        private void IncreaseNavigationLayers_Click(object sender, EventArgs e)
+        {
+            IPlugin page = tabControl1.TabPages[tabControl1.SelectedIndex] as IPlugin;
+            if (page != null)
+                PluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.IncreaseNavigationDepth));
+        }
+
+        private void MenuItemPartSelectorTracking_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.PartSelectorTracking = !GlobalSettings.PartSelectorTracking;
+        }
+
+        private void NextSort_Click(object sender, EventArgs e)
+        {
+            IPlugin page = tabControl1.TabPages[tabControl1.SelectedIndex] as IPlugin;
+            if (page != null)
+                PluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.ChangeSortMode));
+        }
+
+        private void Open_Click(object sender, EventArgs e)
+        {
+            string fileName = (CurrentWSG != null) ? CurrentWSG.OpenedWsg : "";
+
+            Util.WTOpenFileDialog openDlg = new Util.WTOpenFileDialog("sav", fileName);
+            if (openDlg.ShowDialog() == DialogResult.OK)
+            {
+                fileName = openDlg.FileName();
+
+                PluginManager.OnGameLoading(new PluginEventArgs(this, fileName));
+                Application.DoEvents();
+                CurrentWSG = new WillowSaveGame();
+                CurrentWSG.AutoRepair = true;
+                CurrentWSG.LoadWsg(fileName);
+
+                if (CurrentWSG.RequiredRepair == true)
+                {
+                    DialogResult result = MessageBox.Show(
+                        "Your savegame contains corrupted data so it cannot be loaded.  " +
+                        "It is possible to discard the invalid data to repair your savegame " +
+                        "so that it can be opened.  Repairing WILL CAUSE SOME DATA LOSS but " +
+                        "should bring your savegame back to a working state.\r\n\r\nDo you want to " +
+                        "repair the savegame?",
+                        "Recoverable Corruption Detected",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+
+                    if (result == DialogResult.No)
+                        throw new FileFormatException("Savegame file is corrupt.");
+                }
+
+                ConvertListForEditing(db.WeaponList, ref CurrentWSG.Weapons);
+                ConvertListForEditing(db.ItemList, ref CurrentWSG.Items);
+                ConvertListForEditing(db.BankList, ref CurrentWSG.Dlc.BankInventory);
+
+                PluginManager.OnGameLoaded(new PluginEventArgs(this, fileName));
+
+                Save.Enabled = true;
+                SaveAs.Enabled = true;
+                SelectFormat.Enabled = true;
+            }
+            else
+                fileName = "";
+        }
+
+        private void optionsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            colorizeListsToolStripMenuItem.Checked = GlobalSettings.UseColor;
+            showRarityValueToolStripMenuItem.Checked = GlobalSettings.ShowRarity;
+            showEffectiveLevelsToolStripMenuItem.Checked = GlobalSettings.ShowLevel;
+            showManufacturerToolStripMenuItem.Checked = GlobalSettings.ShowManufacturer;
+            MenuItemPartSelectorTracking.Checked = GlobalSettings.PartSelectorTracking;
+        }
+
+        private void PCFormat_Click(object sender, EventArgs e)
+        {
+            if (CurrentWSG.Platform == "PC")
+                return;
+
+            if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.LittleEndian))
+            {
+                if (!UIAction_RemoveRawData())
+                    return;
+            }
+
+            CurrentWSG.Platform = "PC";
+            CurrentWSG.EndianWsg = ByteOrder.LittleEndian;
+            DoWindowTitle();
+            CurrentWSG.OpenedWsg = "";
+            Save.Enabled = false;
+        }
+
+        private void PS3Format_Click(object sender, EventArgs e)
+        {
+            if (CurrentWSG.Platform == "PS3")
+                return;
+
+            if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
+            {
+                if (!UIAction_RemoveRawData())
+                    return;
+            }
+
+            CurrentWSG.Platform = "PS3";
+            CurrentWSG.EndianWsg = ByteOrder.BigEndian;
+            DoWindowTitle();
+            MessageBox.Show("This save data will be stored in the PS3 format. Please note that you will require \r\nproper SFO, PNG, and PFD files to be transfered back to the \r\nPS3. These can be acquired from another Borderlands save \r\nfor the same profile.");
+            CurrentWSG.OpenedWsg = "";
+            Save.Enabled = false;
+        }
+
         private void RepopulateListForSaving<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.Object, new()
         {
             objs = new List<T>();
@@ -223,57 +349,6 @@ namespace WillowTree
             // data that will be rebuilt on the next save attempt.
         }
 
-        private void DoWindowTitle()
-        {
-            ucGeneral eGeneral = PluginManager.GetPlugin(typeof(ucGeneral)) as ucGeneral;
-            if (eGeneral != null)
-                eGeneral.DoWindowTitle();
-        }
-
-        private void Open_Click(object sender, EventArgs e)
-        {
-            string fileName = (CurrentWSG != null) ? CurrentWSG.OpenedWsg : "";
-
-            Util.WTOpenFileDialog openDlg = new Util.WTOpenFileDialog("sav", fileName);
-            if (openDlg.ShowDialog() == DialogResult.OK)
-            {
-                fileName = openDlg.FileName();
-
-                PluginManager.OnGameLoading(new PluginEventArgs(this, fileName));
-                Application.DoEvents();
-                CurrentWSG = new WillowSaveGame();
-                CurrentWSG.AutoRepair = true;
-                CurrentWSG.LoadWsg(fileName);
-
-                if (CurrentWSG.RequiredRepair == true)
-                {
-                    DialogResult result = MessageBox.Show(
-                        "Your savegame contains corrupted data so it cannot be loaded.  " +
-                        "It is possible to discard the invalid data to repair your savegame " +
-                        "so that it can be opened.  Repairing WILL CAUSE SOME DATA LOSS but " +
-                        "should bring your savegame back to a working state.\r\n\r\nDo you want to " +
-                        "repair the savegame?",
-                        "Recoverable Corruption Detected",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-
-                    if (result == DialogResult.No)
-                        throw new FileFormatException("Savegame file is corrupt.");
-                }
-
-                ConvertListForEditing(db.WeaponList, ref CurrentWSG.Weapons);
-                ConvertListForEditing(db.ItemList, ref CurrentWSG.Items);
-                ConvertListForEditing(db.BankList, ref CurrentWSG.Dlc.BankInventory);
-
-                PluginManager.OnGameLoaded(new PluginEventArgs(this, fileName));
-
-                Save.Enabled = true;
-                SaveAs.Enabled = true;
-                SelectFormat.Enabled = true;
-            }
-            else
-                fileName = "";
-        }
-
         private void Save_Click(object sender, EventArgs e)
         {
             try
@@ -309,6 +384,93 @@ namespace WillowTree
             }
         }
 
+        private void SaveOptions_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.Save();
+        }
+
+        private void SaveToFile(string filename)
+        {
+            PluginManager.OnGameSaving(new PluginEventArgs(this, filename));
+            Application.DoEvents();
+
+            // Convert the weapons and items data from WeaponList/ItemList into
+            // the format used by WillowSaveGame.
+            RepopulateListForSaving(db.WeaponList, ref CurrentWSG.Weapons);
+            RepopulateListForSaving(db.ItemList, ref CurrentWSG.Items);
+            RepopulateListForSaving(db.BankList, ref CurrentWSG.Dlc.BankInventory);
+            CurrentWSG.SaveWsg(filename);
+            CurrentWSG.OpenedWsg = filename;
+
+            // Release the WillowSaveGame inventory data now that saving is complete.  The
+            // same data is still contained in db.WeaponList, db.ItemList, and db.BankList
+            // in the format used by the WillowTree UI.
+            CurrentWSG.Weapons = null;
+            CurrentWSG.Items = null;
+            CurrentWSG.Dlc.BankInventory = null;
+
+            PluginManager.OnGameSaved(new PluginEventArgs(this, CurrentWSG.OpenedWsg));
+        }
+
+        private void SetUITreeStyles(bool UseColor)
+        {
+            TreeViewTheme theme;
+
+            if (UseColor)
+                theme = Services.AppThemes.treeViewTheme1;
+            else
+                theme = null;
+
+            db.ItemList.OnTreeThemeChanged(theme);
+            db.WeaponList.OnTreeThemeChanged(theme);
+            db.BankList.OnTreeThemeChanged(theme);
+            db.LockerList.OnTreeThemeChanged(theme);
+        }
+
+        private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.ShowLevel = !GlobalSettings.ShowLevel;
+            UpdateNames();
+        }
+
+        private void showManufacturerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.ShowManufacturer = !GlobalSettings.ShowManufacturer;
+            UpdateNames();
+        }
+
+        private void showRarityValueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.ShowRarity = !GlobalSettings.ShowRarity;
+            UpdateNames();
+        }
+
+        private void StandardInput_Click(object sender, EventArgs e)
+        {
+            GlobalSettings.InputMode = InputMode.Standard;
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
+                PluginManager.OnPluginUnselected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
+
+            int selected = tabControl1.SelectedIndex;
+            if (selected >= 0)
+            {
+                SelectedTabObject = tabControl1.Controls[selected];
+                if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
+                    PluginManager.OnPluginSelected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
+            }
+            else
+                SelectedTabObject = null;
+
+            //if (tabControl1.SelectedIndex == tabControl1.GetTabIndex(DebugTab))
+            //{
+            //    DumpTreeDebugInfo(Weapon.Tree);
+            //}
+        }
+
         /// <summary>
         /// Checks to make sure a savegame contains no raw data.  If it does it asks if it is ok
         /// to remove it and performs removal of the raw data.
@@ -326,41 +488,17 @@ namespace WillowTree
             return true;
         }
 
-        private void PCFormat_Click(object sender, EventArgs e)
+        private void UpdateNames()
         {
-            if (CurrentWSG.Platform == "PC")
-                return;
-
-            if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.LittleEndian))
-            {
-                if (!UIAction_RemoveRawData())
-                    return;
-            }
-
-            CurrentWSG.Platform = "PC";
-            CurrentWSG.EndianWsg = ByteOrder.LittleEndian;
-            DoWindowTitle();
-            CurrentWSG.OpenedWsg = "";
-            Save.Enabled = false;
+            db.WeaponList.OnNameFormatChanged();
+            db.ItemList.OnNameFormatChanged();
+            db.BankList.OnNameFormatChanged();
+            db.LockerList.OnNameFormatChanged();
         }
 
-        private void PS3Format_Click(object sender, EventArgs e)
+        private void WillowTreeMain_FormClosing(object sender, EventArgs e)
         {
-            if (CurrentWSG.Platform == "PS3")
-                return;
-
-            if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
-            {
-                if (!UIAction_RemoveRawData())
-                    return;
-            }
-
-            CurrentWSG.Platform = "PS3";
-            CurrentWSG.EndianWsg = ByteOrder.BigEndian;
-            DoWindowTitle();
-            MessageBox.Show("This save data will be stored in the PS3 format. Please note that you will require \r\nproper SFO, PNG, and PFD files to be transfered back to the \r\nPS3. These can be acquired from another Borderlands save \r\nfor the same profile.");
-            CurrentWSG.OpenedWsg = "";
-            Save.Enabled = false;
+            GlobalSettings.Save();
         }
 
         private void XBoxFormat_Click(object sender, EventArgs e)
@@ -423,147 +561,6 @@ namespace WillowTree
             DoWindowTitle();
             CurrentWSG.OpenedWsg = "";
             Save.Enabled = false;
-        }
-
-        private void ExitWT_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.Save();
-            Application.Exit();
-        }
-
-        private void WillowTreeMain_FormClosing(object sender, EventArgs e)
-        {
-            GlobalSettings.Save();
-        }
-
-        private void StandardInput_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.InputMode = InputMode.Standard;
-        }
-
-        private void AdvancedInputDecimal_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.UseHexInAdvancedMode = false;
-            GlobalSettings.InputMode = InputMode.Advanced;
-        }
-
-        private void AdvancedInputHexadecimal_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.UseHexInAdvancedMode = true;
-            GlobalSettings.InputMode = InputMode.Advanced;
-        }
-
-        private void SaveToFile(string filename)
-        {
-            PluginManager.OnGameSaving(new PluginEventArgs(this, filename));
-            Application.DoEvents();
-
-            // Convert the weapons and items data from WeaponList/ItemList into
-            // the format used by WillowSaveGame.
-            RepopulateListForSaving(db.WeaponList, ref CurrentWSG.Weapons);
-            RepopulateListForSaving(db.ItemList, ref CurrentWSG.Items);
-            RepopulateListForSaving(db.BankList, ref CurrentWSG.Dlc.BankInventory);
-            CurrentWSG.SaveWsg(filename);
-            CurrentWSG.OpenedWsg = filename;
-
-            // Release the WillowSaveGame inventory data now that saving is complete.  The
-            // same data is still contained in db.WeaponList, db.ItemList, and db.BankList
-            // in the format used by the WillowTree UI.
-            CurrentWSG.Weapons = null;
-            CurrentWSG.Items = null;
-            CurrentWSG.Dlc.BankInventory = null;
-
-            PluginManager.OnGameSaved(new PluginEventArgs(this, CurrentWSG.OpenedWsg));
-        }
-
-        private void NextSort_Click(object sender, EventArgs e)
-        {
-            IPlugin page = tabControl1.TabPages[tabControl1.SelectedIndex] as IPlugin;
-            if (page != null)
-                PluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.ChangeSortMode));
-        }
-
-        private void IncreaseNavigationLayers_Click(object sender, EventArgs e)
-        {
-            IPlugin page = tabControl1.TabPages[tabControl1.SelectedIndex] as IPlugin;
-            if (page != null)
-                PluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.IncreaseNavigationDepth));
-        }
-
-        private void UpdateNames()
-        {
-            db.WeaponList.OnNameFormatChanged();
-            db.ItemList.OnNameFormatChanged();
-            db.BankList.OnNameFormatChanged();
-            db.LockerList.OnNameFormatChanged();
-        }
-
-        private void showRarityValueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.ShowRarity = !GlobalSettings.ShowRarity;
-            UpdateNames();
-        }
-
-        private void colorizeListsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.UseColor = !GlobalSettings.UseColor;
-            SetUITreeStyles(GlobalSettings.UseColor);
-        }
-
-        private void optionsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            colorizeListsToolStripMenuItem.Checked = GlobalSettings.UseColor;
-            showRarityValueToolStripMenuItem.Checked = GlobalSettings.ShowRarity;
-            showEffectiveLevelsToolStripMenuItem.Checked = GlobalSettings.ShowLevel;
-            showManufacturerToolStripMenuItem.Checked = GlobalSettings.ShowManufacturer;
-            MenuItemPartSelectorTracking.Checked = GlobalSettings.PartSelectorTracking;
-        }
-
-        private void showManufacturerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.ShowManufacturer = !GlobalSettings.ShowManufacturer;
-            UpdateNames();
-        }
-
-        private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.ShowLevel = !GlobalSettings.ShowLevel;
-            UpdateNames();
-        }
-
-        private void SaveOptions_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.Save();
-        }
-
-        public Font treeViewFont = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-
-        private Control SelectedTabObject = null;
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
-                PluginManager.OnPluginUnselected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
-
-            int selected = tabControl1.SelectedIndex;
-            if (selected >= 0)
-            {
-                SelectedTabObject = tabControl1.Controls[selected];
-                if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
-                    PluginManager.OnPluginSelected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
-            }
-            else
-                SelectedTabObject = null;
-
-            //if (tabControl1.SelectedIndex == tabControl1.GetTabIndex(DebugTab))
-            //{
-            //    DumpTreeDebugInfo(Weapon.Tree);
-            //}
-        }
-
-        private void MenuItemPartSelectorTracking_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.PartSelectorTracking = !GlobalSettings.PartSelectorTracking;
         }
     }
 }
