@@ -28,11 +28,7 @@ namespace WillowTree.Inventory
 
         public event EntryChangeEventHandler EntryAdd;
 
-        public event EntryChangeByKeyEventHandler EntryAddByKey;
-
         public event EntryChangeEventHandler EntryRemove;
-
-        public event EntryChangeByKeyEventHandler EntryRemoveByKey;
 
         public event EntryChangeNodeEventHandler EntryRemoveNode;
 
