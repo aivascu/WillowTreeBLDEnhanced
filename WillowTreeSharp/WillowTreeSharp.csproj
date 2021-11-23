@@ -98,9 +98,9 @@
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="X360, Version=1.0.0.27, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="X360, Version=1.0.0.41, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\X360.dll</HintPath>
+      <HintPath>..\binaries\X360.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -315,7 +315,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\loading.png" />
-    <Content Include="DLLDependencies\X360.dll" />
     <Content Include="Resources\bar.png" />
     <Content Include="Resources\WillowTreeOld.ico" />
   </ItemGroup>
