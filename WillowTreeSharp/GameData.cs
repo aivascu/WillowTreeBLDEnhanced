@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using WillowTree.Inventory;
@@ -9,10 +8,10 @@ namespace WillowTree
 {
     public static class GameData
     {
+        private static string openedLocker; //Keep tracking of last open locker file
         private static Dictionary<string, string> nameLookup;
-        public static readonly string DataPath = WillowSaveGame.DataPath;
-        public static string XmlPath = DataPath + "Xml" + Path.DirectorySeparatorChar;
-        private static string OpenedLocker; //Keep tracking of last open locker file
+
+        public static string DataPath { get; } = WillowSaveGame.DataPath;
 
         private static readonly List<string> skillFiles = new List<string>
         {
@@ -23,18 +22,25 @@ namespace WillowTree
             DataPath + "gd_Skills2_Brick.txt"
         };
 
-        public static XmlFile EchoesXml = new XmlFile(DataPath + "Echos.ini");
-        public static XmlFile LocationsXml = new XmlFile(DataPath + "Locations.ini");
-        public static XmlFile QuestsXml = new XmlFile(DataPath + "Quests.ini");
-        public static XmlFile SkillsCommonXml = new XmlFile(DataPath + "gd_skills_common.txt");
-        public static XmlFile SkillsSoldierXml = new XmlFile(DataPath + "gd_skills2_Roland.txt");
-        public static XmlFile SkillsSirenXml = new XmlFile(DataPath + "gd_Skills2_Lilith.txt");
-        public static XmlFile SkillsHunterXml = new XmlFile(DataPath + "gd_skills2_Mordecai.txt");
-        public static XmlFile SkillsBerserkerXml = new XmlFile(DataPath + "gd_Skills2_Brick.txt");
-        public static XmlFile SkillsAllXml = new XmlFile(skillFiles, XmlPath + "gd_skills.xml");
-        public static XmlFile PartNamesXml = new XmlFile(DataPath + "partnames.ini");
+        public static string XmlPath { get; } = Path.Combine(DataPath, "Xml") + Path.DirectorySeparatorChar;
 
-        public static int[] XPChart = new int[71];
+        public static XmlFile EchoesXml { get; } = new XmlFile(DataPath + "Echos.ini");
+        public static XmlFile LocationsXml { get; } = new XmlFile(DataPath + "Locations.ini");
+        public static XmlFile QuestsXml { get; } = new XmlFile(DataPath + "Quests.ini");
+        public static XmlFile SkillsCommonXml { get; } = new XmlFile(DataPath + "gd_skills_common.txt");
+        public static XmlFile SkillsSoldierXml { get; } = new XmlFile(DataPath + "gd_skills2_Roland.txt");
+        public static XmlFile SkillsSirenXml { get; } = new XmlFile(DataPath + "gd_Skills2_Lilith.txt");
+        public static XmlFile SkillsHunterXml { get; } = new XmlFile(DataPath + "gd_skills2_Mordecai.txt");
+        public static XmlFile SkillsBerserkerXml { get; } = new XmlFile(DataPath + "gd_Skills2_Brick.txt");
+        public static XmlFile SkillsAllXml { get; } = new XmlFile(skillFiles, XmlPath + "gd_skills.xml");
+        public static XmlFile PartNamesXml { get; } = new XmlFile(DataPath + "partnames.ini");
+
+        public static InventoryList WeaponList { get; } = new InventoryList(InventoryType.Weapon);
+        public static InventoryList ItemList { get; } = new InventoryList(InventoryType.Item);
+        public static InventoryList BankList { get; } = new InventoryList(InventoryType.Any);
+        public static InventoryList LockerList { get; } = new InventoryList(InventoryType.Any);
+
+        public static int[] XPChart { get; } = new int[71];
 
         public static void SetXPchart()
         {
@@ -114,11 +120,6 @@ namespace WillowTree
             XPChart[70] = 2147483647;
         }
 
-        public static InventoryList WeaponList = new InventoryList(InventoryType.Weapon);
-        public static InventoryList ItemList = new InventoryList(InventoryType.Item);
-        public static InventoryList BankList = new InventoryList(InventoryType.Any);
-        public static InventoryList LockerList = new InventoryList(InventoryType.Any);
-
         private static int keyIndex;
 
         public static string CreateUniqueKey()
@@ -128,14 +129,14 @@ namespace WillowTree
 
         public static string OpenedLockerFilename()
         {
-            return string.IsNullOrEmpty(OpenedLocker)
+            return string.IsNullOrEmpty(openedLocker)
                 ? DataPath + "default.xml"
-                : OpenedLocker;
+                : openedLocker;
         }
 
         public static void OpenedLockerFilename(string sOpenedLocker)
         {
-            OpenedLocker = sOpenedLocker;
+            openedLocker = sOpenedLocker;
         }
 
         public static string GetName(string part)
@@ -154,7 +155,7 @@ namespace WillowTree
             string database = part.Before('.');
             if (database == "")
             {
-                return "";
+                return string.Empty;
             }
 
             string partName = part.After('.');
@@ -231,6 +232,7 @@ namespace WillowTree
                         penalty -= value;
                     }
                 }
+
                 extraDamage = ((1 + bonus) / (1 + penalty)) - 1;
                 return extraDamage;
             }
