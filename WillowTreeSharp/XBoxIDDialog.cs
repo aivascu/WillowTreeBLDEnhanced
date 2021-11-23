@@ -53,7 +53,6 @@ namespace WillowTree
                 {
                     ID = null;
                     MessageBox.Show("The file is not a valid Xbox 360 savegame file.");
-                    return;
                 }
             }
         }

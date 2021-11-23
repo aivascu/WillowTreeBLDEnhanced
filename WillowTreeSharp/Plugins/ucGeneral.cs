@@ -433,7 +433,6 @@ namespace WillowTree.Plugins
             catch (Exception ex)
             {
                 MessageBox.Show("Error occurred while trying to save locations: " + ex.ToString());
-                return;
             }
         }
 
@@ -452,7 +451,6 @@ namespace WillowTree.Plugins
             catch (Exception ex)
             { 
                 MessageBox.Show("Error occurred while trying to save locations: " + ex.ToString()); 
-                return; 
             }
         }
 
@@ -474,7 +472,6 @@ namespace WillowTree.Plugins
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error occurred while trying to load: " + ex.ToString());
-                    return;
                 }
             }
         }

@@ -65,7 +65,6 @@ namespace WillowTree.Plugins
             {
                 MessageBox.Show("The locker file \"" + GameData.OpenedLockerFilename() + " could not be loaded.  It may be corrupt.  If you delete or rename it the program will make a new one and you may be able to start the program successfully.  Shutting down now.");
                 Application.Exit();
-                return;
             }
         }
 
@@ -267,7 +266,6 @@ namespace WillowTree.Plugins
                     catch (System.IO.IOException)
                     {
                         MessageBox.Show("Unable to read file \"" + file + "\".");
-                        continue;
                     }
                 }
             }

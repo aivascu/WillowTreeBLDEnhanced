@@ -370,7 +370,6 @@ namespace WillowTree.Plugins
                     catch (System.IO.IOException)
                     {
                         MessageBox.Show("Unable to read file \"" + file + "\".");
-                        continue;
                     }
                 }
             }

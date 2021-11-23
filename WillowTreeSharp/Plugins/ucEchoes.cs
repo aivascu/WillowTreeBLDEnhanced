@@ -588,7 +588,6 @@ namespace WillowTree.Plugins
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error occurred while trying to load: " + ex.ToString());
-                    return;
                 }
             }
         }
@@ -685,7 +684,7 @@ namespace WillowTree.Plugins
                 {
                     MergeFromSaveEchoes(tempOpen.FileName(), index);
                 }
-                catch { MessageBox.Show("Couldn't open the other save file."); return; }
+                catch { MessageBox.Show("Couldn't open the other save file."); }
             }
         }
         
