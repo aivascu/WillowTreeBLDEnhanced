@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using WillowTree.Inventory;
 
@@ -11,17 +12,17 @@ namespace WillowTree
         private static Dictionary<string, string> NameLookup;
         public static string AppPath = WillowSaveGame.AppPath;
         public static string DataPath = WillowSaveGame.DataPath;
-        public static string XmlPath = DataPath + "Xml" + System.IO.Path.DirectorySeparatorChar;
+        public static string XmlPath = DataPath + "Xml" + Path.DirectorySeparatorChar;
         private static string OpenedLocker; //Keep tracking of last open locker file
 
-        private static List<string> skillfiles = new List<string>()
-            {
-                DataPath + "gd_skills_common.txt",
-                DataPath + "gd_Skills2_Roland.txt",
-                DataPath + "gd_Skills2_Lilith.txt",
-                DataPath + "gd_skills2_Mordecai.txt",
-                DataPath + "gd_Skills2_Brick.txt"
-            };
+        private static readonly List<string> skillfiles = new List<string>()
+        {
+            DataPath + "gd_skills_common.txt",
+            DataPath + "gd_Skills2_Roland.txt",
+            DataPath + "gd_Skills2_Lilith.txt",
+            DataPath + "gd_skills2_Mordecai.txt",
+            DataPath + "gd_Skills2_Brick.txt"
+        };
 
         public static XmlFile EchoesXml = new XmlFile(DataPath + "Echos.ini");
         public static XmlFile LocationsXml = new XmlFile(DataPath + "Locations.ini");
@@ -129,43 +130,18 @@ namespace WillowTree
         public static string OpenedLockerFilename()
         {
             if (string.IsNullOrEmpty(OpenedLocker))
+            {
                 return DataPath + "default.xml";
+            }
             else
+            {
                 return OpenedLocker;
+            }
         }
 
         public static void OpenedLockerFilename(string sOpenedLocker)
         {
             OpenedLocker = sOpenedLocker;
-        }
-
-        // 0 references - Build composite string by combining the attribute from each part in a thing with a space between
-        // OBSOLETE - Nothing uses this.  It couid be removed.
-        public static string GetInventoryAttributeComposite(XmlFile xml, string[,] InventoryArray, int InventoryIndex, int InventoryPartCount, string AttributeName)
-        {
-            string Name = "";
-            for (int build = 0; build < InventoryPartCount; build++)
-            {
-                string readValue = xml.XmlReadValue(InventoryArray[InventoryIndex, build], AttributeName);
-
-                if (Name == "" && readValue != null)
-                    Name = readValue;
-                else if (readValue != null && readValue != "")
-                    Name = (Name + " " + readValue);
-            }
-
-            return Name;
-        }
-
-        // OBSOLETE - Nothing uses this.  It couid be removed.
-        public static string GetInventoryNameSlow(List<string> parts, int inventoryType)
-        {
-            if (inventoryType == InventoryType.Weapon)
-                return GetWeaponNameSlow(parts);
-            else if (inventoryType == InventoryType.Item)
-                return GetItemNameSlow(parts);
-            else
-                throw new ArgumentException("Unknown inventory type specified in GetInventoryName");
         }
 
         public static string GetName(string part)
@@ -178,298 +154,53 @@ namespace WillowTree
             // data this should be faster.
             string value;
             if (NameLookup.TryGetValue(part, out value) == false)
+            {
                 return "";
+            }
+
             return value;
         }
 
-        // 1 references - Compose the full name of a item from its parts (list version)
-        // OBSOLETE - Nothing uses this.  It couid be removed.
-        public static string GetWeaponNameFast(List<string> parts)
-        {
-            // This version uses the higher performance GetName function to fetch
-            // part names from the NameLookup dictionary.
-            string Name = GetName(parts[13]);
-            string Prefix = GetName(parts[12]);
-
-            string MfgText;
-            if (GlobalSettings.ShowManufacturer)
-            {
-                MfgText = GetName(parts[1]); // Mfg Name
-                if (MfgText == "")
-                    MfgText = "Generic";
-            }
-            else
-                MfgText = "";
-
-            string BodyText = GetName(parts[3]); // Body text
-            string MaterialText = GetName(parts[11]); // Material text
-
-            int Model = Parse.AsInt(GetName(parts[8]), 0);        // Number from stock
-            Model += Parse.AsInt(GetName(parts[5]), 0);           // Number from mag
-            //            if ((GetPartRarity(parts[8]) == 0) || (GetPartRarity(parts[5]) == 0))
-            //                Model = Model / 10;
-            if ((GetPartRarity(parts[8]) != 0) && (GetPartRarity(parts[5]) != 0))
-                Model = Model * 10;
-            string ModelText = (Model != 0 ? Model.ToString() : "");
-
-            string ModelName = BodyText + ModelText + MaterialText;
-
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            if (MfgText != "")
-            {
-                sb.Append(MfgText);
-                sb.Append(' ');
-            }
-
-            if (ModelName != "")
-            {
-                sb.Append(ModelName);
-                sb.Append(' ');
-            }
-
-            if (Prefix != "")
-            {
-                sb.Append(Prefix);
-                sb.Append(' ');
-            }
-
-            sb.Append(Name);
-
-            return sb.ToString();
-        }
-
-        // 0 references - Compose the full name of a item from its parts (list version)
-        // OBSOLETE - Nothing uses this.  It couid be removed.
-        public static string GetWeaponNameSlow(List<string> parts)
-        {
-            // This version uses the lower performance GetPartName function to fetch
-            // part names directly from the Xml part data files rather than using
-            // the NameLookup dictionary.
-            string Name = GetPartName(parts[13]);
-            string Prefix = GetPartName(parts[12]);
-
-            string MfgText;
-            if (GlobalSettings.ShowManufacturer)
-            {
-                MfgText = GetPartAttribute(parts[1], "Manufacturer"); // Mfg Name
-                if (MfgText == "")
-                    MfgText = "Generic";
-            }
-            else
-                MfgText = "";
-
-            string BodyText = GetPartName(parts[3]); // Body text
-            string MaterialText = GetPartName(parts[11]); // Material text
-
-            int Model = GetPartNumber(parts[8]);        // Number from stock
-            Model += GetPartNumber(parts[5]);           // Number from mag
-            //            if ((GetPartRarity(parts[8]) == 0) || (GetPartRarity(parts[5]) == 0))
-            //                Model = Model / 10;
-            if ((GetPartRarity(parts[8]) != 0) && (GetPartRarity(parts[5]) != 0))
-                Model = Model * 10;
-            string ModelText = (Model != 0 ? Model.ToString() : "");
-
-            string ModelName = BodyText + ModelText + MaterialText;
-
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            if (MfgText != "")
-            {
-                sb.Append(MfgText);
-                sb.Append(' ');
-            }
-
-            if (ModelName != "")
-            {
-                sb.Append(ModelName);
-                sb.Append(' ');
-            }
-
-            if (Prefix != "")
-            {
-                sb.Append(Prefix);
-                sb.Append(' ');
-            }
-
-            sb.Append(Name);
-
-            return sb.ToString();
-        }
-
-        // 0 references - Compose the full name of an item from its parts (list vesion)
-        // OBSOLETE - Nothing uses this.  It couid be removed.
-        public static string GetItemNameFast(List<string> parts)
-        {
-            // This version uses the higher performance GetName function to fetch
-            // part names from the NameLookup dictionary.
-            string Name = GetName(parts[8]);
-            string Prefix = GetName(parts[7]);
-            if ((Name == "") && (Prefix == ""))
-            {
-                Name = GetName(parts[1]);
-                if (Name == "")
-                    return "Unknown Item";
-                return Name;
-            }
-
-            string MfgText;
-            if (GlobalSettings.ShowManufacturer)
-            {
-                MfgText = GetName(parts[6]); // Mfg Name
-                if (MfgText == "")
-                    MfgText = GetPartAttribute(parts[1], "NoManufacturerName");
-            }
-            else
-                MfgText = "";
-
-            string BodyText = GetName(parts[5]); // Right text
-            string MaterialText = GetName(parts[2]); // Material text
-
-            int Model = Parse.AsInt(GetName(parts[3]));        // ModelNumber text
-            Model += Parse.AsInt(GetName(parts[4]));           //
-            //            if ((GetPartRarity(parts[3]) == 0) || (GetPartRarity(parts[4]) == 0))
-            //                Model = Model / 10;
-            if ((GetPartRarity(parts[3]) != 0) && (GetPartRarity(parts[4]) != 0))
-                Model = Model * 10;
-            string ModelText = (Model != 0 ? Model.ToString() : "");
-
-            string ModelName = BodyText + ModelText + MaterialText;
-
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            if (MfgText != "")
-            {
-                sb.Append(MfgText);
-                sb.Append(' ');
-            }
-
-            if (ModelName != "")
-            {
-                sb.Append(ModelName);
-                sb.Append(' ');
-            }
-
-            if (Prefix != "")
-            {
-                sb.Append(Prefix);
-                sb.Append(' ');
-            }
-
-            sb.Append(Name);
-
-            return sb.ToString();
-        }
-
-        // 1 references - Compose the full name of an item from its parts (list vesion)
-        // OBSOLETE - Nothing uses this.  It couid be removed.
-        public static string GetItemNameSlow(List<string> parts)
-        {
-            string Name = GetPartName(parts[8]);
-            string Prefix = GetPartName(parts[7]);
-            if ((Name == "") && (Prefix == ""))
-            {
-                Name = GetPartAttribute(parts[1], "ItemName");
-                if (Name == "")
-                    return "Unknown Item";
-                return Name;
-            }
-
-            string MfgText;
-            if (GlobalSettings.ShowManufacturer)
-            {
-                MfgText = GetPartAttribute(parts[6], "Manufacturer"); // Mfg Name
-                if (MfgText == "")
-                    MfgText = GetPartAttribute(parts[1], "NoManufacturerName");
-            }
-            else
-                MfgText = "";
-
-            string BodyText = GetPartName(parts[5]); // Right text
-            string MaterialText = GetPartName(parts[2]); // Material text
-
-            int Model = GetPartNumber(parts[3]);        // ModelNumber text
-            Model += GetPartNumber(parts[4]);           //
-            if ((GetPartRarity(parts[3]) == 0) || (GetPartRarity(parts[4]) == 0))
-                Model = Model / 10;
-            string ModelText = (Model != 0 ? Model.ToString() : "");
-
-            string ModelName = BodyText + ModelText + MaterialText;
-
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            if (MfgText != "")
-            {
-                sb.Append(MfgText);
-                sb.Append(' ');
-            }
-
-            if (ModelName != "")
-            {
-                sb.Append(ModelName);
-                sb.Append(' ');
-            }
-
-            if (Prefix != "")
-            {
-                sb.Append(Prefix);
-                sb.Append(' ');
-            }
-
-            sb.Append(Name);
-
-            return sb.ToString();
-        }
-
-        // 27 references - Fetch a given attribute from a part
         public static string GetPartAttribute(string part, string AttributeName)
         {
             string Database = part.Before('.');
             if (Database == "")
+            {
                 return "";
+            }
 
             string PartName = part.After('.');
 
             string DbFileName = DataPath + Database + ".txt";
-            if (!System.IO.File.Exists(DbFileName))
+            if (!File.Exists(DbFileName))
+            {
                 return "";
+            }
 
             XmlFile DataFile = XmlFile.XmlFileFromCache(DbFileName);
 
-            string ComponentText = DataFile.XmlReadValue(PartName, AttributeName);
-            return ComponentText;
+            return DataFile.XmlReadValue(PartName, AttributeName);
         }
 
-        // 2 references
         public static List<string> GetPartSection(string part)
         {
             string Database = part.Before('.');
             if (Database == "")
+            {
                 return null;
+            }
 
             string PartName = part.After('.');
 
             string DbFileName = XmlPath + Database + ".xml";
-            if (!System.IO.File.Exists(DbFileName))
+            if (!File.Exists(DbFileName))
+            {
                 return null;
+            }
 
             XmlFile DataFile = XmlFile.XmlFileFromCache(DbFileName);
 
-            List<string> section = DataFile.XmlReadSection(PartName);
-            return section;
-        }
-
-        // 9 references - Fetch the PartName attribute of a part
-        public static string GetPartName(string part)
-        {
-            // This is the slow way to get part names directly from the part Xml
-            // files.  GetName(string part) is a higher performance method that
-            // fetches parts from the NameLookup dictionary which contains only
-            // part names and no other data.
-            return GetPartAttribute(part, "PartName");
-        }
-
-        // 5 references - Fetch the PartNumberAddend attribute of a part
-        public static int GetPartNumber(string part)
-        {
-            string ComponentText = GetPartAttribute(part, "PartNumberAddend");
-            return Parse.AsInt(ComponentText, null);
+            return DataFile.XmlReadSection(PartName);
         }
 
         public static int GetPartRarity(string part)
@@ -477,83 +208,6 @@ namespace WillowTree
             string ComponentText = GetPartAttribute(part, "Rarity");
             return Parse.AsInt(ComponentText, null);
         }
-
-        //// 5 references - Translate the Rarity attribute of a part and return its value
-        //public static int GetPartRarity(string part)
-        //{
-        //    string RarityText = GetPartAttribute(part, "Rarity");
-        //    switch (RarityText)
-        //    {   // The rarity values are extracted directly from code contributed by CK Y
-        //        // I assume they are correct, but I haven't tested them independently. (matt911)
-        //        case (""):
-        //        case ("WeaponPartRarity1_Common"):
-        //            return 0;
-        //        case ("WeaponPartRarity2_Uncommon"):
-        //            return 1;
-        //        case ("WeaponPartRarity3_Uncommoner"):
-        //            return 3;
-        //        case ("WeaponPartRarity4_Rare"):
-        //            return 5;
-        //        case ("WeaponPartRarity5_VeryRare"):
-        //            return 8;
-        //        case ("WeaponPartRarity6_Legendary"):
-        //            return 50;
-        //        case ("ArtifactPartRarity1_Common"):
-        //            return 0;
-        //        case ("ArtifactPartRarity2_Uncommon"):
-        //            return 2;
-        //        case ("ArtifactPartRarity3_Uncommoner"):
-        //            return 4;
-        //        case ("ArtifactPartRarity4_Rare"):
-        //            return 6;
-        //        case ("ArtifactPartRarity5_VeryRare"):
-        //            return 8;
-        //        case ("ArtifactPartRarity6_Legendary"):
-        //            return 10;
-        //        case ("GrenadeModPartRarity1_Common"):
-        //            return 0;
-        //        case ("GrenadeModPartRarity2_Uncommon"):
-        //            return 2;
-        //        case ("GrenadeModPartRarity3_Uncommoner"):
-        //            return 4;
-        //        case ("GrenadeModPartRarity4_Rare"):
-        //            return 6;
-        //        case ("GrenadeModPartRarity5_VeryRare"):
-        //            return 8;
-        //        case ("GrenadeModPartRarity6_Legendary"):
-        //            return 10;
-        //        case ("ShieldPartRarity1_Common"):
-        //            return 0;
-        //        case ("ShieldPartRarity2_Uncommon"):
-        //            return 2;
-        //        case ("ShieldPartRarity3_Uncommoner"):
-        //            return 4;
-        //        case ("ShieldPartRarity4_Rare"):
-        //            return 6;
-        //        case ("ShieldPartRarity5_VeryRare"):
-        //            return 8;
-        //        case ("ShieldPartRarity6_Legendary"):
-        //            return 10;
-        //        case ("ClassModPartRarity1_Common"):
-        //            return 0;
-        //        case ("ClassModPartRarity2_Uncommon"):
-        //            return 2;
-        //        case ("ClassModPartRarity3_Uncommoner"):
-        //            return 4;
-        //        case ("ClassModPartRarity4_Rare"):
-        //            return 6;
-        //        case ("ClassModPartRarity5_VeryRare"):
-        //            return 8;
-        //        case ("ClassModPartRarity6_Legendary"):
-        //            return 10;
-        //        default:
-        //            int val;
-        //            if (int.TryParse(RarityText, out val))
-        //                return val;
-        //            MessageBox.Show("Unrecognized rarity string in " + part);
-        //            return 0;
-        //    }
-        //}
 
         public static Color RarityToColorItem(int rarity)
         {
@@ -570,7 +224,11 @@ namespace WillowTree
             else if (rarity <= 170) { color = GlobalSettings.RarityColor[8]; }
             else if (rarity <= 171) { color = GlobalSettings.RarityColor[9]; }
             else if (rarity <= 179) { color = GlobalSettings.RarityColor[10]; }
-            else color = GlobalSettings.RarityColor[11];
+            else
+            {
+                color = GlobalSettings.RarityColor[11];
+            }
+
             return color;
         }
 
@@ -589,7 +247,11 @@ namespace WillowTree
             else if (rarity <= 170) { color = GlobalSettings.RarityColor[8]; }
             else if (rarity <= 171) { color = GlobalSettings.RarityColor[9]; }
             else if (rarity <= 179) { color = GlobalSettings.RarityColor[10]; }
-            else color = GlobalSettings.RarityColor[11];
+            else
+            {
+                color = GlobalSettings.RarityColor[11];
+            }
+
             return color;
         }
 
@@ -614,12 +276,18 @@ namespace WillowTree
                         value = Parse.AsDouble(GetPartAttribute(WeaponParts[i], StatName), 0);
                     }
                     else
+                    {
                         value = Parse.AsDouble(GetPartAttribute(WeaponParts[i], StatName), 0);
+                    }
 
                     if (value >= 0)
+                    {
                         bonus += value;
+                    }
                     else
+                    {
                         penalty -= value;
+                    }
                 }
                 ExtraDamage = ((1 + bonus) / (1 + penalty)) - 1;
                 return ExtraDamage;
@@ -633,110 +301,22 @@ namespace WillowTree
         public static int GetEffectiveLevelItem(string[] ItemParts, int Quality, int LevelIndex)
         {
             if (LevelIndex != 0)
+            {
                 return LevelIndex - 2;
+            }
 
             string Manufacturer = ItemParts[6].After("gd_manufacturers.Manufacturers.");
-            //            string Manufacturer = GetPartAttribute(WeaponParts[6], "Manufacturer").TrimEnd();
             string LevelIndexText = GetPartAttribute(ItemParts[0], Manufacturer + Quality);
             return Parse.AsInt(LevelIndexText, 2) - 2;
         }
 
-        //public class InventoryComparer : Comparer<InventoryEntry>
-        //{
-        //    public int[] comparisons;
-
-        //    public InventoryComparer(int[] comparisonarray)
-        //    {
-        //        comparisons = comparisonarray;
-        //    }
-
-        //    public override int Compare(InventoryEntry x, InventoryEntry y)
-        //    {
-        //        int result = 0;
-        //        foreach (int comparison in comparisons)
-        //        {
-        //            switch (comparison)
-        //            {
-        //                case 0: result = string.Compare(x.Name, y.Name); break;
-        //                case 1:
-        //                    if (x.Rarity > y.Rarity)
-        //                        result = -1;
-        //                    else if (x.Rarity < y.Rarity)
-        //                        result = 1;
-        //                    else
-        //                        result = 0;
-        //                    break;
-        //                case 2: result = string.Compare(x.Category, y.Category); break;
-        //                case 3: result = string.Compare(x.NameParts[3], y.NameParts[3]); break;
-        //                case 4: result = string.Compare(x.NameParts[2], y.NameParts[2]); break;
-        //                case 5: result = string.Compare(x.NameParts[1], y.NameParts[1]); break;
-        //                case 6: result = string.Compare(x.NameParts[0], y.NameParts[0]); break;
-        //                case 7:
-        //                    if (x.Level > y.Level)
-        //                        result = -1;
-        //                    else if (x.Level < y.Level)
-        //                        result = 1;
-        //                    else
-        //                        result = 0;
-        //                    break;
-        //                case 8:
-        //                    int xkeyval = int.Parse(x.Key);
-        //                    int ykeyval = int.Parse(y.Key);
-        //                    if (xkeyval > ykeyval)
-        //                        result = -1;
-        //                    else if (xkeyval < ykeyval)
-        //                        result = 1;
-        //                    else
-        //                        result = 0;
-        //                    break;
-        //            }
-        //            if (result != 0)
-        //                return result;
-        //        }
-        //        return result;
-        //    }
-        //}
-        //InventoryComparer CategoryNameComparison = new InventoryComparer(new int[] { 2, 0, 8 });
-        //InventoryComparer CategoryRarityLevelComparison = new InventoryComparer(new int[] { 2, 1, 7, 8 });
-        //InventoryComparer CategoryTitlePrefixModelComparison = new InventoryComparer(new int[] { 2, 3, 4, 5, 8 });
-        //InventoryComparer CategoryLevelNameComparison = new InventoryComparer(new int[] { 2, 7, 0, 8 });
-        //InventoryComparer NameComparison = new InventoryComparer(new int[] { 0, 8 });
-        //InventoryComparer RarityLevelComparison = new InventoryComparer(new int[] { 1, 7, 8 });
-        //InventoryComparer TitlePrefixModelComparison = new InventoryComparer(new int[] { 2, 3, 4, 5, 8 });
-        //InventoryComparer LevelNameComparison = new InventoryComparer(new int[] { 7, 0, 8 });
-
-        //public class InventoryComparisonIterator
-        //{
-        //    public int ComparerIndex;
-        //    public InventoryComparer[] Comparers;
-        //    public InventoryComparisonIterator(InventoryComparer[] comparers)
-        //    {
-        //        Comparers = comparers;
-        //    }
-        //    public void NextComparer()
-        //    {
-        //        ComparerIndex++;
-        //        if (ComparerIndex >= Comparers.Length)
-        //            ComparerIndex = 0;
-        //    }
-        //    public void PreviousComparer()
-        //    {
-        //        ComparerIndex++;
-        //        if (ComparerIndex >= Comparers.Length)
-        //            ComparerIndex = 0;
-        //    }
-        //    public InventoryComparer CurrentComparer()
-        //    {
-        //        return Comparers[ComparerIndex];
-        //    }
-        //}
-
         public static int GetEffectiveLevelWeapon(string[] WeaponParts, int Quality, int LevelIndex)
         {
             if (LevelIndex != 0)
+            {
                 return LevelIndex - 2;
+            }
 
-            //            string Manufacturer = GetPartAttribute(WeaponParts[1], "Manufacturer").TrimEnd();
             // There may be a case below where the manufacturer is invalid or blank
             string Manufacturer = WeaponParts[1].After("gd_manufacturers.Manufacturers.");
             string LevelIndexText = GetPartAttribute(WeaponParts[0], Manufacturer + Quality);
@@ -751,8 +331,14 @@ namespace WillowTree
                 double BonusDamage = 0;
                 double Multiplier;
                 if (WeaponParts[2] == "gd_weap_repeater_pistol.A_Weapon.WeaponType_repeater_pistol")
+                {
                     Multiplier = 1;
-                else Multiplier = Parse.AsDouble(GetPartAttribute(WeaponParts[2], "WeaponDamageFormulaMultiplier"), 1);
+                }
+                else
+                {
+                    Multiplier = Parse.AsDouble(GetPartAttribute(WeaponParts[2], "WeaponDamageFormulaMultiplier"), 1);
+                }
+
                 int Level = GetEffectiveLevelWeapon(WeaponParts, Quality, LevelIndex);
                 double Power = 1.3;
                 double Offset = 9;
@@ -762,9 +348,13 @@ namespace WillowTree
                     {
                         double PartDamage = Parse.AsDouble(GetPartAttribute(WeaponParts[i], "WeaponDamage"), 0);
                         if (PartDamage < 0)
+                        {
                             PenaltyDamage -= PartDamage;
+                        }
                         else
+                        {
                             BonusDamage += PartDamage;
+                        }
                     }
                 }
 
@@ -789,35 +379,51 @@ namespace WillowTree
 
             double statvalue = GetExtraStats(parts, "TechLevelIncrease");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\nElemental Tech Level: " + statvalue;
+            }
 
             statvalue = GetExtraStats(parts, "WeaponDamage");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Damage";
+            }
 
             statvalue = GetExtraStats(parts, "WeaponFireRate");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Rate of Fire";
+            }
 
             statvalue = GetExtraStats(parts, "WeaponCritBonus");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Critical Damage";
+            }
 
             statvalue = GetExtraStats(parts, "WeaponReloadSpeed");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Reload Speed";
+            }
 
             statvalue = GetExtraStats(parts, "WeaponSpread");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Spread";
+            }
 
             statvalue = GetExtraStats(parts, "MaxAccuracy");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Max Accuracy";
+            }
 
             statvalue = GetExtraStats(parts, "MinAccuracy");
             if (statvalue != 0)
+            {
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Min Accuracy";
+            }
 
             return WeaponInfo;
         }
@@ -830,8 +436,7 @@ namespace WillowTree
 
                 foreach (string section in names.stListSectionNames())
                 {
-                    List<string> entries = names.XmlReadSection(section);
-                    foreach (string entry in entries)
+                    foreach (string entry in names.XmlReadSection(section))
                     {
                         int index = entry.IndexOf(':');
                         string part = entry.Substring(0, index);
