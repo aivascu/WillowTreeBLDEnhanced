@@ -1,38 +1,6 @@
-﻿/*  This file is part of WillowTree#
- * 
- *  Copyright (C) 2011 Matthew Carter <matt911@users.sf.net>
- *  Copyright (C) 2010, 2011 XanderChaos
- *  Copyright (C) 2011 Thomas Kaiser
- *  Copyright (C) 2010 JackSchitt
- * 
- *  WillowTree# is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  WillowTree# is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-using Aga.Controls.Tree;
-using Aga.Controls.Tree.NodeControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
-//using System.Reflection;
-//using System.Diagnostics;
 using System.Drawing;
-//using System.Xml;
-//using X360.IO;
-//using X360.STFS;
-//Yeah, I don't need most of these. So sue me.
-//using Microsoft.VisualBasic;
-//using System.Net;
-//using System.Threading;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -44,9 +12,9 @@ namespace WillowTree
 {
     public partial class WillowTreeMain : Form
     {
-        PluginComponentManager PluginManager = Services.PluginManager;
+        private PluginComponentManager PluginManager = Services.PluginManager;
 
-        WillowSaveGame CurrentWSG;
+        private WillowSaveGame CurrentWSG;
 
         public WillowSaveGame SaveData
         {
@@ -72,15 +40,15 @@ namespace WillowTree
         {
             GlobalSettings.Load();
 
-            if (System.IO.Directory.Exists(db.DataPath) == false)
+            if (!Directory.Exists(db.DataPath))
             {
                 MessageBox.Show("Couldn't find the 'Data' folder! Please make sure that WillowTree# and its data folder are in the same directory.");
                 Application.Exit();
                 return;
             }
 
-            if (System.IO.File.Exists(db.DataPath + "default.xml") == false)
-                System.IO.File.WriteAllText(db.DataPath + "default.xml", "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
+            if (!File.Exists(db.DataPath + "default.xml"))
+                File.WriteAllText(db.DataPath + "default.xml", "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
 
             InitializeComponent();
 
@@ -99,16 +67,16 @@ namespace WillowTree
             CreatePluginAsTab("Echo Logs", new ucEchoes());
             CreatePluginAsTab("Bank", new ucGears());
             CreatePluginAsTab("Locker", new ucLocker());
-#if DEBUG
             CreatePluginAsTab("Debug", new ucDebug());
-#endif
             CreatePluginAsTab("About", new ucAbout());
 
             try
             {
                 tabControl1.SelectTab("ucAbout");
             }
-            catch { }
+            catch
+            {
+            }
 
             SetUITreeStyles(GlobalSettings.UseColor);
         }
@@ -122,20 +90,6 @@ namespace WillowTree
                 tabControl1.Controls.Add(plugin);
                 PluginManager.InitializePlugin(plugin as IPlugin);
             }
-        }
-
-        private void ConvertListForEditing(InventoryList itmList, ref List<List<string>> itmStrings, ref List<List<int>> itmValues)
-        {
-            // Populate itmList with items created from the WillowSaveGame data lists
-            itmList.ClearSilent();
-            for (int i = 0; i < itmStrings.Count; i++)
-                itmList.AddSilent(new InventoryEntry(itmList.invType, itmStrings[i], itmValues[i]));
-            itmList.OnListReload();
-
-            // Release the WillowSaveGame data lists now that the data is converted
-            // to the format that the WillowTree UI uses.
-            itmStrings = null;
-            itmValues = null;
         }
 
         private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.Object
@@ -162,7 +116,7 @@ namespace WillowTree
 
                 // Detach the parts list from the bank entry.
                 itmBank[i].Strings = null;
- 
+
                 // Items have a different part order in the bank and in the backpack
                 // Part                Index      Index
                 //                   Inventory    Bank
@@ -180,7 +134,7 @@ namespace WillowTree
 
                 // Convert all items into the backpack part order.  Weapons use
                 // the same format for both backpack and bank.
-      
+
                 if (itmType == InventoryType.Item)
                 {
                     string temp = parts[1];
@@ -193,8 +147,7 @@ namespace WillowTree
                     parts[5] = parts[6];
                     parts[6] = temp;
                 }
-                
-                
+
                 // Create an inventory entry with the re-ordered parts list and add it
                 itmList.AddSilent(new InventoryEntry((byte)(itmBank[i].TypeId - 1), parts, itmBankValues));
                 //Item/Weapon in bank have their type increase by 1, we reduce TypeId by 1 to manipulate them like other list
@@ -205,30 +158,7 @@ namespace WillowTree
             // to the format that the WillowTree UI uses.  It gets recreated at save time.
             itmBank = null;
         }
-        
-        private void RepopulateListForSaving(InventoryList itmList, ref List<List<string>> itmStrings, ref List<List<int>> itmValues)
-        {
-            itmStrings = new List<List<string>>();
-            itmValues = new List<List<int>>();
 
-            // Build the lists of string and value data needed by WillowSaveGame to store the 
-            // inventory from the data that is in itmList.
-            foreach (InventoryEntry item in itmList.Items.Values)
-            {
-                itmStrings.Add(item.Parts);
-                List<int> values = item.GetValues();
-                itmValues.Add(values);
-            }
-
-            // itm may represent: item, weapon, bank
-            // Note that the string lists that contain the parts are shared
-            // between itmList and itmStrings after this method runs, so 
-            // cross-contamination can occur if they are modified.  They should 
-            // only be held in this state long enough to save, which does not modify
-            // values, then itmStrings/itmValues should be released by setting them
-            // to null since they will not be used again until the next save when they
-            // will have to be recreated.
-        }
         private void RepopulateListForSaving<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.Object, new()
         {
             objs = new List<T>();
@@ -240,21 +170,22 @@ namespace WillowTree
                 objs.Add(obj);
             }
 
-                // itm may represent: item, weapon, bank
-                // Note that the string lists that contain the parts are shared
-                // between itmList and itmStrings after this method runs, so 
-                // cross-contamination can occur if they are modified.  They should 
-                // only be held in this state long enough to save, which does not modify
-                // values, then itmStrings/itmValues should be released by setting them
-                // to null since they will not be used again until the next save when they
-                // will have to be recreated.
+            // itm may represent: item, weapon, bank
+            // Note that the string lists that contain the parts are shared
+            // between itmList and itmStrings after this method runs, so
+            // cross-contamination can occur if they are modified.  They should
+            // only be held in this state long enough to save, which does not modify
+            // values, then itmStrings/itmValues should be released by setting them
+            // to null since they will not be used again until the next save when they
+            // will have to be recreated.
         }
+
         private void RepopulateListForSaving(InventoryList itmList, ref List<WillowSaveGame.BankEntry> itmBank)
         {
             itmBank = new List<WillowSaveGame.BankEntry>();
             WillowSaveGame.BankEntry itm;
 
-            // Build the lists of string and value data needed by WillowSaveGame to store the 
+            // Build the lists of string and value data needed by WillowSaveGame to store the
             // inventory from the data that is in itmList.
             foreach (InventoryEntry item in itmList.Items.Values)
             {
@@ -265,7 +196,7 @@ namespace WillowTree
                     // Items must have their parts reordered because they are different in the bank.
                     List<string> oldParts = item.Parts;
                     itm.Strings = new List<string>() { oldParts[1], oldParts[0], oldParts[6], oldParts[2], oldParts[3],
-                                                                  oldParts[4], oldParts[5], oldParts[7], oldParts[8] };     
+                                                                  oldParts[4], oldParts[5], oldParts[7], oldParts[8] };
                 }
                 else
                     itm.Strings = new List<string>(item.Parts);
@@ -286,7 +217,7 @@ namespace WillowTree
                 itmBank.Add(itm);
             }
 
-            // The string lists stored in the bank entries are not not shared 
+            // The string lists stored in the bank entries are not not shared
             // after this method runs like they are for the backpack inventory.
             // Still they should be released after saving since this is duplicate
             // data that will be rebuilt on the next save attempt.
@@ -342,6 +273,7 @@ namespace WillowTree
             else
                 fileName = "";
         }
+
         private void Save_Click(object sender, EventArgs e)
         {
             try
@@ -357,29 +289,33 @@ namespace WillowTree
             }
             catch { }
 
-//            try
+            //            try
             {
                 SaveToFile(CurrentWSG.OpenedWsg);
                 MessageBox.Show("Saved WSG to: " + CurrentWSG.OpenedWsg);
             }
-//            catch { MessageBox.Show("Couldn't save WSG"); }
+            //            catch { MessageBox.Show("Couldn't save WSG"); }
         }
+
         private void SaveAs_Click(object sender, EventArgs e)
         {
             Util.WTSaveFileDialog tempSave = new Util.WTSaveFileDialog("sav", CurrentWSG.OpenedWsg);
 
             if (tempSave.ShowDialog() == DialogResult.OK)
             {
-                    SaveToFile(tempSave.FileName());
-                    MessageBox.Show("Saved WSG to: " + CurrentWSG.OpenedWsg);
-                    Save.Enabled = true;
+                SaveToFile(tempSave.FileName());
+                MessageBox.Show("Saved WSG to: " + CurrentWSG.OpenedWsg);
+                Save.Enabled = true;
             }
         }
 
-        // Checks to make sure a savegame contains no raw data.  If it does it asks if it is ok
-        // to remove it and performs removal of the raw data.
-        // Return value is true if the result is a savegame with no raw data or false if the
-        // savegame still contains raw data.
+        /// <summary>
+        /// Checks to make sure a savegame contains no raw data.  If it does it asks if it is ok
+        /// to remove it and performs removal of the raw data.
+        /// Return value is true if the result is a savegame with no raw data or false if the
+        /// savegame still contains raw data.
+        /// </summary>
+        /// <returns></returns>
         private bool UIAction_RemoveRawData()
         {
             DialogResult result = MessageBox.Show("This savegame contains some unexpected or possibly corrupt DLC data that WillowTree# does not know how to parse, so it cannot be rewritten in a different machine byte order.  The extra data can be discarded to allow you to convert the savegame, but this will cause DLC data loss if the unknown DLC data is actually used by Borderlands.  It is typical for Steam PC savegames to have a data section like this and it must be removed to convert to Xbox 360 or PS3 format.  The data probably serves no gameplay purpose because it doesn't exist in the PC DVD version.\r\n\r\nDo you want to discard the raw data to allow the conversion?", "Unexpected Raw Data", MessageBoxButtons.YesNo);
@@ -397,7 +333,7 @@ namespace WillowTree
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.LittleEndian))
             {
-                if (UIAction_RemoveRawData() == false)
+                if (!UIAction_RemoveRawData())
                     return;
             }
 
@@ -407,6 +343,7 @@ namespace WillowTree
             CurrentWSG.OpenedWsg = "";
             Save.Enabled = false;
         }
+
         private void PS3Format_Click(object sender, EventArgs e)
         {
             if (CurrentWSG.Platform == "PS3")
@@ -414,7 +351,7 @@ namespace WillowTree
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
             {
-                if (UIAction_RemoveRawData() == false)
+                if (!UIAction_RemoveRawData())
                     return;
             }
 
@@ -425,6 +362,7 @@ namespace WillowTree
             CurrentWSG.OpenedWsg = "";
             Save.Enabled = false;
         }
+
         private void XBoxFormat_Click(object sender, EventArgs e)
         {
             if (CurrentWSG.Platform == "X360")
@@ -432,7 +370,7 @@ namespace WillowTree
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
             {
-                if (UIAction_RemoveRawData() == false)
+                if (!UIAction_RemoveRawData())
                     return;
             }
 
@@ -455,6 +393,7 @@ namespace WillowTree
             CurrentWSG.OpenedWsg = "";
             Save.Enabled = false;
         }
+
         private void XBoxJPFormat_Click(object sender, EventArgs e)
         {
             if (CurrentWSG.Platform == "X360JP")
@@ -462,7 +401,7 @@ namespace WillowTree
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
             {
-                if (UIAction_RemoveRawData() == false)
+                if (!UIAction_RemoveRawData())
                     return;
             }
 
@@ -485,12 +424,13 @@ namespace WillowTree
             CurrentWSG.OpenedWsg = "";
             Save.Enabled = false;
         }
-        
+
         private void ExitWT_Click(object sender, EventArgs e)
         {
             GlobalSettings.Save();
             Application.Exit();
         }
+
         private void WillowTreeMain_FormClosing(object sender, EventArgs e)
         {
             GlobalSettings.Save();
@@ -500,11 +440,13 @@ namespace WillowTree
         {
             GlobalSettings.InputMode = InputMode.Standard;
         }
+
         private void AdvancedInputDecimal_Click(object sender, EventArgs e)
         {
             GlobalSettings.UseHexInAdvancedMode = false;
             GlobalSettings.InputMode = InputMode.Advanced;
         }
+
         private void AdvancedInputHexadecimal_Click(object sender, EventArgs e)
         {
             GlobalSettings.UseHexInAdvancedMode = true;
@@ -514,7 +456,7 @@ namespace WillowTree
         private void SaveToFile(string filename)
         {
             PluginManager.OnGameSaving(new PluginEventArgs(this, filename));
-			Application.DoEvents();
+            Application.DoEvents();
 
             // Convert the weapons and items data from WeaponList/ItemList into
             // the format used by WillowSaveGame.
@@ -526,7 +468,7 @@ namespace WillowTree
 
             // Release the WillowSaveGame inventory data now that saving is complete.  The
             // same data is still contained in db.WeaponList, db.ItemList, and db.BankList
-            // in the format used by the WillowTree UI.           
+            // in the format used by the WillowTree UI.
             CurrentWSG.Weapons = null;
             CurrentWSG.Items = null;
             CurrentWSG.Dlc.BankInventory = null;
@@ -556,25 +498,18 @@ namespace WillowTree
             db.LockerList.OnNameFormatChanged();
         }
 
-        // Options Menu
-        private void trackCurrentPartToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.PartSelectorTracking = true;
-        }
-        private void trackingDisabledToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GlobalSettings.PartSelectorTracking = false;
-        }
         private void showRarityValueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GlobalSettings.ShowRarity = !GlobalSettings.ShowRarity;
             UpdateNames();
         }
+
         private void colorizeListsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GlobalSettings.UseColor = !GlobalSettings.UseColor;
             SetUITreeStyles(GlobalSettings.UseColor);
         }
+
         private void optionsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             colorizeListsToolStripMenuItem.Checked = GlobalSettings.UseColor;
@@ -583,49 +518,38 @@ namespace WillowTree
             showManufacturerToolStripMenuItem.Checked = GlobalSettings.ShowManufacturer;
             MenuItemPartSelectorTracking.Checked = GlobalSettings.PartSelectorTracking;
         }
+
         private void showManufacturerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GlobalSettings.ShowManufacturer = !GlobalSettings.ShowManufacturer;
             UpdateNames();
         }
+
         private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GlobalSettings.ShowLevel = !GlobalSettings.ShowLevel;
             UpdateNames();
         }
+
         private void SaveOptions_Click(object sender, EventArgs e)
         {
             GlobalSettings.Save();
         }
 
-        public Font treeViewFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-
-        //private void DumpTreeDebugInfo(TreeViewAdv tree)
-        //{
-        //    DebugText1.AppendText("TreeViewAdv: " + tree.Name + "\r\n");
-        //    if (WeaponTree.SelectedNode == null)
-        //        DebugText1.AppendText("    No node selected\r\n");
-        //    else
-        //    {
-        //        ColoredTextNode node = WeaponTree.SelectedNode.Tag as ColoredTextNode;
-        //        string tag = node.Tag as string;
-        //        DebugText1.AppendText("WeaponTree.SelectedNode.Tag = \"" + node.Tag as string + "\"\r\n");
-        //        DebugText1.AppendText("WeaponTree.SelectedNode.Text = \"" + node.Text + "\"\r\n");
-        //        DebugText1.AppendText("WeaponTree.SelectedNode.ForeColor = \"" + node.ForeColor + "\"\r\n");
-        //    }
-        //}
+        public Font treeViewFont = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
 
         private Control SelectedTabObject = null;
+
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
                 PluginManager.OnPluginUnselected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
-            
+
             int selected = tabControl1.SelectedIndex;
             if (selected >= 0)
             {
                 SelectedTabObject = tabControl1.Controls[selected];
-                if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin)) 
+                if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
                     PluginManager.OnPluginSelected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
             }
             else
@@ -643,4 +567,3 @@ namespace WillowTree
         }
     }
 }
-
