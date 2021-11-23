@@ -28,7 +28,8 @@ namespace WillowTree
                 WillowTreeMain mainForm = new WillowTreeMain(
                     new FileWrapper(fileSystem),
                     new DirectoryWrapper(fileSystem),
-                    new GameDataWrapper());
+                    new GameDataWrapper(),
+                    new GlobalSettingsWrapper());
                 Application.Run(mainForm);
             }
             catch (Exception e)

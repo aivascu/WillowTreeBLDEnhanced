@@ -113,7 +113,9 @@
     <Compile Include="Array.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="GameDataWrapper.cs" />
+    <Compile Include="GlobalSettingsWrapper.cs" />
     <Compile Include="IGameData.cs" />
+    <Compile Include="IGlobalSettings.cs" />
     <Compile Include="Inventory\InventoryComparer.cs" />
     <Compile Include="Inventory\InventoryComparers.cs" />
     <Compile Include="Inventory\InventoryComparisonIterator.cs" />

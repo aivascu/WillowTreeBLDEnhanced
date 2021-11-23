@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
+using System.Globalization;
+using System.IO.Abstractions;
 using System.Text;
 using System.Xml;
 
@@ -8,16 +9,14 @@ namespace WillowTree
 {
     public static class GlobalSettings
     {
-        public static InputMode InputMode { get; set; } = InputMode.Standard;
-
-        public static bool UseHexInAdvancedMode;
-        public static bool PartSelectorTracking = true;
-        public static bool ShowManufacturer;
-        public static bool UseColor;
-        public static bool ShowRarity;
-        public static bool ShowLevel = true;
-        public static string lastLockerFile = string.Empty;
-        public static Color BackgroundColor = Color.FromArgb(0x30, 0x30, 0x30);
+        private static bool useHexInAdvancedMode;
+        private static bool partSelectorTracking = true;
+        private static bool showManufacturer;
+        private static bool useColor;
+        private static bool showRarity;
+        private static bool showLevel = true;
+        private static string lastLockerFile = string.Empty;
+        private static Color backgroundColor = Color.FromArgb(0x30, 0x30, 0x30);
 
         // ------- MAX VALUES ---------
         // All values that exceed these sanity limits will be adjusted by the UI and give the
@@ -38,29 +37,47 @@ namespace WillowTree
         // of int.MaxValue and avoid that problem.  Bank and Backpack limits exist to keep the
         // savegame file from becoming excessively large which slows down loading.  Borderlands
         // can support much higher values but these are safe and sane.
-        public static int MaxCash = 1000000000;
+        private static int maxCash = 1000000000;
 
-        public static int MaxExperience = 8451341;
-        public static int MaxLevel = 69;
-        public static int MaxBackpackSlots = 1000;
-        public static int MaxBankSlots = 1000;
-        public static int MaxSkillPoints = 500;
+        private static int maxExperience = 8451341;
+        private static int maxLevel = 69;
+        private static int maxBackpackSlots = 1000;
+        private static int maxBankSlots = 1000;
+        private static int maxSkillPoints = 500;
 
-        public static Color[] RarityColor =
-            {
-                Color.White,
-                Color.FromArgb(0x3d, 0xe6, 0x0b),
-                Color.FromArgb(0x2f, 0x78, 0xff),
-                Color.FromArgb(0xB9, 0x40, 0xFF),
-                Color.FromArgb(0xFF, 0xDC ,0x35),
-                Color.FromArgb(0xff, 0x96, 0x00),
-                Color.DarkOrange,
-                Color.Cyan,
-                Color.FromArgb(0x3d, 0xe6, 0x0b),
-                Color.Red,
-                Color.GhostWhite,
-                Color.Yellow,
-            };
+        private static Color[] rarityColor =
+        {
+            Color.White,
+            Color.FromArgb(0x3d, 0xe6, 0x0b),
+            Color.FromArgb(0x2f, 0x78, 0xff),
+            Color.FromArgb(0xB9, 0x40, 0xFF),
+            Color.FromArgb(0xFF, 0xDC ,0x35),
+            Color.FromArgb(0xff, 0x96, 0x00),
+            Color.DarkOrange,
+            Color.Cyan,
+            Color.FromArgb(0x3d, 0xe6, 0x0b),
+            Color.Red,
+            Color.GhostWhite,
+            Color.Yellow,
+        };
+
+        public static IFile File { get; set; } = new FileWrapper(new FileSystem());
+        public static InputMode InputMode { get; set; } = InputMode.Standard;
+        public static bool UseHexInAdvancedMode { get => useHexInAdvancedMode; set => useHexInAdvancedMode = value; }
+        public static bool PartSelectorTracking { get => partSelectorTracking; set => partSelectorTracking = value; }
+        public static bool ShowManufacturer { get => showManufacturer; set => showManufacturer = value; }
+        public static bool UseColor { get => useColor; set => useColor = value; }
+        public static bool ShowRarity { get => showRarity; set => showRarity = value; }
+        public static bool ShowLevel { get => showLevel; set => showLevel = value; }
+        public static string LastLockerFile { get => lastLockerFile; set => lastLockerFile = value; }
+        public static Color BackgroundColor { get => backgroundColor; set => backgroundColor = value; }
+        public static int MaxCash { get => maxCash; set => maxCash = value; }
+        public static int MaxExperience { get => maxExperience; set => maxExperience = value; }
+        public static int MaxLevel { get => maxLevel; set => maxLevel = value; }
+        public static int MaxBackpackSlots { get => maxBackpackSlots; set => maxBackpackSlots = value; }
+        public static int MaxBankSlots { get => maxBankSlots; set => maxBankSlots = value; }
+        public static int MaxSkillPoints { get => maxSkillPoints; set => maxSkillPoints = value; }
+        public static Color[] RarityColor { get => rarityColor; set => rarityColor = value; }
 
         public static void Save()
         {
@@ -106,30 +123,8 @@ namespace WillowTree
             }
         }
 
-        private static bool XmlReadBool(XmlTextReader reader, ref bool var)
+        public static void Load(string filename)
         {
-            if (bool.TryParse(reader.ReadElementContentAsString(), out bool value))
-            {
-                var = value;
-                return true;
-            }
-            return false;
-        }
-
-        private static bool XmlReadInt(XmlTextReader reader, ref int var)
-        {
-            if (int.TryParse(reader.ReadElementContentAsString(), out int value))
-            {
-                var = value;
-                return true;
-            }
-            return false;
-        }
-
-        public static void Load()
-        {
-            string filename = GameData.XmlPath + "options.xml";
-
             if (!File.Exists(filename))
             {
                 return;
@@ -151,24 +146,24 @@ namespace WillowTree
                             InputMode = GetInputMethod(reader.ReadElementContentAsString());
                             break;
 
-                        case "UseHexInAdvancedMode": XmlReadBool(reader, ref UseHexInAdvancedMode); break;
-                        case "PartSelectorTracking": XmlReadBool(reader, ref PartSelectorTracking); break;
-                        case "ShowManufacturer": XmlReadBool(reader, ref ShowManufacturer); break;
-                        case "ShowRarity": XmlReadBool(reader, ref ShowRarity); break;
-                        case "ShowLevel": XmlReadBool(reader, ref ShowLevel); break;
-                        case "UseColor": XmlReadBool(reader, ref UseColor); break;
+                        case "UseHexInAdvancedMode": XmlReadBool(reader, ref useHexInAdvancedMode); break;
+                        case "PartSelectorTracking": XmlReadBool(reader, ref partSelectorTracking); break;
+                        case "ShowManufacturer": XmlReadBool(reader, ref showManufacturer); break;
+                        case "ShowRarity": XmlReadBool(reader, ref showRarity); break;
+                        case "ShowLevel": XmlReadBool(reader, ref showLevel); break;
+                        case "UseColor": XmlReadBool(reader, ref useColor); break;
                         case "lastLockerFile":
                             {
                                 GameData.OpenedLockerFilename(reader.ReadElementContentAsString());
                             }
                             break;
 
-                        case "MaxCash": XmlReadInt(reader, ref MaxCash); break;
-                        case "MaxLevel": XmlReadInt(reader, ref MaxLevel); break;
-                        case "MaxExperience": XmlReadInt(reader, ref MaxExperience); break;
-                        case "MaxInventorySlots": XmlReadInt(reader, ref MaxBackpackSlots); break;
-                        case "MaxBankSlots": XmlReadInt(reader, ref MaxBankSlots); break;
-                        case "MaxSkillPoints": XmlReadInt(reader, ref MaxSkillPoints); break;
+                        case "MaxCash": XmlReadInt(reader, ref maxCash); break;
+                        case "MaxLevel": XmlReadInt(reader, ref maxLevel); break;
+                        case "MaxExperience": XmlReadInt(reader, ref maxExperience); break;
+                        case "MaxInventorySlots": XmlReadInt(reader, ref maxBackpackSlots); break;
+                        case "MaxBankSlots": XmlReadInt(reader, ref maxBankSlots); break;
+                        case "MaxSkillPoints": XmlReadInt(reader, ref maxSkillPoints); break;
 
                         case "RarityColor0":
                         case "RarityColor1":
@@ -186,9 +181,9 @@ namespace WillowTree
                             {
                                 int index = Parse.AsInt(reader.Name.After("RarityColor"));
                                 string text = reader.ReadElementContentAsString();
-                                if (uint.TryParse(text, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out uint colorval))
+                                if (uint.TryParse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint colorval))
                                 {
-                                    RarityColor[index] = Color.FromArgb((int)colorval);
+                                    rarityColor[index] = Color.FromArgb((int)colorval);
                                 }
                             }
                             catch { }
@@ -196,6 +191,26 @@ namespace WillowTree
                     }
                 }
             }
+        }
+
+        private static bool XmlReadBool(XmlTextReader reader, ref bool var)
+        {
+            if (bool.TryParse(reader.ReadElementContentAsString(), out bool value))
+            {
+                var = value;
+                return true;
+            }
+            return false;
+        }
+
+        private static bool XmlReadInt(XmlTextReader reader, ref int var)
+        {
+            if (int.TryParse(reader.ReadElementContentAsString(), out int value))
+            {
+                var = value;
+                return true;
+            }
+            return false;
         }
 
         private static InputMode GetInputMethod(string inputMode)

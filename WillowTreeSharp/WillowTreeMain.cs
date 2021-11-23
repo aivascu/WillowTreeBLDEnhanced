@@ -19,14 +19,16 @@ namespace WillowTree
         private readonly IFile file;
         private readonly IDirectory directory;
         private readonly IGameData gameData;
+        private readonly IGlobalSettings settings;
 
-        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData)
+        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData, IGlobalSettings settings)
         {
             this.file = file;
             this.directory = directory;
             this.gameData = gameData;
+            this.settings = settings;
 
-            GlobalSettings.Load();
+            this.settings.Load(this.gameData.XmlPath + "options.xml");
 
             if (!this.directory.Exists(this.gameData.DataPath))
             {
@@ -70,7 +72,7 @@ namespace WillowTree
             {
             }
 
-            SetUiTreeStyles(GlobalSettings.UseColor);
+            SetUiTreeStyles(this.settings.UseColor);
         }
 
         public WillowSaveGame SaveData => currentWsg;
@@ -88,20 +90,20 @@ namespace WillowTree
 
         private void AdvancedInputDecimal_Click(object sender, EventArgs e)
         {
-            GlobalSettings.UseHexInAdvancedMode = false;
-            GlobalSettings.InputMode = InputMode.Advanced;
+            this.settings.UseHexInAdvancedMode = false;
+            this.settings.InputMode = InputMode.Advanced;
         }
 
         private void AdvancedInputHexadecimal_Click(object sender, EventArgs e)
         {
-            GlobalSettings.UseHexInAdvancedMode = true;
-            GlobalSettings.InputMode = InputMode.Advanced;
+            this.settings.UseHexInAdvancedMode = true;
+            this.settings.InputMode = InputMode.Advanced;
         }
 
         private void colorizeListsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GlobalSettings.UseColor = !GlobalSettings.UseColor;
-            SetUiTreeStyles(GlobalSettings.UseColor);
+            this.settings.UseColor = !this.settings.UseColor;
+            SetUiTreeStyles(this.settings.UseColor);
         }
 
         private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.Object
@@ -189,7 +191,7 @@ namespace WillowTree
 
         private void ExitWT_Click(object sender, EventArgs e)
         {
-            GlobalSettings.Save();
+            this.settings.Save();
             Application.Exit();
         }
 
@@ -204,7 +206,7 @@ namespace WillowTree
 
         private void MenuItemPartSelectorTracking_Click(object sender, EventArgs e)
         {
-            GlobalSettings.PartSelectorTracking = !GlobalSettings.PartSelectorTracking;
+            this.settings.PartSelectorTracking = !this.settings.PartSelectorTracking;
         }
 
         private void NextSort_Click(object sender, EventArgs e)
@@ -262,11 +264,11 @@ namespace WillowTree
 
         private void optionsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            colorizeListsToolStripMenuItem.Checked = GlobalSettings.UseColor;
-            showRarityValueToolStripMenuItem.Checked = GlobalSettings.ShowRarity;
-            showEffectiveLevelsToolStripMenuItem.Checked = GlobalSettings.ShowLevel;
-            showManufacturerToolStripMenuItem.Checked = GlobalSettings.ShowManufacturer;
-            MenuItemPartSelectorTracking.Checked = GlobalSettings.PartSelectorTracking;
+            colorizeListsToolStripMenuItem.Checked = this.settings.UseColor;
+            showRarityValueToolStripMenuItem.Checked = this.settings.ShowRarity;
+            showEffectiveLevelsToolStripMenuItem.Checked = this.settings.ShowLevel;
+            showManufacturerToolStripMenuItem.Checked = this.settings.ShowManufacturer;
+            MenuItemPartSelectorTracking.Checked = this.settings.PartSelectorTracking;
         }
 
         private void PCFormat_Click(object sender, EventArgs e)
@@ -423,7 +425,7 @@ namespace WillowTree
 
         private void SaveOptions_Click(object sender, EventArgs e)
         {
-            GlobalSettings.Save();
+            this.settings.Save();
         }
 
         private void SaveToFile(string filename)
@@ -461,25 +463,25 @@ namespace WillowTree
 
         private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GlobalSettings.ShowLevel = !GlobalSettings.ShowLevel;
+            this.settings.ShowLevel = !this.settings.ShowLevel;
             UpdateNames();
         }
 
         private void showManufacturerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GlobalSettings.ShowManufacturer = !GlobalSettings.ShowManufacturer;
+            this.settings.ShowManufacturer = !this.settings.ShowManufacturer;
             UpdateNames();
         }
 
         private void showRarityValueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GlobalSettings.ShowRarity = !GlobalSettings.ShowRarity;
+            this.settings.ShowRarity = !this.settings.ShowRarity;
             UpdateNames();
         }
 
         private void StandardInput_Click(object sender, EventArgs e)
         {
-            GlobalSettings.InputMode = InputMode.Standard;
+            this.settings.InputMode = InputMode.Standard;
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -535,7 +537,7 @@ namespace WillowTree
 
         private void WillowTreeMain_FormClosing(object sender, EventArgs e)
         {
-            GlobalSettings.Save();
+            this.settings.Save();
         }
 
         private void XBoxFormat_Click(object sender, EventArgs e)
