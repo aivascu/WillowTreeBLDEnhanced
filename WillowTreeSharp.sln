@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp", "WillowTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp.Tests", "WillowTreeSharp.Tests\WillowTreeSharp.Tests.csproj", "{750B5B6C-3E4D-47D5-8F65-A38DA660981E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp.Controls", "WillowTreeSharp.Controls\WillowTreeSharp.Controls.csproj", "{9CAC0AF9-F039-4F22-963D-52EB5BAB7F55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{750B5B6C-3E4D-47D5-8F65-A38DA660981E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{750B5B6C-3E4D-47D5-8F65-A38DA660981E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{750B5B6C-3E4D-47D5-8F65-A38DA660981E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CAC0AF9-F039-4F22-963D-52EB5BAB7F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CAC0AF9-F039-4F22-963D-52EB5BAB7F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CAC0AF9-F039-4F22-963D-52EB5BAB7F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CAC0AF9-F039-4F22-963D-52EB5BAB7F55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
