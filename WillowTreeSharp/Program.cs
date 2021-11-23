@@ -25,7 +25,11 @@ namespace WillowTree
 
 
                 FileSystem fileSystem = new FileSystem();
-                Application.Run(new WillowTreeMain(new FileWrapper(fileSystem), new DirectoryWrapper(fileSystem)));
+                WillowTreeMain mainForm = new WillowTreeMain(
+                    new FileWrapper(fileSystem),
+                    new DirectoryWrapper(fileSystem),
+                    new GameDataWrapper());
+                Application.Run(mainForm);
             }
             catch (Exception e)
             {

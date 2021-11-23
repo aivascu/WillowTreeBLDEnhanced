@@ -18,15 +18,17 @@ namespace WillowTree
         private Control selectedTabObject = null;
         private readonly IFile file;
         private readonly IDirectory directory;
+        private readonly IGameData gameData;
 
-        public WillowTreeMain(IFile file, IDirectory directory)
+        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData)
         {
             this.file = file;
             this.directory = directory;
+            this.gameData = gameData;
 
             GlobalSettings.Load();
 
-            if (!this.directory.Exists(GameData.DataPath))
+            if (!this.directory.Exists(this.gameData.DataPath))
             {
                 MessageBox.Show(
                     "Couldn't find the 'Data' folder! Please make sure that WillowTree# and its data folder are in the same directory.");
@@ -34,15 +36,15 @@ namespace WillowTree
                 return;
             }
 
-            if (!this.file.Exists($"{GameData.DataPath}default.xml"))
+            if (!this.file.Exists($"{this.gameData.DataPath}default.xml"))
             {
-                this.file.WriteAllText($"{GameData.DataPath}default.xml",
+                this.file.WriteAllText($"{this.gameData.DataPath}default.xml",
                     "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
             }
 
             InitializeComponent();
 
-            GameData.InitializeNameLookup();
+            this.gameData.InitializeNameLookup();
 
             Save.Enabled = false;
             SaveAs.Enabled = false;
@@ -247,9 +249,9 @@ namespace WillowTree
                 }
             }
 
-            ConvertListForEditing(GameData.WeaponList, ref currentWsg.Weapons);
-            ConvertListForEditing(GameData.ItemList, ref currentWsg.Items);
-            ConvertListForEditing(GameData.BankList, ref currentWsg.Dlc.BankInventory);
+            ConvertListForEditing(this.gameData.WeaponList, ref currentWsg.Weapons);
+            ConvertListForEditing(this.gameData.ItemList, ref currentWsg.Items);
+            ConvertListForEditing(this.gameData.BankList, ref currentWsg.Dlc.BankInventory);
 
             pluginManager.OnGameLoaded(new PluginEventArgs(this, fileName));
 
@@ -431,9 +433,9 @@ namespace WillowTree
 
             // Convert the weapons and items data from WeaponList/ItemList into
             // the format used by WillowSaveGame.
-            RepopulateListForSaving(GameData.WeaponList, ref currentWsg.Weapons);
-            RepopulateListForSaving(GameData.ItemList, ref currentWsg.Items);
-            RepopulateListForSaving(GameData.BankList, ref currentWsg.Dlc.BankInventory);
+            RepopulateListForSaving(this.gameData.WeaponList, ref currentWsg.Weapons);
+            RepopulateListForSaving(this.gameData.ItemList, ref currentWsg.Items);
+            RepopulateListForSaving(this.gameData.BankList, ref currentWsg.Dlc.BankInventory);
             currentWsg.SaveWsg(filename);
             currentWsg.OpenedWsg = filename;
 
@@ -447,14 +449,14 @@ namespace WillowTree
             pluginManager.OnGameSaved(new PluginEventArgs(this, currentWsg.OpenedWsg));
         }
 
-        private static void SetUiTreeStyles(bool useColor)
+        private void SetUiTreeStyles(bool useColor)
         {
             var theme = useColor ? Services.AppThemes.treeViewTheme1 : null;
 
-            GameData.ItemList.OnTreeThemeChanged(theme);
-            GameData.WeaponList.OnTreeThemeChanged(theme);
-            GameData.BankList.OnTreeThemeChanged(theme);
-            GameData.LockerList.OnTreeThemeChanged(theme);
+            this.gameData.ItemList.OnTreeThemeChanged(theme);
+            this.gameData.WeaponList.OnTreeThemeChanged(theme);
+            this.gameData.BankList.OnTreeThemeChanged(theme);
+            this.gameData.LockerList.OnTreeThemeChanged(theme);
         }
 
         private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -525,10 +527,10 @@ namespace WillowTree
 
         private void UpdateNames()
         {
-            GameData.WeaponList.OnNameFormatChanged();
-            GameData.ItemList.OnNameFormatChanged();
-            GameData.BankList.OnNameFormatChanged();
-            GameData.LockerList.OnNameFormatChanged();
+            this.gameData.WeaponList.OnNameFormatChanged();
+            this.gameData.ItemList.OnNameFormatChanged();
+            this.gameData.BankList.OnNameFormatChanged();
+            this.gameData.LockerList.OnNameFormatChanged();
         }
 
         private void WillowTreeMain_FormClosing(object sender, EventArgs e)
