@@ -111,11 +111,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Array.cs" />
-    <Compile Include="GameData.cs" />
-    <Compile Include="GameDataWrapper.cs" />
-    <Compile Include="GlobalSettingsWrapper.cs" />
-    <Compile Include="IGameData.cs" />
-    <Compile Include="IGlobalSettings.cs" />
+    <Compile Include="Services\DataAccess\GameData.cs" />
+    <Compile Include="Services\DataAccess\GameDataWrapper.cs" />
+    <Compile Include="Services\Configuration\GlobalSettingsWrapper.cs" />
+    <Compile Include="Services\DataAccess\IGameData.cs" />
+    <Compile Include="Services\Configuration\IGlobalSettings.cs" />
     <Compile Include="Inventory\InventoryComparer.cs" />
     <Compile Include="Inventory\InventoryComparers.cs" />
     <Compile Include="Inventory\InventoryComparisonIterator.cs" />
@@ -123,9 +123,9 @@
     <Compile Include="Inventory\InventoryList.cs" />
     <Compile Include="Inventory\InventoryTreeList.cs" />
     <Compile Include="Inventory\InventoryType.cs" />
-    <Compile Include="PluginComponentManager.cs" />
+    <Compile Include="Plugins\PluginComponentManager.cs" />
     <Compile Include="ParseString.cs" />
-    <Compile Include="GlobalSettings.cs" />
+    <Compile Include="Services\Configuration\GlobalSettings.cs" />
     <Compile Include="Plugins\SamplePlugin.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -191,11 +191,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Services.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Services\ServiceLocator.cs" />
+    <Compile Include="Properties\Settings.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="WillowSaveGame.cs" />
+    <Compile Include="Services\DataAccess\WillowSaveGame.cs" />
     <Compile Include="WillowTreeMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,7 +210,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XML.cs" />
+    <Compile Include="Services\DataAccess\XML.cs" />
     <Content Include="COPYING.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

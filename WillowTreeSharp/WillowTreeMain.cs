@@ -14,7 +14,7 @@ namespace WillowTree
     public partial class WillowTreeMain : Form
     {
         private WillowSaveGame currentWsg;
-        private readonly PluginComponentManager pluginManager = Services.PluginManager;
+        private readonly PluginComponentManager pluginManager = ServiceLocator.PluginManager;
         private Control selectedTabObject = null;
         private readonly IFile file;
         private readonly IDirectory directory;
@@ -453,7 +453,7 @@ namespace WillowTree
 
         private void SetUiTreeStyles(bool useColor)
         {
-            var theme = useColor ? Services.AppThemes.treeViewTheme1 : null;
+            var theme = useColor ? ServiceLocator.AppThemes.treeViewTheme1 : null;
 
             this.gameData.ItemList.OnTreeThemeChanged(theme);
             this.gameData.WeaponList.OnTreeThemeChanged(theme);

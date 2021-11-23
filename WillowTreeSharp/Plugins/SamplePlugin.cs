@@ -116,7 +116,7 @@ namespace WillowTree.Plugins
         {
             List<string> ThemeNames = new List<string>();
 
-            Type ThemeType = WillowTree.Services.AppThemes.GetType();
+            Type ThemeType = WillowTree.ServiceLocator.AppThemes.GetType();
             string TypeName = ThemeType.FullName;
             FieldInfo[] finfos = ThemeType.GetFields();
             foreach (FieldInfo finfo in finfos)
@@ -128,7 +128,7 @@ namespace WillowTree.Plugins
 
         private void wtButton1_Click(object sender, EventArgs e)
         {
-            Type MyType = WillowTree.Services.AppThemes.GetType();
+            Type MyType = WillowTree.ServiceLocator.AppThemes.GetType();
             MemberInfo[] Mymemberinfoarray = MyType.GetMembers();
             // Gets and displays the DeclaringType method.
             wtTextBox1.AppendText("There are " +  Mymemberinfoarray.Length + " members in " + MyType.FullName + ".\r\n");

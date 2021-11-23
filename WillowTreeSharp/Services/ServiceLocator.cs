@@ -30,7 +30,7 @@ namespace WillowTree
     /// currently running instance of WillowTreeMain to ask for the themes to 
     /// render the control colors, so those have to be shared here instead of as
     /// variables of WillowTreeMain.
-    public static class Services
+    public static class ServiceLocator
     {
 
         private static PluginComponentManager _PluginManager;
