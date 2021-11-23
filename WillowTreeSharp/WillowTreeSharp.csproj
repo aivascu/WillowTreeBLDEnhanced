@@ -112,8 +112,13 @@
   <ItemGroup>
     <Compile Include="Array.cs" />
     <Compile Include="GameData.cs" />
+    <Compile Include="Inventory\InventoryComparer.cs" />
+    <Compile Include="Inventory\InventoryComparers.cs" />
+    <Compile Include="Inventory\InventoryComparisonIterator.cs" />
     <Compile Include="Inventory\InventoryEntry.cs" />
+    <Compile Include="Inventory\InventoryList.cs" />
     <Compile Include="Inventory\InventoryTreeList.cs" />
+    <Compile Include="Inventory\InventoryType.cs" />
     <Compile Include="PluginComponentManager.cs" />
     <Compile Include="ParseString.cs" />
     <Compile Include="GlobalSettings.cs" />
