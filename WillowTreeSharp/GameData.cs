@@ -128,12 +128,9 @@ namespace WillowTree
 
         public static string OpenedLockerFilename()
         {
-            if (string.IsNullOrEmpty(OpenedLocker))
-            {
-                return DataPath + "default.xml";
-            }
-
-            return OpenedLocker;
+            return string.IsNullOrEmpty(OpenedLocker)
+                ? DataPath + "default.xml"
+                : OpenedLocker;
         }
 
         public static void OpenedLockerFilename(string sOpenedLocker)
@@ -149,12 +146,7 @@ namespace WillowTree
             // GetPartName(string part) or GetPartAttribute(string part, "PartName"),
             // but since those have to search through lots of Xml nodes to find the
             // data this should be faster.
-            if (nameLookup.TryGetValue(part, out var value) == false)
-            {
-                return "";
-            }
-
-            return value;
+            return !nameLookup.TryGetValue(part, out var value) ? "" : value;
         }
 
         public static string GetPartAttribute(string part, string attributeName)
@@ -203,52 +195,6 @@ namespace WillowTree
         {
             string componentText = GetPartAttribute(part, "Rarity");
             return Parse.AsInt(componentText, null);
-        }
-
-        public static Color RarityToColorItem(int rarity)
-        {
-            Color color;
-
-            if (rarity <= 4) { color = GlobalSettings.RarityColor[0]; }
-            else if (rarity <= 9) { color = GlobalSettings.RarityColor[1]; }
-            else if (rarity <= 13) { color = GlobalSettings.RarityColor[2]; }
-            else if (rarity <= 49) { color = GlobalSettings.RarityColor[3]; }
-            else if (rarity <= 60) { color = GlobalSettings.RarityColor[4]; }
-            else if (rarity <= 65) { color = GlobalSettings.RarityColor[5]; }
-            else if (rarity <= 100) { color = GlobalSettings.RarityColor[6]; }
-            else if (rarity <= 169) { color = GlobalSettings.RarityColor[7]; }
-            else if (rarity <= 170) { color = GlobalSettings.RarityColor[8]; }
-            else if (rarity <= 171) { color = GlobalSettings.RarityColor[9]; }
-            else if (rarity <= 179) { color = GlobalSettings.RarityColor[10]; }
-            else
-            {
-                color = GlobalSettings.RarityColor[11];
-            }
-
-            return color;
-        }
-
-        public static Color RarityToColorWeapon(int rarity)
-        {
-            Color color;
-
-            if (rarity <= 4) { color = GlobalSettings.RarityColor[0]; }
-            else if (rarity <= 10) { color = GlobalSettings.RarityColor[1]; }
-            else if (rarity <= 15) { color = GlobalSettings.RarityColor[2]; }
-            else if (rarity <= 49) { color = GlobalSettings.RarityColor[3]; }
-            else if (rarity <= 60) { color = GlobalSettings.RarityColor[4]; }
-            else if (rarity <= 65) { color = GlobalSettings.RarityColor[5]; }
-            else if (rarity <= 100) { color = GlobalSettings.RarityColor[6]; }
-            else if (rarity <= 169) { color = GlobalSettings.RarityColor[7]; }
-            else if (rarity <= 170) { color = GlobalSettings.RarityColor[8]; }
-            else if (rarity <= 171) { color = GlobalSettings.RarityColor[9]; }
-            else if (rarity <= 179) { color = GlobalSettings.RarityColor[10]; }
-            else
-            {
-                color = GlobalSettings.RarityColor[11];
-            }
-
-            return color;
         }
 
         private static double GetExtraStats(string[] weaponParts, string statName)

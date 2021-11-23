@@ -140,11 +140,11 @@ namespace WillowTree.Inventory
 
                 if (this.Type == InventoryType.Weapon)
                 {
-                    this.Color = GameData.RarityToColorWeapon(this.Rarity);
+                    this.Color = RarityToColorWeapon(this.Rarity);
                 }
                 else
                 {
-                    this.Color = GameData.RarityToColorItem(this.Rarity);
+                    this.Color = RarityToColorItem(this.Rarity);
                 }
             }
             catch
@@ -328,7 +328,7 @@ namespace WillowTree.Inventory
 
                 this.Rarity += partrarity;
             }
-            this.Color = GameData.RarityToColorItem(this.Rarity);
+            this.Color = RarityToColorItem(this.Rarity);
 
             if ((GameData.GetPartRarity(this.Parts[4]) != 0) && (GameData.GetPartRarity(this.Parts[3]) != 0))
             {
@@ -400,7 +400,7 @@ namespace WillowTree.Inventory
 
                 this.Rarity += partrarity;
             }
-            this.Color = GameData.RarityToColorWeapon(this.Rarity);
+            this.Color = RarityToColorWeapon(this.Rarity);
 
             if ((GameData.GetPartRarity(this.Parts[8]) != 0) && (GameData.GetPartRarity(this.Parts[5]) != 0))
             {
@@ -667,5 +667,52 @@ namespace WillowTree.Inventory
             writer.Close();
             return sw.ToString();
         }
+
+        public static Color RarityToColorItem(int rarity)
+        {
+            Color color;
+
+            if (rarity <= 4) { color = GlobalSettings.RarityColor[0]; }
+            else if (rarity <= 9) { color = GlobalSettings.RarityColor[1]; }
+            else if (rarity <= 13) { color = GlobalSettings.RarityColor[2]; }
+            else if (rarity <= 49) { color = GlobalSettings.RarityColor[3]; }
+            else if (rarity <= 60) { color = GlobalSettings.RarityColor[4]; }
+            else if (rarity <= 65) { color = GlobalSettings.RarityColor[5]; }
+            else if (rarity <= 100) { color = GlobalSettings.RarityColor[6]; }
+            else if (rarity <= 169) { color = GlobalSettings.RarityColor[7]; }
+            else if (rarity <= 170) { color = GlobalSettings.RarityColor[8]; }
+            else if (rarity <= 171) { color = GlobalSettings.RarityColor[9]; }
+            else if (rarity <= 179) { color = GlobalSettings.RarityColor[10]; }
+            else
+            {
+                color = GlobalSettings.RarityColor[11];
+            }
+
+            return color;
+        }
+
+        public static Color RarityToColorWeapon(int rarity)
+        {
+            Color color;
+
+            if (rarity <= 4) { color = GlobalSettings.RarityColor[0]; }
+            else if (rarity <= 10) { color = GlobalSettings.RarityColor[1]; }
+            else if (rarity <= 15) { color = GlobalSettings.RarityColor[2]; }
+            else if (rarity <= 49) { color = GlobalSettings.RarityColor[3]; }
+            else if (rarity <= 60) { color = GlobalSettings.RarityColor[4]; }
+            else if (rarity <= 65) { color = GlobalSettings.RarityColor[5]; }
+            else if (rarity <= 100) { color = GlobalSettings.RarityColor[6]; }
+            else if (rarity <= 169) { color = GlobalSettings.RarityColor[7]; }
+            else if (rarity <= 170) { color = GlobalSettings.RarityColor[8]; }
+            else if (rarity <= 171) { color = GlobalSettings.RarityColor[9]; }
+            else if (rarity <= 179) { color = GlobalSettings.RarityColor[10]; }
+            else
+            {
+                color = GlobalSettings.RarityColor[11];
+            }
+
+            return color;
+        }
+
     }
 }
