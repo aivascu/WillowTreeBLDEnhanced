@@ -50,7 +50,6 @@ namespace WillowTree.CustomControls
         public ThemeManager()
         {
             InitializeComponent();
-            Services.ThemeManager = this;
         }
 
         protected override void Dispose(bool disposing)
@@ -366,9 +365,6 @@ namespace WillowTree.CustomControls
         {
             this.DoubleBuffered = true;
             this.RestoreDefaultColors();
-            this.ThemeManager = Services.ThemeManager;
-            if (this.ThemeManager == null)
-                throw new NullReferenceException();
         }
     }
     public class ThemeMissingException : NullReferenceException

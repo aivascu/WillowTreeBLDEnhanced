@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,8 +43,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgaControlsExtensions.cs" />
+    <Compile Include="AppThemes.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BasicTheme.cs" />
+    <Compile Include="CCPanel.cs" />
+    <Compile Include="CCTabControl.cs" />
+    <Compile Include="CCTabControlDesigner.cs" />
+    <Compile Include="ColoredTextNode.cs" />
+    <Compile Include="GroupBox.cs" />
+    <Compile Include="InputMode.cs" />
+    <Compile Include="ManagedTheme.cs" />
+    <Compile Include="PathTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Slider.cs" />
+    <Compile Include="SlideSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SlideSelector.Designer.cs">
+      <DependentUpon>SlideSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Theme.cs" />
+    <Compile Include="WTControls.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppThemes.resx">
+      <DependentUpon>AppThemes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SlideSelector.resx">
+      <DependentUpon>SlideSelector.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aga.Controls\Aga.Controls.csproj">
+      <Project>{e73bb233-d88b-44a7-a98f-d71ee158381d}</Project>
+      <Name>Aga.Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

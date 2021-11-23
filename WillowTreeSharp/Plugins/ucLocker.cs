@@ -159,7 +159,7 @@ namespace WillowTree.Plugins
             foreach (TreeNodeAdv node in nodes)
                 if (node.Children.Count == 0)
                 {
-                    InventoryEntry entry = node.GetEntry();
+                    InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
                         db.WeaponList.Add(entry);
                     else if (entry.Type == InventoryType.Item)
@@ -173,7 +173,7 @@ namespace WillowTree.Plugins
             foreach (TreeNodeAdv node in LockerTree.SelectedNodes)
                 if (node.Children.Count == 0)
                 {
-                    InventoryEntry entry = node.GetEntry();
+                    InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
                         db.WeaponList.Duplicate(entry); //LockerTL.CopySelected(db.WeaponList, false);
                     else if (entry.Type == InventoryType.Item)
@@ -312,7 +312,7 @@ namespace WillowTree.Plugins
             if (LockerTree.SelectedNode == null || LockerTree.SelectedNode.Children.Count > 0)
                 return;
 
-            InventoryEntry entry = LockerTree.SelectedNode.GetEntry();
+            InventoryEntry entry = LockerTree.SelectedNode.GetEntry() as InventoryEntry;
 
             if (LockerTree.SelectedNode.Children.Count == 0)
             {   // Tree nodes with no children are items or weapons.  Entries with children would be section headers.
@@ -346,7 +346,7 @@ namespace WillowTree.Plugins
             if (LockerTree.SelectedNode.Children.Count > 0)
                 return;
 
-            InventoryEntry entry = LockerTree.SelectedNode.GetEntry();
+            InventoryEntry entry = LockerTree.SelectedNode.GetEntry() as InventoryEntry;
 
             int partcount = entry.GetPartCount();
 
@@ -403,7 +403,7 @@ namespace WillowTree.Plugins
             {
                 if (node.Children.Count == 0)
                 {
-                    text = node.GetEntry().ToXmlText().ToUpper();
+                    text = (node.GetEntry() as InventoryEntry).ToXmlText().ToUpper();
 
                     if (searchText != "" && text.Contains(searchText))
                         (node.Tag as ColoredTextNode).Font = HighlightFont;

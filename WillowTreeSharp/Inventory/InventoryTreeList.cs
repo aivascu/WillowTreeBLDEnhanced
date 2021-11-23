@@ -150,14 +150,14 @@ namespace WillowTree.Inventory
 
         public void Remove(TreeNodeAdv node)
         {
-            InventoryEntry entry = node.GetEntry();
+            InventoryEntry entry = node.GetEntry() as InventoryEntry;
             Items.Remove(entry.Key);
             OnEntryRemoveNode(node);
         }
         // 0 references
         public void RemoveSilent(TreeNodeAdv node)
         {
-            InventoryEntry entry = node.GetEntry();
+            InventoryEntry entry = node.GetEntry() as InventoryEntry;
             Items.Remove(entry.Key);
         }
         
@@ -360,7 +360,7 @@ namespace WillowTree.Inventory
         }
         public void OnEntryRemoveNode(InventoryList ilist, TreeNodeAdv node)
         {
-            InventoryEntry entry = node.GetEntry();
+            InventoryEntry entry = node.GetEntry() as InventoryEntry;
             Sorted.Remove(entry);
             RemoveFromTreeView(node, false);
         }
@@ -419,7 +419,7 @@ namespace WillowTree.Inventory
                 if (node.Children.Count > 0)
                     continue;
 
-                InventoryEntry weapon = node.GetEntry();
+                InventoryEntry weapon = node.GetEntry() as InventoryEntry;
                 Add(weapon);
             }
             Tree.EndUpdate();
@@ -604,7 +604,7 @@ namespace WillowTree.Inventory
                 if (node.Children.Count > 0)
                     continue;
 
-                InventoryEntry weapon = node.GetEntry();
+                InventoryEntry weapon = node.GetEntry() as InventoryEntry;
                 Duplicate(weapon);
             }
             Tree.EndUpdate();
@@ -978,7 +978,7 @@ namespace WillowTree.Inventory
             Tree.BeginUpdate();
             foreach (TreeNodeAdv node in nodes)
             {
-                InventoryEntry old = node.GetEntry();
+                InventoryEntry old = node.GetEntry() as InventoryEntry;
                 // If the entry is null it is because the tag isn't an inventory
                 // entry object.  That means it is a category node so don't duplicate
                 // it.
@@ -1006,7 +1006,7 @@ namespace WillowTree.Inventory
 
             foreach (TreeNodeAdv node in nodes)
             {
-                InventoryEntry old = node.GetEntry();
+                InventoryEntry old = node.GetEntry() as InventoryEntry;
                 // If the entry is null it is because the tag isn't an inventory
                 // entry object.  That means it is a category node so don't duplicate
                 // it.

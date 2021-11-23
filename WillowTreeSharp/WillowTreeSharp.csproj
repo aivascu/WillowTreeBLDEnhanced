@@ -110,31 +110,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppThemes.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Array.cs" />
-    <Compile Include="CustomControls\BasicTheme.cs" />
-    <Compile Include="CustomControls\CCPanel.cs" />
-    <Compile Include="CustomControls\ManagedTheme.cs" />
-    <Compile Include="CustomControls\SlideSelector.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\SlideSelector.Designer.cs">
-      <DependentUpon>SlideSelector.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\Theme.cs" />
-    <Compile Include="CustomControls\WTControls.cs" />
-    <Compile Include="CustomControls\CCTabControlDesigner.cs" />
-    <Compile Include="CustomControls\PathTool.cs" />
-    <Compile Include="CustomControls\CCTabControl.cs" />
-    <Compile Include="CustomControls\GroupBox.cs" />
     <Compile Include="db.cs" />
     <Compile Include="Inventory\InventoryEntry.cs" />
     <Compile Include="Inventory\InventoryTreeList.cs" />
     <Compile Include="PluginComponentManager.cs" />
     <Compile Include="ParseString.cs" />
-    <Compile Include="CustomControls\Slider.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Plugins\SamplePlugin.cs">
       <SubType>UserControl</SubType>
@@ -224,12 +205,6 @@
     <Content Include="COPYING.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="AppThemes.resx">
-      <DependentUpon>AppThemes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomControls\SlideSelector.resx">
-      <DependentUpon>SlideSelector.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Plugins\SamplePlugin.resx">
       <DependentUpon>SamplePlugin.cs</DependentUpon>
     </EmbeddedResource>
@@ -470,12 +445,18 @@
       <Project>{e73bb233-d88b-44a7-a98f-d71ee158381d}</Project>
       <Name>Aga.Controls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WillowTreeSharp.Controls\WillowTreeSharp.Controls.csproj">
+      <Project>{9cac0af9-f039-4f22-963d-52eb5bab7f55}</Project>
+      <Name>WillowTreeSharp.Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NLog.Config">
       <Version>4.7.12</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CustomControls\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

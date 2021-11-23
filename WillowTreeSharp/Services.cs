@@ -32,27 +32,6 @@ namespace WillowTree
     /// variables of WillowTreeMain.
     public static class Services
     {
-        static private ThemeManager _ThemeManager;
-        /// <summary>
-        /// Single instance of the theme manager to be shared by any objects that 
-        /// need it in the application. This will not change or be released until 
-        /// the application terminates.
-        /// </summary>
-        static public ThemeManager ThemeManager
-        {
-            get
-            {
-                if (_ThemeManager == null)
-                    _ThemeManager = new ThemeManager();
-
-                return _ThemeManager;
-            }
-            set
-            {
-                if (_ThemeManager == null)
-                    _ThemeManager = value;
-            }
-        }
 
         private static PluginComponentManager _PluginManager;
         /// <summary>

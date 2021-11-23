@@ -21,7 +21,6 @@ using System.Xml;
 
 namespace WillowTree
 {
-    public enum InputMode { Standard, Advanced, UseGlobalSetting};
 
     public class GlobalSettings
     {

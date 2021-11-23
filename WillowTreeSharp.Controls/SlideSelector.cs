@@ -155,7 +155,7 @@ namespace WillowTree.CustomControls
             this.UpDown.Hexadecimal = UseHex;
 
             if (method == InputMode.UseGlobalSetting)
-                method = GlobalSettings.InputMode;
+                method = InputMode.Standard;
 
 
             if (method == _InputMethod)
@@ -214,8 +214,7 @@ namespace WillowTree.CustomControls
             InitializeComponent();
 
             this._InputMethod = WillowTree.InputMode.UseGlobalSetting;
-            this.SetInputMethod(GlobalSettings.InputMode, GlobalSettings.UseHexInAdvancedMode);
-            GlobalSettings.InputMethodChanged += new GlobalSettings.InputMethodChangedEventHandler(SetInputMethod);
+            this.SetInputMethod(InputMode.Standard, false);
         }
 
         private void Slider_ChangeUICues(object sender, UICuesEventArgs e)

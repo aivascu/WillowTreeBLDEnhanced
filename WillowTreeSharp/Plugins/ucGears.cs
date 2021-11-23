@@ -95,9 +95,9 @@ namespace WillowTree.Plugins
 
             //Section for Bank to change interface
             if (GearTree.SelectedNode != null)
-                if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Weapon)
+                if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Weapon)
                     tabName = "Weapons";
-                else if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Item)
+                else if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Item)
                     tabName = "Items";
 
             //Config interface for Weapon, Item, Bank
@@ -247,7 +247,7 @@ namespace WillowTree.Plugins
             foreach (TreeNodeAdv node in GearTree.SelectedNodes)
                 if (node.Children.Count == 0)
                 {
-                    InventoryEntry entry = node.GetEntry();
+                    InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
                         db.WeaponList.Duplicate(entry); //LockerTL.CopySelected(db.WeaponList, false);
                     else if (entry.Type == InventoryType.Item)
@@ -321,7 +321,7 @@ namespace WillowTree.Plugins
                 if (ImportFromTextGear(Clipboard.GetText()))
                 {
                     GearTree.SelectedNode = GearTree.AllNodes.Last();
-                    InventoryEntry gear = GearTree.SelectedNode.GetEntry();
+                    InventoryEntry gear = GearTree.SelectedNode.GetEntry() as InventoryEntry;
                     RefreshGearTree(gear);
                 }
                     
@@ -374,7 +374,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            InventoryEntry gear = GearTree.SelectedNode.GetEntry();
+            InventoryEntry gear = GearTree.SelectedNode.GetEntry() as InventoryEntry;
             GearPartsGroup.Text = gear.Name;
 
             Init();
@@ -405,7 +405,7 @@ namespace WillowTree.Plugins
             if (GearTree.SelectedNode.Children.Count > 0)
                 return;
 
-            InventoryEntry gear = GearTree.SelectedNode.GetEntry();
+            InventoryEntry gear = GearTree.SelectedNode.GetEntry() as InventoryEntry;
 
             RefreshGearTree(gear);
         }
@@ -424,9 +424,9 @@ namespace WillowTree.Plugins
             gear.IsLocked = (int)LockedGear.Value;
 
             // Recalculate the gear stats
-            if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Weapon)
+            if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Weapon)
                 gear.RecalculateDataWeapon();
-            else if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Item)
+            else if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Item)
                 gear.RecalculateDataItem();
 
             gear.BuildName();
@@ -456,7 +456,7 @@ namespace WillowTree.Plugins
             {
                 if (node.Children.Count == 0)
                 {
-                    text = node.GetEntry().ToXmlText().ToUpper();
+                    text = (node.GetEntry() as InventoryEntry).ToXmlText().ToUpper();
 
                     if (searchText != "" && text.Contains(searchText))
                         (node.Tag as ColoredTextNode).Font = HighlightFont;
@@ -620,9 +620,9 @@ namespace WillowTree.Plugins
         {
             txtGearInformation.Clear();
 
-            if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Weapon)
+            if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Weapon)
                 if (GearTree.SelectedNode.GetEntry() != null)
-                    txtGearInformation.Text = db.WeaponInfo(GearTree.SelectedNode.GetEntry());
+                    txtGearInformation.Text = db.WeaponInfo(GearTree.SelectedNode.GetEntry() as InventoryEntry);
             //TODO RSM make like WeaponInfo
             //else if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Item)
             //    if (GearTree.SelectedNode.GetEntry() != null)
