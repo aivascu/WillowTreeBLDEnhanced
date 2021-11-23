@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp", "WillowTreeSharp.csproj", "{D15E6A8F-E4CD-4E0C-A953-ABE3320D98DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aga.Controls", "Aga.Controls\Aga.Controls.csproj", "{E73BB233-D88B-44A7-A98F-D71EE158381D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\Test\Test.csproj", "{750B5B6C-3E4D-47D5-8F65-A38DA660981E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp.Tests", "..\Test\WillowTreeSharp.Tests.csproj", "{750B5B6C-3E4D-47D5-8F65-A38DA660981E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
