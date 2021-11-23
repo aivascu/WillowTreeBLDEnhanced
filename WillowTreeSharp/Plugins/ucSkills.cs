@@ -51,12 +51,12 @@ namespace WillowTree.Plugins
             pm.RegisterPlugin(this, events);
 
             pluginManager = pm;
-            SkillsAllXml = db.SkillsAllXml;
-            SkillsCommonXml = db.SkillsCommonXml;
-            SkillsBerserkerXml = db.SkillsBerserkerXml;
-            SkillsSoldierXml = db.SkillsSoldierXml;
-            SkillsSirenXml = db.SkillsSirenXml;
-            SkillsHunterXml = db.SkillsHunterXml;
+            SkillsAllXml = GameData.SkillsAllXml;
+            SkillsCommonXml = GameData.SkillsCommonXml;
+            SkillsBerserkerXml = GameData.SkillsBerserkerXml;
+            SkillsSoldierXml = GameData.SkillsSoldierXml;
+            SkillsSirenXml = GameData.SkillsSirenXml;
+            SkillsHunterXml = GameData.SkillsHunterXml;
 
             this.Enabled = false;
         }

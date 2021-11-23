@@ -59,17 +59,17 @@ namespace WillowTree.Plugins
             switch (this.Text)
             {
                 case "Weapons":
-                    GearTL = new InventoryTreeList(GearTree, db.WeaponList);
+                    GearTL = new InventoryTreeList(GearTree, GameData.WeaponList);
                     this.gbGear.Text = "Weapon Backpack";
                     this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
                 case "Items":
-                    GearTL = new InventoryTreeList(GearTree, db.ItemList);
+                    GearTL = new InventoryTreeList(GearTree, GameData.ItemList);
                     this.gbGear.Text = "Item Backpack";
                     this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
                 case "Bank":
-                    GearTL = new InventoryTreeList(GearTree, db.BankList);
+                    GearTL = new InventoryTreeList(GearTree, GameData.BankList);
                     this.gbGear.Text = "Bank";
                     this.copyToBankToolStripMenuItem.Visible = false;
                     break;
@@ -208,7 +208,7 @@ namespace WillowTree.Plugins
         {
             PartSelectorGear.Clear();
 
-            string TabsLine = System.IO.File.ReadAllText(db.DataPath + textFile);
+            string TabsLine = System.IO.File.ReadAllText(GameData.DataPath + textFile);
             string[] TabsList = TabsLine.Split(new char[] { (char)';' });
             for (int Progress = 0; Progress < TabsList.Length; Progress++)
                 Util.DoPartsCategory(TabsList[Progress], PartSelectorGear);
@@ -236,11 +236,11 @@ namespace WillowTree.Plugins
         
         private void MoveGear_Click(object sender, EventArgs e)
         {
-            GearTL.CopySelected(db.LockerList, true);
+            GearTL.CopySelected(GameData.LockerList, true);
         }
         private void CopyLocker_Click(object sender, EventArgs e)
         {
-            GearTL.CopySelected(db.LockerList, false);
+            GearTL.CopySelected(GameData.LockerList, false);
         }
         private void CopyBackpack_Click(object sender, EventArgs e)
         {
@@ -249,14 +249,14 @@ namespace WillowTree.Plugins
                 {
                     InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
-                        db.WeaponList.Duplicate(entry); //LockerTL.CopySelected(db.WeaponList, false);
+                        GameData.WeaponList.Duplicate(entry); //LockerTL.CopySelected(db.WeaponList, false);
                     else if (entry.Type == InventoryType.Item)
-                        db.ItemList.Duplicate(entry); //LockerTL.CopySelected(db.ItemList, false);
+                        GameData.ItemList.Duplicate(entry); //LockerTL.CopySelected(db.ItemList, false);
                 }
         }
         private void CopyBank_Click(object sender, EventArgs e)
         {
-            GearTL.CopySelected(db.BankList, false);
+            GearTL.CopySelected(GameData.BankList, false);
         }
         private void ClearAllGear_Click(object sender, EventArgs e)
         {
@@ -521,7 +521,7 @@ namespace WillowTree.Plugins
             try
             {
                 // Read ALL subsections of a given XML section
-                XmlFile Category = XmlFile.XmlFileFromCache(db.DataPath + PartSelectorGear.SelectedNode.Parent.GetKey() + ".txt");
+                XmlFile Category = XmlFile.XmlFileFromCache(GameData.DataPath + PartSelectorGear.SelectedNode.Parent.GetKey() + ".txt");
 
                 // XML Section: PartCategories.SelectedNode.Text
                 List<string> xmlSection = Category.XmlReadSection(PartSelectorGear.SelectedNode.GetText());
@@ -574,7 +574,7 @@ namespace WillowTree.Plugins
             {
                 PartInfoGear.Clear();
 
-                List<string> xmlSection = db.GetPartSection(part);
+                List<string> xmlSection = GameData.GetPartSection(part);
 
                 if (xmlSection != null)
                     PartInfoGear.Lines = xmlSection.ToArray();
@@ -622,7 +622,7 @@ namespace WillowTree.Plugins
 
             if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Weapon)
                 if (GearTree.SelectedNode.GetEntry() != null)
-                    txtGearInformation.Text = db.WeaponInfo(GearTree.SelectedNode.GetEntry() as InventoryEntry);
+                    txtGearInformation.Text = GameData.WeaponInfo(GearTree.SelectedNode.GetEntry() as InventoryEntry);
             //TODO RSM make like WeaponInfo
             //else if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Item)
             //    if (GearTree.SelectedNode.GetEntry() != null)

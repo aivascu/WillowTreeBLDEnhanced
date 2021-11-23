@@ -126,13 +126,13 @@ namespace WillowTree.Inventory
 
         public void Add(InventoryEntry entry)
         {
-            entry.Key = db.CreateUniqueKey();
+            entry.Key = GameData.CreateUniqueKey();
             Items.Add(entry.Key, entry);
             OnEntryAdd(entry);
         }
         public void AddSilent(InventoryEntry entry)
         {
-            entry.Key = db.CreateUniqueKey();
+            entry.Key = GameData.CreateUniqueKey();
             Items.Add(entry.Key, entry);
         }
 
@@ -189,7 +189,7 @@ namespace WillowTree.Inventory
         public void Duplicate(InventoryEntry entry)
         {
             InventoryEntry copy = new InventoryEntry(entry);
-            copy.Key = db.CreateUniqueKey();
+            copy.Key = GameData.CreateUniqueKey();
             Items.Add(copy.Key, copy);
             OnEntryAdd(copy);
         }
@@ -197,7 +197,7 @@ namespace WillowTree.Inventory
         public void DuplicateSilent(InventoryEntry entry)
         {
             InventoryEntry copy = new InventoryEntry(entry);
-            copy.Key = db.CreateUniqueKey();
+            copy.Key = GameData.CreateUniqueKey();
             //Entries.Add(copy);
             Items.Add(copy.Key, copy);
         }
@@ -709,7 +709,7 @@ namespace WillowTree.Inventory
                     writer.WriteEndElement();
                     writer.WriteEndDocument();
 
-                    db.OpenedLockerFilename(InputFile);
+                    GameData.OpenedLockerFilename(InputFile);
                 }
             }
             catch (Exception e)
@@ -1050,14 +1050,14 @@ namespace WillowTree.Inventory
 
         public void PurgeDuplicates()
         {
-            string lastGoodFile = db.OpenedLockerFilename();    //Keep last valid locker path file
-            string tempfile = db.DataPath + "purgeduplicates.temp";
+            string lastGoodFile = GameData.OpenedLockerFilename();    //Keep last valid locker path file
+            string tempfile = GameData.DataPath + "purgeduplicates.temp";
             SaveToXml(tempfile);
             XmlFile.PurgeDuplicates(tempfile);
             LoadFromXml(tempfile, InventoryType.Any);
             System.IO.File.Delete(tempfile);
 
-            db.OpenedLockerFilename(lastGoodFile);  //Restore last valid locker path file
+            GameData.OpenedLockerFilename(lastGoodFile);  //Restore last valid locker path file
         }
 
         #region CategoryLookup Initializer

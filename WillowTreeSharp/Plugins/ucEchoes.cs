@@ -43,7 +43,7 @@ namespace WillowTree.Plugins
             events.GameLoaded = OnGameLoaded;
             pm.RegisterPlugin(this, events);
 
-            EchoesXml = db.EchoesXml;
+            EchoesXml = GameData.EchoesXml;
             DoEchoList();
             this.Enabled = false;
         }

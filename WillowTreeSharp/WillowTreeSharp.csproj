@@ -111,7 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Array.cs" />
-    <Compile Include="db.cs" />
+    <Compile Include="GameData.cs" />
     <Compile Include="Inventory\InventoryEntry.cs" />
     <Compile Include="Inventory\InventoryTreeList.cs" />
     <Compile Include="PluginComponentManager.cs" />

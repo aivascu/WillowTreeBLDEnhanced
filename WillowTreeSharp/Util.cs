@@ -68,7 +68,7 @@ namespace WillowTree
 
         public static void DoPartsCategory(string Category, TreeViewAdv Tree)
         {
-            XmlFile PartList = XmlFile.XmlFileFromCache(db.DataPath + Category + ".txt");
+            XmlFile PartList = XmlFile.XmlFileFromCache(GameData.DataPath + Category + ".txt");
             TreeModel model = Tree.Model as TreeModel;
 
             Tree.BeginUpdate();

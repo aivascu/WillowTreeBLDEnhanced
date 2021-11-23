@@ -91,8 +91,8 @@ namespace WillowTree
                 // it is stored that way in db.DataPath.
                 string folder = Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar;
 
-                if (db.DataPath.Length <= folder.Length && folder.Substring(0, db.DataPath.Length)
-                    .Equals(db.DataPath, StringComparison.OrdinalIgnoreCase))
+                if (GameData.DataPath.Length <= folder.Length && folder.Substring(0, GameData.DataPath.Length)
+                    .Equals(GameData.DataPath, StringComparison.OrdinalIgnoreCase))
                 {
                     // If the INI or TXT file is in the Data folder (db.DataPath) or its
                     // descendant then make a corresponding XML file in the Xml folder 
@@ -102,7 +102,7 @@ namespace WillowTree
                     // C:\Data\Quests\Part1.ini would produce an XML file named
                     // C:\Xml\Quests\Part1.xml.  The code below would produce a file named
                     // C:\Data\Quests\Xml\Part1.xml
-                    folder = db.XmlPath + folder.Substring(db.DataPath.Length);
+                    folder = GameData.XmlPath + folder.Substring(GameData.DataPath.Length);
                 }
                 else
                 {

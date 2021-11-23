@@ -27,21 +27,21 @@ namespace WillowTree
 
             GlobalSettings.Load();
 
-            if (!this.directory.Exists(db.DataPath))
+            if (!this.directory.Exists(GameData.DataPath))
             {
                 MessageBox.Show("Couldn't find the 'Data' folder! Please make sure that WillowTree# and its data folder are in the same directory.");
                 Application.Exit();
                 return;
             }
 
-            if (!this.file.Exists(db.DataPath + "default.xml"))
+            if (!this.file.Exists(GameData.DataPath + "default.xml"))
             {
-                this.file.WriteAllText(db.DataPath + "default.xml", "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
+                this.file.WriteAllText(GameData.DataPath + "default.xml", "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
             }
 
             InitializeComponent();
 
-            db.InitializeNameLookup();
+            GameData.InitializeNameLookup();
 
             Save.Enabled = false;
             SaveAs.Enabled = false;
@@ -244,9 +244,9 @@ namespace WillowTree
                     }
                 }
 
-                ConvertListForEditing(db.WeaponList, ref CurrentWSG.Weapons);
-                ConvertListForEditing(db.ItemList, ref CurrentWSG.Items);
-                ConvertListForEditing(db.BankList, ref CurrentWSG.Dlc.BankInventory);
+                ConvertListForEditing(GameData.WeaponList, ref CurrentWSG.Weapons);
+                ConvertListForEditing(GameData.ItemList, ref CurrentWSG.Items);
+                ConvertListForEditing(GameData.BankList, ref CurrentWSG.Dlc.BankInventory);
 
                 PluginManager.OnGameLoaded(new PluginEventArgs(this, fileName));
 
@@ -432,9 +432,9 @@ namespace WillowTree
 
             // Convert the weapons and items data from WeaponList/ItemList into
             // the format used by WillowSaveGame.
-            RepopulateListForSaving(db.WeaponList, ref CurrentWSG.Weapons);
-            RepopulateListForSaving(db.ItemList, ref CurrentWSG.Items);
-            RepopulateListForSaving(db.BankList, ref CurrentWSG.Dlc.BankInventory);
+            RepopulateListForSaving(GameData.WeaponList, ref CurrentWSG.Weapons);
+            RepopulateListForSaving(GameData.ItemList, ref CurrentWSG.Items);
+            RepopulateListForSaving(GameData.BankList, ref CurrentWSG.Dlc.BankInventory);
             CurrentWSG.SaveWsg(filename);
             CurrentWSG.OpenedWsg = filename;
 
@@ -461,10 +461,10 @@ namespace WillowTree
                 theme = null;
             }
 
-            db.ItemList.OnTreeThemeChanged(theme);
-            db.WeaponList.OnTreeThemeChanged(theme);
-            db.BankList.OnTreeThemeChanged(theme);
-            db.LockerList.OnTreeThemeChanged(theme);
+            GameData.ItemList.OnTreeThemeChanged(theme);
+            GameData.WeaponList.OnTreeThemeChanged(theme);
+            GameData.BankList.OnTreeThemeChanged(theme);
+            GameData.LockerList.OnTreeThemeChanged(theme);
         }
 
         private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -538,10 +538,10 @@ namespace WillowTree
 
         private void UpdateNames()
         {
-            db.WeaponList.OnNameFormatChanged();
-            db.ItemList.OnNameFormatChanged();
-            db.BankList.OnNameFormatChanged();
-            db.LockerList.OnNameFormatChanged();
+            GameData.WeaponList.OnNameFormatChanged();
+            GameData.ItemList.OnNameFormatChanged();
+            GameData.BankList.OnNameFormatChanged();
+            GameData.LockerList.OnNameFormatChanged();
         }
 
         private void WillowTreeMain_FormClosing(object sender, EventArgs e)

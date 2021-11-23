@@ -69,20 +69,20 @@ namespace WillowTree.Plugins
             ImportAllFromItems.Enabled = false;
             ImportAllFromWeapons.Enabled = false;
 
-            LockerTL = new InventoryTreeList(LockerTree, db.LockerList);
+            LockerTL = new InventoryTreeList(LockerTree, GameData.LockerList);
 
-            string lockerFilename = db.OpenedLockerFilename();
+            string lockerFilename = GameData.OpenedLockerFilename();
             if (!System.IO.File.Exists(lockerFilename))
-                db.OpenedLockerFilename(db.DataPath + "default.xml");
+                GameData.OpenedLockerFilename(GameData.DataPath + "default.xml");
 
             try
             {
-                LoadLocker(db.OpenedLockerFilename());
+                LoadLocker(GameData.OpenedLockerFilename());
                 LockerTL.UpdateTree();
             }
             catch (ApplicationException)
             {
-                MessageBox.Show("The locker file \"" + db.OpenedLockerFilename() + " could not be loaded.  It may be corrupt.  If you delete or rename it the program will make a new one and you may be able to start the program successfully.  Shutting down now.");
+                MessageBox.Show("The locker file \"" + GameData.OpenedLockerFilename() + " could not be loaded.  It may be corrupt.  If you delete or rename it the program will make a new one and you may be able to start the program successfully.  Shutting down now.");
                 Application.Exit();
                 return;
             }
@@ -99,7 +99,7 @@ namespace WillowTree.Plugins
             HighlightFont = null;
 
             LockerTL = null;
-            db.OpenedLockerFilename(null);
+            GameData.OpenedLockerFilename(null);
         }
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
@@ -111,7 +111,7 @@ namespace WillowTree.Plugins
 
         public void OnGameSaving(object sender, PluginEventArgs e)
         {
-            LockerTL.SaveToXml(db.OpenedLockerFilename());
+            LockerTL.SaveToXml(GameData.OpenedLockerFilename());
         }
 
         public void OnPluginCommand(object sender, PluginCommandEventArgs e)
@@ -161,9 +161,9 @@ namespace WillowTree.Plugins
                 {
                     InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
-                        db.WeaponList.Add(entry);
+                        GameData.WeaponList.Add(entry);
                     else if (entry.Type == InventoryType.Item)
-                        db.ItemList.Add(entry);
+                        GameData.ItemList.Add(entry);
 
                     LockerTL.Remove(node, false);
                 }
@@ -175,14 +175,14 @@ namespace WillowTree.Plugins
                 {
                     InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
-                        db.WeaponList.Duplicate(entry); //LockerTL.CopySelected(db.WeaponList, false);
+                        GameData.WeaponList.Duplicate(entry); //LockerTL.CopySelected(db.WeaponList, false);
                     else if (entry.Type == InventoryType.Item)
-                        db.ItemList.Duplicate(entry); //LockerTL.CopySelected(db.ItemList, false);
+                        GameData.ItemList.Duplicate(entry); //LockerTL.CopySelected(db.ItemList, false);
                 }
         }
         private void CopyBank_Click(object sender, EventArgs e)
         {
-            LockerTL.CopySelected(db.BankList, false);
+            LockerTL.CopySelected(GameData.BankList, false);
         }
         private void ClearAllLocker_Click(object sender, EventArgs e)
         {
@@ -230,7 +230,7 @@ namespace WillowTree.Plugins
         }
         private void ExportToXmlLocker_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog fileDlg = new Util.WTSaveFileDialog("xml", db.OpenedLockerFilename());
+            Util.WTSaveFileDialog fileDlg = new Util.WTSaveFileDialog("xml", GameData.OpenedLockerFilename());
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
                 LockerTL.SaveToXml(fileDlg.FileName());
@@ -291,18 +291,18 @@ namespace WillowTree.Plugins
         private void ImportAllFromItemsLocker_Click(object sender, EventArgs e)
         {
             LockerTree.BeginUpdate();
-            foreach (InventoryEntry item in db.ItemList.Items.Values)
+            foreach (InventoryEntry item in GameData.ItemList.Items.Values)
                 LockerTL.Duplicate(item);
             LockerTree.EndUpdate();
-            LockerTL.SaveToXml(db.OpenedLockerFilename());
+            LockerTL.SaveToXml(GameData.OpenedLockerFilename());
         }
         private void ImportAllFromWeaponsLocker_Click(object sender, EventArgs e)
         {
             LockerTree.BeginUpdate();
-            foreach (InventoryEntry weapon in db.WeaponList.Items.Values)
+            foreach (InventoryEntry weapon in GameData.WeaponList.Items.Values)
                 LockerTL.Duplicate(weapon);
             LockerTree.EndUpdate();
-            LockerTL.SaveToXml(db.OpenedLockerFilename());
+            LockerTL.SaveToXml(GameData.OpenedLockerFilename());
         }
         
         private void LockerTree_SelectionChanged(object sender, EventArgs e)
@@ -423,14 +423,14 @@ namespace WillowTree.Plugins
         
         private void OpenLocker_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog FromFile = new Util.WTOpenFileDialog("xml", db.OpenedLockerFilename());
+            Util.WTOpenFileDialog FromFile = new Util.WTOpenFileDialog("xml", GameData.OpenedLockerFilename());
 
             try
             {
                 if (FromFile.ShowDialog() == DialogResult.OK)
                 {
                     LoadLocker(FromFile.FileName());
-                    db.OpenedLockerFilename(FromFile.FileName()); 
+                    GameData.OpenedLockerFilename(FromFile.FileName()); 
                 }
             }
             catch { MessageBox.Show("Could not load the selected WillowTree Locker."); }

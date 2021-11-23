@@ -140,9 +140,9 @@ namespace WillowTree.Inventory
                     throw new FormatException();
 
                 if (this.Type == InventoryType.Weapon)
-                    this.Color = db.RarityToColorWeapon(this.Rarity);
+                    this.Color = GameData.RarityToColorWeapon(this.Rarity);
                 else
-                    this.Color = db.RarityToColorItem(this.Rarity);
+                    this.Color = GameData.RarityToColorItem(this.Rarity);
             }
             catch
             {
@@ -277,16 +277,16 @@ namespace WillowTree.Inventory
             // and naming items that is determined from the parts and values.
             // This function is used to fetch them all.
 
-            string BodyText = db.GetName(this.Parts[5]); // Body text
-            string MaterialText = db.GetName(this.Parts[2]); // Material text
+            string BodyText = GameData.GetName(this.Parts[5]); // Body text
+            string MaterialText = GameData.GetName(this.Parts[2]); // Material text
 
-            int Model = Parse.AsInt(db.GetPartAttribute(this.Parts[4], "PartNumberAddend"), 0);        // Number from stock
-            Model += Parse.AsInt(db.GetPartAttribute(this.Parts[3], "PartNumberAddend"), 0);           // Number from mag
+            int Model = Parse.AsInt(GameData.GetPartAttribute(this.Parts[4], "PartNumberAddend"), 0);        // Number from stock
+            Model += Parse.AsInt(GameData.GetPartAttribute(this.Parts[3], "PartNumberAddend"), 0);           // Number from mag
 
-            this.Rarity = Parse.AsInt(db.GetPartAttribute(this.Parts[1], "BaseRarity"), 0);
+            this.Rarity = Parse.AsInt(GameData.GetPartAttribute(this.Parts[1], "BaseRarity"), 0);
             for (int i = 2; i < 9; i++)
             {
-                int partrarity = db.GetPartRarity(this.Parts[i]);
+                int partrarity = GameData.GetPartRarity(this.Parts[i]);
                 //                    if ((partrarity == 50) && (i < 10) && (Parts[i].StartsWith("dlc3") == false))
                 //                        partrarity = 5;
                 //else if ((Parts[i] == "dlc3_gd_weap_UniqueParts.SniperRifle.sight4_Jakobs_Bessie") ||
@@ -313,34 +313,34 @@ namespace WillowTree.Inventory
                 //                        partrarity = 5;
                 this.Rarity += partrarity;
             }
-            this.Color = db.RarityToColorItem(this.Rarity);
+            this.Color = GameData.RarityToColorItem(this.Rarity);
             //                if ((GetPartRarity(this.Parts[8]) == 0) || (GetPartRarity(this.Parts[5]) == 0))
             //                   Model = Model / 10;
 
-            if ((db.GetPartRarity(this.Parts[4]) != 0) && (db.GetPartRarity(this.Parts[3]) != 0))
+            if ((GameData.GetPartRarity(this.Parts[4]) != 0) && (GameData.GetPartRarity(this.Parts[3]) != 0))
                 Model = Model * 10;
 
             string ModelText = (Model != 0 ? Model.ToString() : "");
 
-            string MfgText = db.GetPartAttribute(this.Parts[6], "Manufacturer"); // Mfg Name
+            string MfgText = GameData.GetPartAttribute(this.Parts[6], "Manufacturer"); // Mfg Name
             if (MfgText == "")
-                MfgText = db.GetPartAttribute(this.Parts[1], "NoManufacturerName");
+                MfgText = GameData.GetPartAttribute(this.Parts[1], "NoManufacturerName");
             string ModelName = BodyText + ModelText + MaterialText;
 
-            string Prefix = db.GetName(this.Parts[7]);
-            string Title = db.GetName(this.Parts[8]);
+            string Prefix = GameData.GetName(this.Parts[7]);
+            string Title = GameData.GetName(this.Parts[8]);
 
             if ((Title == "") && (Prefix == ""))
             {
-                Title = db.GetPartAttribute(this.Parts[1], "ItemName");
+                Title = GameData.GetPartAttribute(this.Parts[1], "ItemName");
                 if (Name == "")
                     Name = "Unknown Item";
             }
 
-            this.Category = db.GetPartAttribute(this.Parts[1], "Presentation");
+            this.Category = GameData.GetPartAttribute(this.Parts[1], "Presentation");
             if (this.Category == "")
                 this.Category = "none";
-            this.EffectiveLevel = db.GetEffectiveLevelItem(this.Parts.ToArray(), this.QualityIndex, this.LevelIndex);
+            this.EffectiveLevel = GameData.GetEffectiveLevelItem(this.Parts.ToArray(), this.QualityIndex, this.LevelIndex);
 
             this.NameParts = new string[]
                     {
@@ -359,16 +359,16 @@ namespace WillowTree.Inventory
             // and naming items that is determined from the parts and values.
             // This function is used to fetch them all.
 
-            string BodyText = db.GetName(this.Parts[3]); // Body text
-            string MaterialText = db.GetName(this.Parts[11]); // Material text
+            string BodyText = GameData.GetName(this.Parts[3]); // Body text
+            string MaterialText = GameData.GetName(this.Parts[11]); // Material text
 
-            int Model = Parse.AsInt(db.GetPartAttribute(this.Parts[8], "PartNumberAddend"), 0);        // Number from stock
-            Model += Parse.AsInt(db.GetPartAttribute(this.Parts[5], "PartNumberAddend"), 0);           // Number from mag
+            int Model = Parse.AsInt(GameData.GetPartAttribute(this.Parts[8], "PartNumberAddend"), 0);        // Number from stock
+            Model += Parse.AsInt(GameData.GetPartAttribute(this.Parts[5], "PartNumberAddend"), 0);           // Number from mag
 
-            this.Rarity = Parse.AsInt(db.GetPartAttribute(this.Parts[2], "BaseRarity"), 0);
+            this.Rarity = Parse.AsInt(GameData.GetPartAttribute(this.Parts[2], "BaseRarity"), 0);
             for (int i = 3; i < 14; i++)
             {
-                int partrarity = db.GetPartRarity(this.Parts[i]);
+                int partrarity = GameData.GetPartRarity(this.Parts[i]);
                 // There are several parts that dont use the part rarity that I found
                 // in the data.  This attempts to detect them and deal with them.
                 if ((partrarity == 50) && (i < 10) && (Parts[i].StartsWith("dlc3") == false))
@@ -397,24 +397,24 @@ namespace WillowTree.Inventory
                 //    partrarity = 5;
                 this.Rarity += partrarity;
             }
-            this.Color = db.RarityToColorWeapon(this.Rarity);
+            this.Color = GameData.RarityToColorWeapon(this.Rarity);
             //                if ((GetPartRarity(this.Parts[8]) == 0) || (GetPartRarity(this.Parts[5]) == 0))
             //                   Model = Model / 10;
 
-            if ((db.GetPartRarity(this.Parts[8]) != 0) && (db.GetPartRarity(this.Parts[5]) != 0))
+            if ((GameData.GetPartRarity(this.Parts[8]) != 0) && (GameData.GetPartRarity(this.Parts[5]) != 0))
                 Model = Model * 10;
 
             string ModelText = (Model != 0 ? Model.ToString() : "");
 
-            string MfgText = db.GetName(this.Parts[1]); // Mfg Name
+            string MfgText = GameData.GetName(this.Parts[1]); // Mfg Name
             string ModelName = BodyText + ModelText + MaterialText;
-            string Prefix = db.GetName(this.Parts[12]);
-            string Title = db.GetName(this.Parts[13]);
+            string Prefix = GameData.GetName(this.Parts[12]);
+            string Title = GameData.GetName(this.Parts[13]);
 
-            this.Category = db.GetPartAttribute(this.Parts[2], "Presentation");
+            this.Category = GameData.GetPartAttribute(this.Parts[2], "Presentation");
             if (this.Category == "")
                 this.Category = "none";
-            this.EffectiveLevel = db.GetEffectiveLevelWeapon(this.Parts.ToArray(), this.QualityIndex, this.LevelIndex);
+            this.EffectiveLevel = GameData.GetEffectiveLevelWeapon(this.Parts.ToArray(), this.QualityIndex, this.LevelIndex);
             // If the order or format of the level string changes, be sure to change it
             // in EditLevelAllWeapons_Click as well.
             this.NameParts = new string[]

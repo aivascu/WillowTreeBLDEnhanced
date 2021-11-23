@@ -96,7 +96,7 @@ namespace WillowTree
 
         static public void Save()
         {
-            string filename = db.XmlPath + "options.xml";
+            string filename = GameData.XmlPath + "options.xml";
 
             using (XmlTextWriter gs = new XmlTextWriter(filename, Encoding.UTF8))
             {
@@ -111,7 +111,7 @@ namespace WillowTree
                 gs.WriteElementString("UseColor", UseColor.ToString());
                 gs.WriteElementString("ShowRarity", ShowRarity.ToString());
                 gs.WriteElementString("ShowLevel", ShowLevel.ToString());
-                gs.WriteElementString("lastLockerFile", db.OpenedLockerFilename());
+                gs.WriteElementString("lastLockerFile", GameData.OpenedLockerFilename());
 
                 gs.WriteElementString("MaxCash", MaxCash.ToString());
                 gs.WriteElementString("MaxLevel", MaxLevel.ToString());
@@ -162,7 +162,7 @@ namespace WillowTree
 
         static public void Load()
         {
-            string filename = db.XmlPath + "options.xml";
+            string filename = GameData.XmlPath + "options.xml";
 
             if (!System.IO.File.Exists(filename))
                 return;
@@ -190,7 +190,7 @@ namespace WillowTree
                             case "UseColor": XmlReadBool(gs, ref UseColor); break;
                             case "lastLockerFile":
                                 {
-                                    db.OpenedLockerFilename(gs.ReadElementContentAsString());
+                                    GameData.OpenedLockerFilename(gs.ReadElementContentAsString());
                                 }
                                 break;
 

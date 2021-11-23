@@ -45,7 +45,7 @@ namespace WillowTree.Plugins
             events.GameLoaded = OnGameLoaded;
             pm.RegisterPlugin(this, events);
 
-            QuestsXml = db.QuestsXml;
+            QuestsXml = GameData.QuestsXml;
 
             this.Enabled = false;
             DoQuestList();

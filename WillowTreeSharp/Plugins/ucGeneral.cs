@@ -45,8 +45,8 @@ namespace WillowTree.Plugins
             pm.RegisterPlugin(this, events);
 
             this.Enabled = false;
-            LocationsXml = db.LocationsXml;
-            db.setXPchart();
+            LocationsXml = GameData.LocationsXml;
+            GameData.setXPchart();
             DoLocationsList();
             Cash.Maximum = GlobalSettings.MaxCash;
             Experience.Maximum = GlobalSettings.MaxExperience;
@@ -518,7 +518,7 @@ namespace WillowTree.Plugins
         {
             if (Level.Value > 0 && Level.Value < 70)
             {
-                Experience.Minimum = db.XPChart[(int)Level.Value];
+                Experience.Minimum = GameData.XPChart[(int)Level.Value];
 
             }
             else

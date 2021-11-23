@@ -1,42 +1,20 @@
-﻿/*  This file is part of WillowTree#
- * 
- *  Copyright (C) 2011 Matthew Carter <matt911@users.sf.net>
- *  Copyright (C) 2010, 2011 XanderChaos
- *  Copyright (C) 2011 Thomas Kaiser
- *  Copyright (C) 2010 JackSchitt
- * 
- *  WillowTree# is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  WillowTree# is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-//using System.Xml;
-//using System.Windows.Forms;
 using WillowTree.Inventory;
 
 namespace WillowTree
 {
-    public partial class db
+    public static class GameData
     {
-        static Dictionary<string, string> NameLookup;
+        private static Dictionary<string, string> NameLookup;
         public static string AppPath = WillowSaveGame.AppPath;
         public static string DataPath = WillowSaveGame.DataPath;
         public static string XmlPath = DataPath + "Xml" + System.IO.Path.DirectorySeparatorChar;
         private static string OpenedLocker; //Keep tracking of last open locker file
 
-        static List<string> skillfiles = new List<string>()
+        private static List<string> skillfiles = new List<string>()
             {
                 DataPath + "gd_skills_common.txt",
                 DataPath + "gd_Skills2_Roland.txt",
@@ -151,7 +129,7 @@ namespace WillowTree
         public static string OpenedLockerFilename()
         {
             if (string.IsNullOrEmpty(OpenedLocker))
-                return db.DataPath + "default.xml";
+                return DataPath + "default.xml";
             else
                 return OpenedLocker;
         }
@@ -168,7 +146,6 @@ namespace WillowTree
             string Name = "";
             for (int build = 0; build < InventoryPartCount; build++)
             {
-
                 string readValue = xml.XmlReadValue(InventoryArray[InventoryIndex, build], AttributeName);
 
                 if (Name == "" && readValue != null)
@@ -194,10 +171,10 @@ namespace WillowTree
         public static string GetName(string part)
         {
             // This method fetches the name of a part from the NameLookup dictionary
-            // which only contains name data extracted from each part.  The name 
-            // could be fetched from the individual part data by using 
+            // which only contains name data extracted from each part.  The name
+            // could be fetched from the individual part data by using
             // GetPartName(string part) or GetPartAttribute(string part, "PartName"),
-            // but since those have to search through lots of Xml nodes to find the 
+            // but since those have to search through lots of Xml nodes to find the
             // data this should be faster.
             string value;
             if (NameLookup.TryGetValue(part, out value) == false)
@@ -209,7 +186,7 @@ namespace WillowTree
         // OBSOLETE - Nothing uses this.  It couid be removed.
         public static string GetWeaponNameFast(List<string> parts)
         {
-            // This version uses the higher performance GetName function to fetch 
+            // This version uses the higher performance GetName function to fetch
             // part names from the NameLookup dictionary.
             string Name = GetName(parts[13]);
             string Prefix = GetName(parts[12]);
@@ -265,7 +242,7 @@ namespace WillowTree
         // OBSOLETE - Nothing uses this.  It couid be removed.
         public static string GetWeaponNameSlow(List<string> parts)
         {
-            // This version uses the lower performance GetPartName function to fetch 
+            // This version uses the lower performance GetPartName function to fetch
             // part names directly from the Xml part data files rather than using
             // the NameLookup dictionary.
             string Name = GetPartName(parts[13]);
@@ -322,7 +299,7 @@ namespace WillowTree
         // OBSOLETE - Nothing uses this.  It couid be removed.
         public static string GetItemNameFast(List<string> parts)
         {
-            // This version uses the higher performance GetName function to fetch 
+            // This version uses the higher performance GetName function to fetch
             // part names from the NameLookup dictionary.
             string Name = GetName(parts[8]);
             string Prefix = GetName(parts[7]);
@@ -500,6 +477,7 @@ namespace WillowTree
             string ComponentText = GetPartAttribute(part, "Rarity");
             return Parse.AsInt(ComponentText, null);
         }
+
         //// 5 references - Translate the Rarity attribute of a part and return its value
         //public static int GetPartRarity(string part)
         //{
@@ -567,7 +545,7 @@ namespace WillowTree
         //        case ("ClassModPartRarity5_VeryRare"):
         //            return 8;
         //        case ("ClassModPartRarity6_Legendary"):
-        //            return 10;        
+        //            return 10;
         //        default:
         //            int val;
         //            if (int.TryParse(RarityText, out val))
@@ -806,38 +784,38 @@ namespace WillowTree
             string WeaponInfo;
             string[] parts = invEntry.Parts.ToArray<string>();
 
-            int Damage = db.GetWeaponDamage(parts, invEntry.QualityIndex, invEntry.LevelIndex);
+            int Damage = GetWeaponDamage(parts, invEntry.QualityIndex, invEntry.LevelIndex);
             WeaponInfo = "Expected Damage: " + Damage;
 
-            double statvalue = db.GetExtraStats(parts, "TechLevelIncrease");
+            double statvalue = GetExtraStats(parts, "TechLevelIncrease");
             if (statvalue != 0)
                 WeaponInfo += "\r\nElemental Tech Level: " + statvalue;
 
-            statvalue = db.GetExtraStats(parts, "WeaponDamage");
+            statvalue = GetExtraStats(parts, "WeaponDamage");
             if (statvalue != 0)
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Damage";
 
-            statvalue = db.GetExtraStats(parts, "WeaponFireRate");
+            statvalue = GetExtraStats(parts, "WeaponFireRate");
             if (statvalue != 0)
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Rate of Fire";
 
-            statvalue = db.GetExtraStats(parts, "WeaponCritBonus");
+            statvalue = GetExtraStats(parts, "WeaponCritBonus");
             if (statvalue != 0)
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Critical Damage";
 
-            statvalue = db.GetExtraStats(parts, "WeaponReloadSpeed");
+            statvalue = GetExtraStats(parts, "WeaponReloadSpeed");
             if (statvalue != 0)
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Reload Speed";
 
-            statvalue = db.GetExtraStats(parts, "WeaponSpread");
+            statvalue = GetExtraStats(parts, "WeaponSpread");
             if (statvalue != 0)
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Spread";
 
-            statvalue = db.GetExtraStats(parts, "MaxAccuracy");
+            statvalue = GetExtraStats(parts, "MaxAccuracy");
             if (statvalue != 0)
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Max Accuracy";
 
-            statvalue = db.GetExtraStats(parts, "MinAccuracy");
+            statvalue = GetExtraStats(parts, "MinAccuracy");
             if (statvalue != 0)
                 WeaponInfo += "\r\n" + statvalue.ToString("P") + " Min Accuracy";
 
