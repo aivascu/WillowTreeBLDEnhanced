@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aga.Controls.Tree
 {
-	public class TreeViewAdvEventArgs : EventArgs
+    public class TreeViewAdvEventArgs : EventArgs
 	{
 		private TreeNodeAdv _node;
 

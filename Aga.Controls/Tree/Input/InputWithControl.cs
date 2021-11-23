@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Aga.Controls.Tree
 {
-	internal class InputWithControl: NormalInputState
+    internal class InputWithControl: NormalInputState
 	{
 		public InputWithControl(TreeViewAdv tree): base(tree)
 		{

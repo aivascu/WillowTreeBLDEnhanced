@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aga.Controls.Tree
 {
-	internal class InputWithShift: NormalInputState
+    internal class InputWithShift: NormalInputState
 	{
 		public InputWithShift(TreeViewAdv tree): base(tree)
 		{

@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	public class Node
+    public class Node
 	{
 		#region NodeCollection
 

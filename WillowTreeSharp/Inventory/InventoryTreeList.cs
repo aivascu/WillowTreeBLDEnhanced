@@ -18,14 +18,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Aga.Controls.Tree;
-using System.Xml;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using System.Xml;
 using WillowTree.CustomControls;
 
 namespace WillowTree.Inventory

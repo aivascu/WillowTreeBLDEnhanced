@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aga.Controls.Tree
 {
-	public class TreeModelEventArgs: TreePathEventArgs
+    public class TreeModelEventArgs: TreePathEventArgs
 	{
 		private object[] _children;
 		public object[] Children

@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Security.Permissions;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	internal class ResizeColumnState: ColumnState
+    internal class ResizeColumnState: ColumnState
 	{
 		private Point _initLocation;
 		private int _initWidth;

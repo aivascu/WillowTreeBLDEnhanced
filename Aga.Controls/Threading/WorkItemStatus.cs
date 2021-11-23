@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Aga.Controls.Threading
 {
-	public enum WorkItemStatus 
+    public enum WorkItemStatus 
 	{ 
 		Completed, 
 		Queued, 

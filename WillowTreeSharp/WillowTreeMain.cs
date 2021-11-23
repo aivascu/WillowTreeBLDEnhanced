@@ -19,11 +19,13 @@
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using Aga.Controls.Tree;
+using Aga.Controls.Tree.NodeControls;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
+//using System.Reflection;
+//using System.Diagnostics;
+using System.Drawing;
 //using System.Xml;
 //using X360.IO;
 //using X360.STFS;
@@ -32,13 +34,9 @@ using System.Windows.Forms;
 //using System.Net;
 //using System.Threading;
 using System.IO;
-//using System.Reflection;
-//using System.Diagnostics;
-using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using WillowTree.CustomControls;
-using Aga.Controls;
-using Aga.Controls.Tree;
-using Aga.Controls.Tree.NodeControls;
 using WillowTree.Inventory;
 using WillowTree.Plugins;
 

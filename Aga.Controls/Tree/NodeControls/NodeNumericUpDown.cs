@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Reflection;
-using System.ComponentModel;
-using System.Drawing.Design;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class NodeNumericUpDown : BaseTextControl
+    public class NodeNumericUpDown : BaseTextControl
 	{
 		#region Properties
 

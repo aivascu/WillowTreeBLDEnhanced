@@ -1,4 +1,7 @@
+using Aga.Controls.Threading;
+using Aga.Controls.Tree.NodeControls;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,21 +9,17 @@ using System.Drawing;
 using System.Security.Permissions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Collections;
-
-using Aga.Controls.Tree.NodeControls;
-using Aga.Controls.Threading;
 
 
 namespace Aga.Controls.Tree
 {
-	/// <summary>
-	/// Extensible advanced <see cref="TreeView"/> implemented in 100% managed C# code.
-	/// Features: Model/View architecture. Multiple column per node. Ability to select
-	/// multiple tree nodes. Different types of controls for each node column: 
-	/// <see cref="CheckBox"/>, Icon, Label... Drag and Drop highlighting. Load on
-	/// demand of nodes. Incremental search of nodes.
-	/// </summary>
+    /// <summary>
+    /// Extensible advanced <see cref="TreeView"/> implemented in 100% managed C# code.
+    /// Features: Model/View architecture. Multiple column per node. Ability to select
+    /// multiple tree nodes. Different types of controls for each node column: 
+    /// <see cref="CheckBox"/>, Icon, Label... Drag and Drop highlighting. Load on
+    /// demand of nodes. Incremental search of nodes.
+    /// </summary>
     [System.ComponentModel.DesignerCategory("")]
 	public partial class TreeViewAdv : Control
 	{

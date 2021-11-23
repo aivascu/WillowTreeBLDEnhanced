@@ -1,12 +1,11 @@
+using Aga.Controls.Tree.NodeControls;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
-using Aga.Controls.Tree.NodeControls;
 
 namespace Aga.Controls.Tree
 {
-	public class AutoRowHeightLayout: IRowLayout
+    public class AutoRowHeightLayout: IRowLayout
 	{
 		private DrawContext _measureContext;
 		private TreeViewAdv _treeView;

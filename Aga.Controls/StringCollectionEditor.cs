@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel.Design;
 
 namespace Aga.Controls
 {
-	public class StringCollectionEditor : CollectionEditor
+    public class StringCollectionEditor : CollectionEditor
 	{
 		public StringCollectionEditor(Type type): base(type)
 		{

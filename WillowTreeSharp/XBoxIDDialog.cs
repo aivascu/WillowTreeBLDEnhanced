@@ -18,13 +18,11 @@
  */
 
 using System;
-using System.Drawing;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
-using X360.STFS;
 using X360.IO;
+using X360.STFS;
 
 namespace WillowTree
 {

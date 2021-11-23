@@ -3,12 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace Aga.Controls.Threading
 {
-	public class AbortableThreadPool
+    public class AbortableThreadPool
 	{
 		private LinkedList<WorkItem> _callbacks = new LinkedList<WorkItem>();
 		private Dictionary<WorkItem, Thread> _threads = new Dictionary<WorkItem, Thread>();

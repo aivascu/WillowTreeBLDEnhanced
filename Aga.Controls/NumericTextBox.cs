@@ -1,18 +1,18 @@
 using System;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Globalization;
+using System.Windows.Forms;
 
 
 namespace Aga.Controls
 {
-	/// <summary>
-	/// Restricts the entry of characters to digits, the negative sign,
-	/// the decimal point, and editing keystrokes (backspace).
-	/// It does not handle the AltGr key so any keys that can be created in any
-	/// combination with AltGr these are not filtered
-	/// </summary>
-	public class NumericTextBox : TextBox
+    /// <summary>
+    /// Restricts the entry of characters to digits, the negative sign,
+    /// the decimal point, and editing keystrokes (backspace).
+    /// It does not handle the AltGr key so any keys that can be created in any
+    /// combination with AltGr these are not filtered
+    /// </summary>
+    public class NumericTextBox : TextBox
 	{
 		private const int WM_PASTE = 0x302;
 		private NumberStyles numberStyle = NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign;

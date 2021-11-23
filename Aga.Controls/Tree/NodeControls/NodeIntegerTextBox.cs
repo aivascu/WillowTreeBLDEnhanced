@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Aga.Controls.Tree.NodeControls
 {
 
-	public class NodeIntegerTextBox : NodeTextBox
+    public class NodeIntegerTextBox : NodeTextBox
 	{
 		private bool _allowNegativeSign = true;
 		[DefaultValue(true)]

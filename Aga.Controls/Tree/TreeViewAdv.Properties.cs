@@ -1,3 +1,4 @@
+using Aga.Controls.Tree.NodeControls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,11 +7,9 @@ using System.Drawing;
 using System.Drawing.Design;
 using System.Windows.Forms;
 
-using Aga.Controls.Tree.NodeControls;
-
 namespace Aga.Controls.Tree
 {
-	public partial class TreeViewAdv
+    public partial class TreeViewAdv
 	{
 		private Cursor _innerCursor = null;
 

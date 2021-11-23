@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Aga.Controls.Tree
 {
-	public struct DropPosition
+    public struct DropPosition
 	{
 		private TreeNodeAdv _node;
 		public TreeNodeAdv Node

@@ -18,11 +18,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 //using System.Drawing;
 //using System.Linq;
 using System.Windows.Forms;
-using System.Reflection;
-using WillowTree.CustomControls;
 
 namespace WillowTree.Plugins
 {

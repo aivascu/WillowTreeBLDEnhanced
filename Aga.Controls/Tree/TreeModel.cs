@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Collections.ObjectModel;
 
 namespace Aga.Controls.Tree
 {
-	/// <summary>
-	/// Provides a simple ready to use implementation of <see cref="ITreeModel"/>. Warning: this class is not optimized 
-	/// to work with big amount of data. In this case create you own implementation of <c>ITreeModel</c>, and pay attention
-	/// on GetChildren and IsLeaf methods.
-	/// </summary>
-	public class TreeModel : ITreeModel
+    /// <summary>
+    /// Provides a simple ready to use implementation of <see cref="ITreeModel"/>. Warning: this class is not optimized 
+    /// to work with big amount of data. In this case create you own implementation of <c>ITreeModel</c>, and pay attention
+    /// on GetChildren and IsLeaf methods.
+    /// </summary>
+    public class TreeModel : ITreeModel
 	{
 		private Node _root;
 		public Node Root

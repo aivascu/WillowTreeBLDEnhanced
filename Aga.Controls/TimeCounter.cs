@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Aga.Controls
 {
-	/// <summary>
-	/// High resolution timer, used to test performance
-	/// </summary>
-	public static class TimeCounter
+    /// <summary>
+    /// High resolution timer, used to test performance
+    /// </summary>
+    public static class TimeCounter
 	{
 		private static Int64 _start;
 

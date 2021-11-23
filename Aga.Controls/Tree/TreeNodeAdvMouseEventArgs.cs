@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
 using Aga.Controls.Tree.NodeControls;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	public class TreeNodeAdvMouseEventArgs : MouseEventArgs
+    public class TreeNodeAdvMouseEventArgs : MouseEventArgs
 	{
 		private TreeNodeAdv _node;
 		public TreeNodeAdv Node

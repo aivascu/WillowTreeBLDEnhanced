@@ -17,12 +17,10 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace WillowTree
 {
-   public interface IPlugin
+    public interface IPlugin
     {
         string Name { get; set; }
         void InitializePlugin(PluginComponentManager pm);

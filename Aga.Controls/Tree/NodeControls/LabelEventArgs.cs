@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class LabelEventArgs : EventArgs
+    public class LabelEventArgs : EventArgs
 	{
 		private object _subject;
 		public object Subject

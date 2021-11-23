@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
-using System.Windows.Forms;
-using Aga.Controls.Properties;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class NodeIcon : BindableControl
+    public class NodeIcon : BindableControl
 	{
 		public NodeIcon()
 		{

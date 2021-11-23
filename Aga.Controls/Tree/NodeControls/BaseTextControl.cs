@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Reflection;
-using System.ComponentModel;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public abstract class BaseTextControl : EditableControl
+    public abstract class BaseTextControl : EditableControl
 	{
 		private TextFormatFlags _baseFormatFlags;
         private TextFormatFlags _formatFlags;

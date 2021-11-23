@@ -1,14 +1,10 @@
+using Aga.Controls.Tree.NodeControls;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Aga.Controls.Tree.NodeControls;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	internal class IncrementalSearch
+    internal class IncrementalSearch
 	{
 		private const int SearchTimeout = 300; //end of incremental search timeot in msec
 

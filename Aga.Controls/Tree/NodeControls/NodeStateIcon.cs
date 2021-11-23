@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
 using Aga.Controls.Properties;
+using System.Drawing;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class NodeStateIcon: NodeIcon
+    public class NodeStateIcon: NodeIcon
 	{
 		private Image _leaf;
 		private Image _opened;

@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	[DesignTimeVisible(false), ToolboxItem(false)]
+    [DesignTimeVisible(false), ToolboxItem(false)]
 	public abstract class NodeControl : Component
 	{
 		#region Properties

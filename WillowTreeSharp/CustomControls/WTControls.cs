@@ -15,17 +15,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+using Aga.Controls.Tree;
+using Aga.Controls.Tree.NodeControls;
 using System;
-using System.Linq;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Drawing.Design;
-using System.Collections;
-using Aga.Controls.Tree;
-using Aga.Controls;
-using Aga.Controls.Tree.NodeControls;
 
 namespace WillowTree.CustomControls
 {

@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
+using System.Text;
 
 namespace Aga.Controls
 {
-	/// <summary>
-	/// Is used to analyze code performance
-	/// </summary>
-	public static class PerformanceAnalyzer
+    /// <summary>
+    /// Is used to analyze code performance
+    /// </summary>
+    public static class PerformanceAnalyzer
 	{
 		public class PerformanceInfo
 		{

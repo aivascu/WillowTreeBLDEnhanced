@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
 namespace Aga.Controls.Tree
 {
-	[Serializable]
+    [Serializable]
 	public sealed class TreeNodeAdv : ISerializable
 	{
 		#region NodeCollection

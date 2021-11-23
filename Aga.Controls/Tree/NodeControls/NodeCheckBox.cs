@@ -1,13 +1,13 @@
-using System;
-using System.Drawing;
 using Aga.Controls.Properties;
+using System;
+using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using System.ComponentModel;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class NodeCheckBox : InteractiveControl
+    public class NodeCheckBox : InteractiveControl
 	{
 		public const int ImageSize = 13;
 

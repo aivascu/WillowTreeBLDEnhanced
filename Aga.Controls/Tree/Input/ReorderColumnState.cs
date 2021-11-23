@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	internal class ReorderColumnState : ColumnState
+    internal class ReorderColumnState : ColumnState
 	{
 		#region Properties
 

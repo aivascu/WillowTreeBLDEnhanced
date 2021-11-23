@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	/// <summary>
-	/// Displays an animated icon for those nodes, who are in expanding state. 
-	/// Parent TreeView must have AsyncExpanding property set to true.
-	/// </summary>
-	public class ExpandingIcon: NodeControl
+    /// <summary>
+    /// Displays an animated icon for those nodes, who are in expanding state. 
+    /// Parent TreeView must have AsyncExpanding property set to true.
+    /// </summary>
+    public class ExpandingIcon: NodeControl
 	{
 		private static GifDecoder _gif = ResourceHelper.LoadingIcon;
 		private static int _index = 0;

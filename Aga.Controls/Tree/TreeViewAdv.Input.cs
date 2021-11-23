@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
 using Aga.Controls.Tree.NodeControls;
+using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	public partial class TreeViewAdv
+    public partial class TreeViewAdv
 	{
 		#region Keys
 

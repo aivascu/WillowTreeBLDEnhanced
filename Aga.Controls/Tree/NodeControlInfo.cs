@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Aga.Controls.Tree.NodeControls;
 using System.Drawing;
 
 namespace Aga.Controls.Tree
 {
-	public struct NodeControlInfo
+    public struct NodeControlInfo
 	{
 		public static readonly NodeControlInfo Empty = new NodeControlInfo(null, Rectangle.Empty, null);
 

@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Reflection;
 using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Design;
+using System.Text;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class NodeComboBox : BaseTextControl
+    public class NodeComboBox : BaseTextControl
 	{
 		#region Properties
 

@@ -1,10 +1,6 @@
-using System;
-using System.Text;
-using System.Collections.ObjectModel;
-
 namespace Aga.Controls.Tree
 {
-	public class TreePath
+    public class TreePath
 	{
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
 		public static readonly TreePath Empty = new TreePath();

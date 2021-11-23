@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
 using Aga.Controls.Tree.NodeControls;
+using System.Drawing;
 
 namespace Aga.Controls.Tree
 {
-	public struct DrawContext
+    public struct DrawContext
 	{
 		private Graphics _graphics;
 		public Graphics Graphics

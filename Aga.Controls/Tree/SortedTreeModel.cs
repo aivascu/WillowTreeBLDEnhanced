@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 
 namespace Aga.Controls.Tree
 {
-	public class SortedTreeModel: TreeModelBase
+    public class SortedTreeModel: TreeModelBase
 	{
 		private ITreeModel _innerModel;
 		public ITreeModel InnerModel

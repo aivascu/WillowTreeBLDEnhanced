@@ -18,18 +18,18 @@
 
 using System;
 using System.Collections.Generic;
-//using System.Linq;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Collections.ObjectModel;
 //using System.Windows.Forms.Design;
 //using System.Windows.Forms.Design.Behavior;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
 //using System.ComponentModel.Design;
 //using System.Runtime;
 //using System.Diagnostics;
 using System.ComponentModel.Design.Serialization;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+//using System.Linq;
+using System.Windows.Forms;
 
 namespace WillowTree.CustomControls
 {

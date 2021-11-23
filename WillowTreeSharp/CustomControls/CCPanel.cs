@@ -15,14 +15,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Drawing.Design;
 
 namespace WillowTree.CustomControls
 {

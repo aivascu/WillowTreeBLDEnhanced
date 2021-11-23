@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	internal class NormalInputState : InputState
+    internal class NormalInputState : InputState
 	{
 		private bool _mouseDownFlag = false;
 

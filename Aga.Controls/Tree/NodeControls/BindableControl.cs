@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public abstract class BindableControl : NodeControl
+    public abstract class BindableControl : NodeControl
 	{
 		private struct MemberAdapter
 		{

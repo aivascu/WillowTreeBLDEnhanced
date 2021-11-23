@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using Aga.Controls.Tree.NodeControls;
+﻿using Aga.Controls.Tree.NodeControls;
+using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	partial class TreeViewAdv
+    partial class TreeViewAdv
 	{
 		private TreeNodeAdv _editingNode;
 

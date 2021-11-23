@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aga.Controls.Tree
 {
-	public abstract class TreeModelBase: ITreeModel
+    public abstract class TreeModelBase: ITreeModel
 	{
 		public abstract System.Collections.IEnumerable GetChildren(TreePath treePath);
 		public abstract bool IsLeaf(TreePath treePath);

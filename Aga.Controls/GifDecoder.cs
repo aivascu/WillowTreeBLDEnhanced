@@ -27,12 +27,11 @@
 using System;
 using System.Collections;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
 namespace Aga.Controls
 {
-	public class GifFrame
+    public class GifFrame
 	{
 		private Image _image;
 		public Image Image

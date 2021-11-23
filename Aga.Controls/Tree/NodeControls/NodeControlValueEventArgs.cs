@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class NodeControlValueEventArgs : NodeEventArgs
+    public class NodeControlValueEventArgs : NodeEventArgs
 	{
 		private object _value;
 		public object Value

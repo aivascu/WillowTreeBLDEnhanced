@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class EditEventArgs : NodeEventArgs
+    public class EditEventArgs : NodeEventArgs
 	{
 		private Control _control;
 		public Control Control

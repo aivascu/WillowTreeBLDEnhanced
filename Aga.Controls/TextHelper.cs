@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls
 {
-	public static class TextHelper
+    public static class TextHelper
 	{
 		public static StringAlignment TranslateAligment(HorizontalAlignment alignment)
 		{

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 namespace Aga.Controls.Tree
 {
-	internal abstract class InputState
+    internal abstract class InputState
 	{
 		private TreeViewAdv _tree;
 

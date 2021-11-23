@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Aga.Controls.Tree
 {
-	public class DropNodeValidatingEventArgs: EventArgs
+    public class DropNodeValidatingEventArgs: EventArgs
 	{
 		Point _point;
 		TreeNodeAdv _node;

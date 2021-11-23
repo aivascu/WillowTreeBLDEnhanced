@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace Aga.Controls
 {
-	public static class BitmapHelper
+    public static class BitmapHelper
 	{
 		[StructLayout(LayoutKind.Sequential)]
 		private struct PixelData

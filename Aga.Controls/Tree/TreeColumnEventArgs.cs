@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aga.Controls.Tree
 {
-	public class TreeColumnEventArgs: EventArgs
+    public class TreeColumnEventArgs: EventArgs
 	{
 		private TreeColumn _column;
 		public TreeColumn Column

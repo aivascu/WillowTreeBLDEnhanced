@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree.NodeControls
 {
-	public abstract class EditableControl : InteractiveControl
+    public abstract class EditableControl : InteractiveControl
 	{
 		private Timer _timer;
 		private bool _editFlag;

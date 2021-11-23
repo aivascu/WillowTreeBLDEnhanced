@@ -20,8 +20,8 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
+using System.Linq;
 //using System.Xml;
 //using System.Windows.Forms;
 using WillowTree.Inventory;

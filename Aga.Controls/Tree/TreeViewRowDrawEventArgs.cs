@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Aga.Controls.Tree
 {
-	public class TreeViewRowDrawEventArgs: PaintEventArgs
+    public class TreeViewRowDrawEventArgs: PaintEventArgs
 	{
 		TreeNodeAdv _node;
 		DrawContext _context;

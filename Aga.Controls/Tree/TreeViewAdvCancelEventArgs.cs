@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Aga.Controls.Tree
 {
-	public class TreeViewAdvCancelEventArgs : TreeViewAdvEventArgs
+    public class TreeViewAdvCancelEventArgs : TreeViewAdvEventArgs
 	{
 		private bool _cancel;
 

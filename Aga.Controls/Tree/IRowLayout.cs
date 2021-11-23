@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 
 namespace Aga.Controls.Tree
 {
-	internal interface IRowLayout
+    internal interface IRowLayout
 	{
 		int PreferredRowHeight
 		{

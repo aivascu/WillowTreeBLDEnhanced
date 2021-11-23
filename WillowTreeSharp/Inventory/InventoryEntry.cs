@@ -20,11 +20,10 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using System.IO;
 
 namespace WillowTree.Inventory
 {

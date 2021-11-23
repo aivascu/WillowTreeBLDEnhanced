@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aga.Controls.Tree
 {
-	/// <summary>
-	/// Converts IEnumerable interface to ITreeModel. 
-	/// Allows to display a plain list in the TreeView
-	/// </summary>
-	public class TreeListAdapter : ITreeModel
+    /// <summary>
+    /// Converts IEnumerable interface to ITreeModel. 
+    /// Allows to display a plain list in the TreeView
+    /// </summary>
+    public class TreeListAdapter : ITreeModel
 	{
 		private System.Collections.IEnumerable _list;
 

@@ -19,12 +19,7 @@
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
-using System.Drawing;
-using System.Linq;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Diagnostics;
-using WillowTree.Inventory;
 
 namespace WillowTree.Plugins
 {

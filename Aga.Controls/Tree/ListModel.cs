@@ -1,11 +1,9 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
 
 namespace Aga.Controls.Tree
 {
-	public class ListModel : TreeModelBase
+    public class ListModel : TreeModelBase
 	{
 		private IList _list;
 

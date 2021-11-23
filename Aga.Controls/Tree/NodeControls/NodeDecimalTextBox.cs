@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
+using System.ComponentModel;
 using System.Windows.Forms;
-using System.Reflection;
-using System.ComponentModel; 
- 
+
 namespace Aga.Controls.Tree.NodeControls
 {
-	public class NodeDecimalTextBox : NodeTextBox
+    public class NodeDecimalTextBox : NodeTextBox
 	{
 		private bool _allowDecimalSeparator = true;
 		[DefaultValue(true)]

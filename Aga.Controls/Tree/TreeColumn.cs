@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Drawing;
-using System.Windows.Forms.VisualStyles;
 using System.Drawing.Imaging;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Aga.Controls.Tree
 {
-	[TypeConverter(typeof(TreeColumn.TreeColumnConverter)), DesignTimeVisible(false), ToolboxItem(false)]
+    [TypeConverter(typeof(TreeColumn.TreeColumnConverter)), DesignTimeVisible(false), ToolboxItem(false)]
 	public class TreeColumn : Component
 	{
 		private class TreeColumnConverter : ComponentConverter
