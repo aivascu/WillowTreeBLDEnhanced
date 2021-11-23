@@ -224,9 +224,6 @@
     <Content Include="COPYING.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="tools\bin_exclude.txt" />
-    <Content Include="tools\listfiles.vbs" />
-    <Content Include="tools\src_exclude.txt" />
     <EmbeddedResource Include="AppThemes.resx">
       <DependentUpon>AppThemes.cs</DependentUpon>
     </EmbeddedResource>
@@ -456,7 +453,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="tools\makedist.bat" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\WT_Background.png" />
