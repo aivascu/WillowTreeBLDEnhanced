@@ -17,7 +17,7 @@ namespace WillowTree
         public static bool ShowRarity;
         public static bool ShowLevel = true;
         public static string lastLockerFile = string.Empty;
-        public static Color BackgroundColor = Color.FromArgb(48, 48, 48);
+        public static Color BackgroundColor = Color.FromArgb(0x30, 0x30, 0x30);
 
         // ------- MAX VALUES ---------
         // All values that exceed these sanity limits will be adjusted by the UI and give the
@@ -51,9 +51,9 @@ namespace WillowTree
                 Color.White,
                 Color.FromArgb(0x3d, 0xe6, 0x0b),
                 Color.FromArgb(0x2f, 0x78, 0xff),
-                Color.FromArgb(185, 64, 255),
-                Color.FromArgb(255, 220 ,53),
-                Color.FromArgb(0xff,0x96, 0x00),
+                Color.FromArgb(0xB9, 0x40, 0xFF),
+                Color.FromArgb(0xFF, 0xDC ,0x35),
+                Color.FromArgb(0xff, 0x96, 0x00),
                 Color.DarkOrange,
                 Color.Cyan,
                 Color.FromArgb(0x3d, 0xe6, 0x0b),
