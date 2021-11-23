@@ -10,8 +10,8 @@ namespace WillowTree
     public static class GameData
     {
         private static Dictionary<string, string> NameLookup;
-        public static string AppPath = WillowSaveGame.AppPath;
-        public static string DataPath = WillowSaveGame.DataPath;
+        public static readonly string AppPath = WillowSaveGame.AppPath;
+        public static readonly string DataPath = WillowSaveGame.DataPath;
         public static string XmlPath = DataPath + "Xml" + Path.DirectorySeparatorChar;
         private static string OpenedLocker; //Keep tracking of last open locker file
 

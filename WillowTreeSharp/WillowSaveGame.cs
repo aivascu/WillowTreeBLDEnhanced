@@ -44,11 +44,10 @@ namespace WillowTree
         // a UriFormatException for some reason.  I'm rewriting this line to try to resolve it.
         // This also removes the dependence of WillowSaveGame on Windows Forms since
         // Application is a part of the System.Windows.Forms namespace.
-        //public static string AppPath = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar;
 
-        public static string AppPath = (Assembly.GetEntryAssembly() != null ? Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) : "") +
+        public static readonly string AppPath = (Assembly.GetEntryAssembly() != null ? Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) : "") +
                                        Path.DirectorySeparatorChar;
-        public static string DataPath = AppPath + "Data" + Path.DirectorySeparatorChar;
+        public static readonly string DataPath = AppPath + "Data" + Path.DirectorySeparatorChar;
 
         // Used for all single-byte string encodings.
         private static Encoding _singleByteEncoding; // DO NOT REFERENCE THIS DIRECTLY!
