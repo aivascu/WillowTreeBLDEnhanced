@@ -1,59 +1,27 @@
-﻿/*  This file is part of WillowTree#
- * 
- *  Copyright (C) 2011 Matthew Carter <matt911@users.sf.net>
- * 
- *  WillowTree# is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  WillowTree# is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
- */
+﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Xml;
 
 namespace WillowTree
 {
-
-    public class GlobalSettings
+    public static class GlobalSettings
     {
-        // GlobalSettings provides a place to collect all the settings that
-        // I want to be able to be loaded and saved to the user option
-        // file options.xml.  
-        public delegate void InputMethodChangedEventHandler(WillowTree.InputMode method, bool UseHexadecimal);
-        static public event InputMethodChangedEventHandler InputMethodChanged;
+        public static InputMode InputMode { get; set; } = InputMode.Standard;
 
-        static private WillowTree.InputMode _InputMode = WillowTree.InputMode.Standard;
-        static public WillowTree.InputMode InputMode
-        {
-            get { return _InputMode; }
-            set
-            {
-                _InputMode = value;
-                if (InputMethodChanged != null)
-                    InputMethodChanged(InputMode, UseHexInAdvancedMode);
-            }
-        }
-
-        static public bool UseHexInAdvancedMode = false;
-        static public bool PartSelectorTracking = true;
-        static public bool ShowManufacturer = false;
-        static public bool UseColor = false;
-        static public bool ShowRarity = false;
-        static public bool ShowLevel = true;
-        static public string lastLockerFile = string.Empty;
-        static public Color BackgroundColor = Color.FromArgb(48, 48, 48);
+        public static bool UseHexInAdvancedMode;
+        public static bool PartSelectorTracking = true;
+        public static bool ShowManufacturer;
+        public static bool UseColor;
+        public static bool ShowRarity;
+        public static bool ShowLevel = true;
+        public static string lastLockerFile = string.Empty;
+        public static Color BackgroundColor = Color.FromArgb(48, 48, 48);
 
         // ------- MAX VALUES ---------
-        // All values that exceed these sanity limits will be adjusted by the UI and give the 
-        // user a warning except for cash.  Cash increases too often automatically through 
+        // All values that exceed these sanity limits will be adjusted by the UI and give the
+        // user a warning except for cash.  Cash increases too often automatically through
         // gameplay so it will be adjusted silently to prevent receiving a warning every time
         // the savegame is opened.
         //
@@ -61,28 +29,28 @@ namespace WillowTree
         // the limits in 'options.xml'.  These values are the defaults if 'options.xml' has
         // not yet been created or its values are missing or corrupt.
         // ----------------------------
-        
-        // Borderlands 1.4.2.1 (Steam PC) has a bug that allows the cash to go to an extreme 
-        // negative number if you exceed int.MaxValue when picking up a money bag off the ground.
-        // You cannot buy anything in that state until you sell an item to the shop, which will 
-        // set your money back to int.MaxValue again and repeat the cycle when you again pick
-        // up money off the ground.  The default for MaxCash is set to 1 billion to stay clear 
-        // of int.MaxValue and avoid that problem.  Bank and Backpack limits exist to keep the
-        // savegame file from becoming excessively large which slows down loading.  Borderlands 
-        // can support much higher values but these are safe and sane.
-        static public int MaxCash = 1000000000;
-        static public int MaxExperience = 8451341;
-        static public int MaxLevel = 69;
-        static public int MaxBackpackSlots = 1000;
-        static public int MaxBankSlots = 1000;
-        static public int MaxSkillPoints = 500;
 
-        static public Color[] RarityColor =
+        // Borderlands 1.4.2.1 (Steam PC) has a bug that allows the cash to go to an extreme
+        // negative number if you exceed int.MaxValue when picking up a money bag off the ground.
+        // You cannot buy anything in that state until you sell an item to the shop, which will
+        // set your money back to int.MaxValue again and repeat the cycle when you again pick
+        // up money off the ground.  The default for MaxCash is set to 1 billion to stay clear
+        // of int.MaxValue and avoid that problem.  Bank and Backpack limits exist to keep the
+        // savegame file from becoming excessively large which slows down loading.  Borderlands
+        // can support much higher values but these are safe and sane.
+        public static int MaxCash = 1000000000;
+
+        public static int MaxExperience = 8451341;
+        public static int MaxLevel = 69;
+        public static int MaxBackpackSlots = 1000;
+        public static int MaxBankSlots = 1000;
+        public static int MaxSkillPoints = 500;
+
+        public static Color[] RarityColor =
             {
                 Color.White,
                 Color.FromArgb(0x3d, 0xe6, 0x0b),
-                Color.FromArgb(0x2f, 0x78, 0xff), 
-//                Color.FromArgb(3111167),
+                Color.FromArgb(0x2f, 0x78, 0xff),
                 Color.FromArgb(185, 64, 255),
                 Color.FromArgb(255, 220 ,53),
                 Color.FromArgb(0xff,0x96, 0x00),
@@ -94,54 +62,53 @@ namespace WillowTree
                 Color.Yellow,
             };
 
-        static public void Save()
+        public static void Save()
         {
             string filename = GameData.XmlPath + "options.xml";
 
-            using (XmlTextWriter gs = new XmlTextWriter(filename, Encoding.UTF8))
+            using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
             {
-                gs.WriteStartDocument();
-                gs.Formatting = Formatting.Indented;
-                gs.WriteStartElement("Settings");
+                writer.WriteStartDocument();
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartElement("Settings");
 
-                gs.WriteElementString("InputMode", InputMode.ToString());
-                gs.WriteElementString("UseHexInAdvancedMode", UseHexInAdvancedMode.ToString());
-                gs.WriteElementString("PartSelectorTracking", PartSelectorTracking.ToString());
-                gs.WriteElementString("ShowManufacturer", ShowManufacturer.ToString());
-                gs.WriteElementString("UseColor", UseColor.ToString());
-                gs.WriteElementString("ShowRarity", ShowRarity.ToString());
-                gs.WriteElementString("ShowLevel", ShowLevel.ToString());
-                gs.WriteElementString("lastLockerFile", GameData.OpenedLockerFilename());
+                writer.WriteElementString("InputMode", InputMode.ToString());
+                writer.WriteElementString("UseHexInAdvancedMode", UseHexInAdvancedMode.ToString());
+                writer.WriteElementString("PartSelectorTracking", PartSelectorTracking.ToString());
+                writer.WriteElementString("ShowManufacturer", ShowManufacturer.ToString());
+                writer.WriteElementString("UseColor", UseColor.ToString());
+                writer.WriteElementString("ShowRarity", ShowRarity.ToString());
+                writer.WriteElementString("ShowLevel", ShowLevel.ToString());
+                writer.WriteElementString("lastLockerFile", GameData.OpenedLockerFilename());
 
-                gs.WriteElementString("MaxCash", MaxCash.ToString());
-                gs.WriteElementString("MaxLevel", MaxLevel.ToString());
-                gs.WriteElementString("MaxExperience", MaxExperience.ToString());
-                gs.WriteElementString("MaxInventorySlots", MaxBackpackSlots.ToString());
-                gs.WriteElementString("MaxBankSlots", MaxBankSlots.ToString());
-                gs.WriteElementString("MaxSkillPoints", MaxSkillPoints.ToString());
+                writer.WriteElementString("MaxCash", MaxCash.ToString());
+                writer.WriteElementString("MaxLevel", MaxLevel.ToString());
+                writer.WriteElementString("MaxExperience", MaxExperience.ToString());
+                writer.WriteElementString("MaxInventorySlots", MaxBackpackSlots.ToString());
+                writer.WriteElementString("MaxBankSlots", MaxBankSlots.ToString());
+                writer.WriteElementString("MaxSkillPoints", MaxSkillPoints.ToString());
 
-                gs.WriteElementString("RarityColor0", RarityColor[0].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor1", RarityColor[1].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor2", RarityColor[2].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor3", RarityColor[3].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor4", RarityColor[4].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor5", RarityColor[5].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor6", RarityColor[6].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor7", RarityColor[7].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor8", RarityColor[8].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor9", RarityColor[9].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor10", RarityColor[10].ToArgb().ToString("X"));
-                gs.WriteElementString("RarityColor11", RarityColor[11].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor0", RarityColor[0].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor1", RarityColor[1].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor2", RarityColor[2].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor3", RarityColor[3].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor4", RarityColor[4].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor5", RarityColor[5].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor6", RarityColor[6].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor7", RarityColor[7].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor8", RarityColor[8].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor9", RarityColor[9].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor10", RarityColor[10].ToArgb().ToString("X"));
+                writer.WriteElementString("RarityColor11", RarityColor[11].ToArgb().ToString("X"));
 
-                gs.WriteEndElement();
-                gs.WriteEndDocument();
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
             }
         }
 
-        static private bool XmlReadBool(XmlTextReader gs, ref bool var)
+        private static bool XmlReadBool(XmlTextReader reader, ref bool var)
         {
-            bool value;
-            if (bool.TryParse(gs.ReadElementContentAsString(), out value))
+            if (bool.TryParse(reader.ReadElementContentAsString(), out bool value))
             {
                 var = value;
                 return true;
@@ -149,10 +116,9 @@ namespace WillowTree
             return false;
         }
 
-        static private bool XmlReadInt(XmlTextReader gs, ref int var)
+        private static bool XmlReadInt(XmlTextReader reader, ref int var)
         {
-            int value;
-            if (int.TryParse(gs.ReadElementContentAsString(), out value))
+            if (int.TryParse(reader.ReadElementContentAsString(), out int value))
             {
                 var = value;
                 return true;
@@ -160,72 +126,83 @@ namespace WillowTree
             return false;
         }
 
-        static public void Load()
+        public static void Load()
         {
             string filename = GameData.XmlPath + "options.xml";
 
-            if (!System.IO.File.Exists(filename))
+            if (!File.Exists(filename))
+            {
                 return;
-            using (XmlTextReader gs = new XmlTextReader(filename))
+            }
+
+            using (XmlTextReader reader = new XmlTextReader(filename))
             {
-                gs.XmlResolver = null;
-                while (gs.Read())
+                reader.XmlResolver = null;
+                while (reader.Read())
                 {
-                    if (gs.NodeType == XmlNodeType.Element)
+                    if (reader.NodeType != XmlNodeType.Element)
                     {
-                        switch (gs.Name)
-                        {
-                            case "InputMode":
-                                string InputModeText = gs.ReadElementContentAsString();
-                                if (InputModeText == "Advanced")
-                                    InputMode = InputMode.Advanced;
-                                else if (InputModeText == "Standard")
-                                    InputMode = InputMode.Standard;
-                                break;
-                            case "UseHexInAdvancedMode": XmlReadBool(gs, ref UseHexInAdvancedMode); break;
-                            case "PartSelectorTracking": XmlReadBool(gs, ref PartSelectorTracking); break;
-                            case "ShowManufacturer": XmlReadBool(gs, ref ShowManufacturer); break;
-                            case "ShowRarity": XmlReadBool(gs, ref ShowRarity); break;
-                            case "ShowLevel": XmlReadBool(gs, ref ShowLevel); break;
-                            case "UseColor": XmlReadBool(gs, ref UseColor); break;
-                            case "lastLockerFile":
+                        continue;
+                    }
+
+                    switch (reader.Name)
+                    {
+                        case "InputMode":
+                            InputMode = GetInputMethod(reader.ReadElementContentAsString());
+                            break;
+
+                        case "UseHexInAdvancedMode": XmlReadBool(reader, ref UseHexInAdvancedMode); break;
+                        case "PartSelectorTracking": XmlReadBool(reader, ref PartSelectorTracking); break;
+                        case "ShowManufacturer": XmlReadBool(reader, ref ShowManufacturer); break;
+                        case "ShowRarity": XmlReadBool(reader, ref ShowRarity); break;
+                        case "ShowLevel": XmlReadBool(reader, ref ShowLevel); break;
+                        case "UseColor": XmlReadBool(reader, ref UseColor); break;
+                        case "lastLockerFile":
+                            {
+                                GameData.OpenedLockerFilename(reader.ReadElementContentAsString());
+                            }
+                            break;
+
+                        case "MaxCash": XmlReadInt(reader, ref MaxCash); break;
+                        case "MaxLevel": XmlReadInt(reader, ref MaxLevel); break;
+                        case "MaxExperience": XmlReadInt(reader, ref MaxExperience); break;
+                        case "MaxInventorySlots": XmlReadInt(reader, ref MaxBackpackSlots); break;
+                        case "MaxBankSlots": XmlReadInt(reader, ref MaxBankSlots); break;
+                        case "MaxSkillPoints": XmlReadInt(reader, ref MaxSkillPoints); break;
+
+                        case "RarityColor0":
+                        case "RarityColor1":
+                        case "RarityColor2":
+                        case "RarityColor3":
+                        case "RarityColor4":
+                        case "RarityColor5":
+                        case "RarityColor6":
+                        case "RarityColor7":
+                        case "RarityColor8":
+                        case "RarityColor9":
+                        case "RarityColor10":
+                        case "RarityColor11":
+                            try
+                            {
+                                int index = Parse.AsInt(reader.Name.After("RarityColor"));
+                                string text = reader.ReadElementContentAsString();
+                                if (uint.TryParse(text, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out uint colorval))
                                 {
-                                    GameData.OpenedLockerFilename(gs.ReadElementContentAsString());
+                                    RarityColor[index] = Color.FromArgb((int)colorval);
                                 }
-                                break;
-
-                            case "MaxCash": XmlReadInt(gs, ref MaxCash); break;
-                            case "MaxLevel": XmlReadInt(gs, ref MaxLevel); break;
-                            case "MaxExperience": XmlReadInt(gs, ref MaxExperience); break;
-                            case "MaxInventorySlots": XmlReadInt(gs, ref MaxBackpackSlots); break;
-                            case "MaxBankSlots": XmlReadInt(gs, ref MaxBankSlots); break;
-                            case "MaxSkillPoints": XmlReadInt(gs, ref MaxSkillPoints); break;
-
-                            case "RarityColor0":
-                            case "RarityColor1":
-                            case "RarityColor2":
-                            case "RarityColor3":
-                            case "RarityColor4":
-                            case "RarityColor5":
-                            case "RarityColor6":
-                            case "RarityColor7":
-                            case "RarityColor8":
-                            case "RarityColor9":
-                            case "RarityColor10":
-                            case "RarityColor11":
-                                try
-                                {
-                                    int index = Parse.AsInt(gs.Name.After("RarityColor"));
-                                    uint colorval;
-                                    string text = gs.ReadElementContentAsString();
-                                    if (uint.TryParse(text, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out colorval))
-                                        GlobalSettings.RarityColor[index] = Color.FromArgb((int)colorval);
-                                } catch { }
-                                break;
-                        }
+                            }
+                            catch { }
+                            break;
                     }
                 }
             }
+        }
+
+        private static InputMode GetInputMethod(string inputMode)
+        {
+            return string.Equals(inputMode, "Advanced", StringComparison.OrdinalIgnoreCase)
+                ? InputMode.Advanced
+                : InputMode.Standard;
         }
     }
 }
