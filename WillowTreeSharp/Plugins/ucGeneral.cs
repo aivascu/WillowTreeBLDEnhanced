@@ -46,7 +46,7 @@ namespace WillowTree.Plugins
 
             this.Enabled = false;
             LocationsXml = GameData.LocationsXml;
-            GameData.setXPchart();
+            GameData.SetXPchart();
             DoLocationsList();
             Cash.Maximum = GlobalSettings.MaxCash;
             Experience.Maximum = GlobalSettings.MaxExperience;

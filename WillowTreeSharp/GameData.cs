@@ -9,13 +9,12 @@ namespace WillowTree
 {
     public static class GameData
     {
-        private static Dictionary<string, string> NameLookup;
-        public static readonly string AppPath = WillowSaveGame.AppPath;
+        private static Dictionary<string, string> nameLookup;
         public static readonly string DataPath = WillowSaveGame.DataPath;
         public static string XmlPath = DataPath + "Xml" + Path.DirectorySeparatorChar;
         private static string OpenedLocker; //Keep tracking of last open locker file
 
-        private static readonly List<string> skillfiles = new List<string>()
+        private static readonly List<string> skillFiles = new List<string>
         {
             DataPath + "gd_skills_common.txt",
             DataPath + "gd_Skills2_Roland.txt",
@@ -32,12 +31,12 @@ namespace WillowTree
         public static XmlFile SkillsSirenXml = new XmlFile(DataPath + "gd_Skills2_Lilith.txt");
         public static XmlFile SkillsHunterXml = new XmlFile(DataPath + "gd_skills2_Mordecai.txt");
         public static XmlFile SkillsBerserkerXml = new XmlFile(DataPath + "gd_Skills2_Brick.txt");
-        public static XmlFile SkillsAllXml = new XmlFile(skillfiles, XmlPath + "gd_skills.xml");
+        public static XmlFile SkillsAllXml = new XmlFile(skillFiles, XmlPath + "gd_skills.xml");
         public static XmlFile PartNamesXml = new XmlFile(DataPath + "partnames.ini");
 
         public static int[] XPChart = new int[71];
 
-        public static void setXPchart()
+        public static void SetXPchart()
         {
             XPChart[0] = 0;
             XPChart[1] = 0;
@@ -120,11 +119,11 @@ namespace WillowTree
         public static InventoryList BankList = new InventoryList(InventoryType.Any);
         public static InventoryList LockerList = new InventoryList(InventoryType.Any);
 
-        private static int _keyIndex;
+        private static int keyIndex;
 
         public static string CreateUniqueKey()
         {
-            return _keyIndex++.ToString();
+            return keyIndex++.ToString();
         }
 
         public static string OpenedLockerFilename()
@@ -133,10 +132,8 @@ namespace WillowTree
             {
                 return DataPath + "default.xml";
             }
-            else
-            {
-                return OpenedLocker;
-            }
+
+            return OpenedLocker;
         }
 
         public static void OpenedLockerFilename(string sOpenedLocker)
@@ -152,8 +149,7 @@ namespace WillowTree
             // GetPartName(string part) or GetPartAttribute(string part, "PartName"),
             // but since those have to search through lots of Xml nodes to find the
             // data this should be faster.
-            string value;
-            if (NameLookup.TryGetValue(part, out value) == false)
+            if (nameLookup.TryGetValue(part, out var value) == false)
             {
                 return "";
             }
@@ -161,52 +157,52 @@ namespace WillowTree
             return value;
         }
 
-        public static string GetPartAttribute(string part, string AttributeName)
+        public static string GetPartAttribute(string part, string attributeName)
         {
-            string Database = part.Before('.');
-            if (Database == "")
+            string database = part.Before('.');
+            if (database == "")
             {
                 return "";
             }
 
-            string PartName = part.After('.');
+            string partName = part.After('.');
 
-            string DbFileName = DataPath + Database + ".txt";
-            if (!File.Exists(DbFileName))
+            string dbFileName = DataPath + database + ".txt";
+            if (!File.Exists(dbFileName))
             {
                 return "";
             }
 
-            XmlFile DataFile = XmlFile.XmlFileFromCache(DbFileName);
+            XmlFile dataFile = XmlFile.XmlFileFromCache(dbFileName);
 
-            return DataFile.XmlReadValue(PartName, AttributeName);
+            return dataFile.XmlReadValue(partName, attributeName);
         }
 
         public static List<string> GetPartSection(string part)
         {
-            string Database = part.Before('.');
-            if (Database == "")
+            string database = part.Before('.');
+            if (database == "")
             {
                 return null;
             }
 
-            string PartName = part.After('.');
+            string partName = part.After('.');
 
-            string DbFileName = XmlPath + Database + ".xml";
-            if (!File.Exists(DbFileName))
+            string dbFileName = XmlPath + database + ".xml";
+            if (!File.Exists(dbFileName))
             {
                 return null;
             }
 
-            XmlFile DataFile = XmlFile.XmlFileFromCache(DbFileName);
+            XmlFile dataFile = XmlFile.XmlFileFromCache(dbFileName);
 
-            return DataFile.XmlReadSection(PartName);
+            return dataFile.XmlReadSection(partName);
         }
 
         public static int GetPartRarity(string part)
         {
-            string ComponentText = GetPartAttribute(part, "Rarity");
-            return Parse.AsInt(ComponentText, null);
+            string componentText = GetPartAttribute(part, "Rarity");
+            return Parse.AsInt(componentText, null);
         }
 
         public static Color RarityToColorItem(int rarity)
@@ -255,17 +251,17 @@ namespace WillowTree
             return color;
         }
 
-        private static double GetExtraStats(string[] WeaponParts, string StatName)
+        private static double GetExtraStats(string[] weaponParts, string statName)
         {
             double bonus = 0;
             double penalty = 0;
             double value;
             try
             {
-                double ExtraDamage = 0;
+                double extraDamage = 0;
                 for (int i = 3; i < 14; i++)
                 {
-                    string valuestring = GetPartAttribute(WeaponParts[i], StatName);
+                    string valuestring = GetPartAttribute(weaponParts[i], statName);
                     if (valuestring.Contains(','))
                     {
                         // TODO: I think there are some entries that have two numbers
@@ -273,11 +269,11 @@ namespace WillowTree
                         // handle them.  This breakpoint will catch it when debugging so
                         // so I can figure it out.
                         //Debugger.Break();
-                        value = Parse.AsDouble(GetPartAttribute(WeaponParts[i], StatName), 0);
+                        value = Parse.AsDouble(GetPartAttribute(weaponParts[i], statName), 0);
                     }
                     else
                     {
-                        value = Parse.AsDouble(GetPartAttribute(WeaponParts[i], StatName), 0);
+                        value = Parse.AsDouble(GetPartAttribute(weaponParts[i], statName), 0);
                     }
 
                     if (value >= 0)
@@ -289,8 +285,8 @@ namespace WillowTree
                         penalty -= value;
                     }
                 }
-                ExtraDamage = ((1 + bonus) / (1 + penalty)) - 1;
-                return ExtraDamage;
+                extraDamage = ((1 + bonus) / (1 + penalty)) - 1;
+                return extraDamage;
             }
             catch
             {
@@ -298,70 +294,70 @@ namespace WillowTree
             }
         }
 
-        public static int GetEffectiveLevelItem(string[] ItemParts, int Quality, int LevelIndex)
+        public static int GetEffectiveLevelItem(string[] itemParts, int quality, int levelIndex)
         {
-            if (LevelIndex != 0)
+            if (levelIndex != 0)
             {
-                return LevelIndex - 2;
+                return levelIndex - 2;
             }
 
-            string Manufacturer = ItemParts[6].After("gd_manufacturers.Manufacturers.");
-            string LevelIndexText = GetPartAttribute(ItemParts[0], Manufacturer + Quality);
-            return Parse.AsInt(LevelIndexText, 2) - 2;
+            string manufacturer = itemParts[6].After("gd_manufacturers.Manufacturers.");
+            string levelIndexText = GetPartAttribute(itemParts[0], manufacturer + quality);
+            return Parse.AsInt(levelIndexText, 2) - 2;
         }
 
-        public static int GetEffectiveLevelWeapon(string[] WeaponParts, int Quality, int LevelIndex)
+        public static int GetEffectiveLevelWeapon(string[] weaponParts, int quality, int levelIndex)
         {
-            if (LevelIndex != 0)
+            if (levelIndex != 0)
             {
-                return LevelIndex - 2;
+                return levelIndex - 2;
             }
 
             // There may be a case below where the manufacturer is invalid or blank
-            string Manufacturer = WeaponParts[1].After("gd_manufacturers.Manufacturers.");
-            string LevelIndexText = GetPartAttribute(WeaponParts[0], Manufacturer + Quality);
-            return Parse.AsInt(LevelIndexText, 2) - 2;
+            string manufacturer = weaponParts[1].After("gd_manufacturers.Manufacturers.");
+            string levelIndexText = GetPartAttribute(weaponParts[0], manufacturer + quality);
+            return Parse.AsInt(levelIndexText, 2) - 2;
         }
 
-        private static int GetWeaponDamage(string[] WeaponParts, int Quality, int LevelIndex)
+        private static int GetWeaponDamage(string[] weaponParts, int quality, int levelIndex)
         {
             try
             {
-                double PenaltyDamage = 0;
-                double BonusDamage = 0;
-                double Multiplier;
-                if (WeaponParts[2] == "gd_weap_repeater_pistol.A_Weapon.WeaponType_repeater_pistol")
+                double penaltyDamage = 0;
+                double bonusDamage = 0;
+                double multiplier;
+                if (weaponParts[2] == "gd_weap_repeater_pistol.A_Weapon.WeaponType_repeater_pistol")
                 {
-                    Multiplier = 1;
+                    multiplier = 1;
                 }
                 else
                 {
-                    Multiplier = Parse.AsDouble(GetPartAttribute(WeaponParts[2], "WeaponDamageFormulaMultiplier"), 1);
+                    multiplier = Parse.AsDouble(GetPartAttribute(weaponParts[2], "WeaponDamageFormulaMultiplier"), 1);
                 }
 
-                int Level = GetEffectiveLevelWeapon(WeaponParts, Quality, LevelIndex);
-                double Power = 1.3;
-                double Offset = 9;
+                int level = GetEffectiveLevelWeapon(weaponParts, quality, levelIndex);
+                double power = 1.3;
+                double offset = 9;
                 for (int i = 3; i < 14; i++)
                 {
-                    if (WeaponParts[i].Contains("."))
+                    if (weaponParts[i].Contains("."))
                     {
-                        double PartDamage = Parse.AsDouble(GetPartAttribute(WeaponParts[i], "WeaponDamage"), 0);
-                        if (PartDamage < 0)
+                        double partDamage = Parse.AsDouble(GetPartAttribute(weaponParts[i], "WeaponDamage"), 0);
+                        if (partDamage < 0)
                         {
-                            PenaltyDamage -= PartDamage;
+                            penaltyDamage -= partDamage;
                         }
                         else
                         {
-                            BonusDamage += PartDamage;
+                            bonusDamage += partDamage;
                         }
                     }
                 }
 
-                double DmgScaler = (1 + BonusDamage) / (1 + PenaltyDamage);
-                double BaseDamage = 0.8 * Multiplier * (Math.Pow(Level + 2, Power) + Offset);
-                double ScaledDamage = BaseDamage * DmgScaler;
-                return (int)Math.Truncate(ScaledDamage + 1);
+                double dmgScaler = (1 + bonusDamage) / (1 + penaltyDamage);
+                double baseDamage = 0.8 * multiplier * (Math.Pow(level + 2, power) + offset);
+                double scaledDamage = baseDamage * dmgScaler;
+                return (int)Math.Truncate(scaledDamage + 1);
             }
             catch
             {
@@ -371,66 +367,66 @@ namespace WillowTree
 
         public static string WeaponInfo(InventoryEntry invEntry)
         {
-            string WeaponInfo;
+            string weaponInfo;
             string[] parts = invEntry.Parts.ToArray<string>();
 
-            int Damage = GetWeaponDamage(parts, invEntry.QualityIndex, invEntry.LevelIndex);
-            WeaponInfo = "Expected Damage: " + Damage;
+            int damage = GetWeaponDamage(parts, invEntry.QualityIndex, invEntry.LevelIndex);
+            weaponInfo = $"Expected Damage: {damage}";
 
             double statvalue = GetExtraStats(parts, "TechLevelIncrease");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\nElemental Tech Level: " + statvalue;
+                weaponInfo += $"\r\nElemental Tech Level: {statvalue}";
             }
 
             statvalue = GetExtraStats(parts, "WeaponDamage");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\n" + statvalue.ToString("P") + " Damage";
+                weaponInfo += $"\r\n{statvalue:P} Damage";
             }
 
             statvalue = GetExtraStats(parts, "WeaponFireRate");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\n" + statvalue.ToString("P") + " Rate of Fire";
+                weaponInfo += $"\r\n{statvalue:P} Rate of Fire";
             }
 
             statvalue = GetExtraStats(parts, "WeaponCritBonus");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\n" + statvalue.ToString("P") + " Critical Damage";
+                weaponInfo += $"\r\n{statvalue:P} Critical Damage";
             }
 
             statvalue = GetExtraStats(parts, "WeaponReloadSpeed");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\n" + statvalue.ToString("P") + " Reload Speed";
+                weaponInfo += $"\r\n{statvalue:P} Reload Speed";
             }
 
             statvalue = GetExtraStats(parts, "WeaponSpread");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\n" + statvalue.ToString("P") + " Spread";
+                weaponInfo += $"\r\n{statvalue:P} Spread";
             }
 
             statvalue = GetExtraStats(parts, "MaxAccuracy");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\n" + statvalue.ToString("P") + " Max Accuracy";
+                weaponInfo += $"\r\n{statvalue:P} Max Accuracy";
             }
 
             statvalue = GetExtraStats(parts, "MinAccuracy");
             if (statvalue != 0)
             {
-                WeaponInfo += "\r\n" + statvalue.ToString("P") + " Min Accuracy";
+                weaponInfo += $"\r\n{statvalue:P} Min Accuracy";
             }
 
-            return WeaponInfo;
+            return weaponInfo;
         }
 
         public static void InitializeNameLookup()
         {
-            NameLookup = new Dictionary<string, string>();
+            nameLookup = new Dictionary<string, string>();
             {
                 XmlFile names = PartNamesXml;
 
@@ -441,7 +437,7 @@ namespace WillowTree
                         int index = entry.IndexOf(':');
                         string part = entry.Substring(0, index);
                         string name = entry.Substring(index + 1);
-                        NameLookup.Add(part, name);
+                        nameLookup.Add(part, name);
                     }
                 }
             }
