@@ -1,10 +1,10 @@
 ﻿/*  This file is part of WillowTree#
- * 
+ *
  *  Copyright (C) 2011 Matthew Carter <matt911@users.sf.net>
  *  Copyright (C) 2010, 2011 XanderChaos
  *  Copyright (C) 2011 Thomas Kaiser
  *  Copyright (C) 2010 JackSchitt
- * 
+ *
  *  WillowTree# is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -18,6 +18,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
@@ -32,21 +33,24 @@ namespace WillowTree.Plugins
     public partial class ucGears : UserControl, IPlugin
     {
         #region Members
-        PluginComponentManager pluginManager;
-        Font HighlightFont;
-        WillowSaveGame CurrentWSG;
+
+        private PluginComponentManager pluginManager;
+        private Font HighlightFont;
+        private WillowSaveGame CurrentWSG;
 
         public InventoryTreeList GearTL;
 
-        String gearTextName;
-        String gearFileName;
-        int gearVisibleLine;
-        #endregion
-        
+        private String gearTextName;
+        private String gearFileName;
+        private int gearVisibleLine;
+
+        #endregion Members
+
         public ucGears()
         {
             InitializeComponent();
         }
+
         public void InitializePlugin(PluginComponentManager pm)
         {
             PluginEvents events = new PluginEvents();
@@ -63,11 +67,13 @@ namespace WillowTree.Plugins
                     this.gbGear.Text = "Weapon Backpack";
                     this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
+
                 case "Items":
                     GearTL = new InventoryTreeList(GearTree, GameData.ItemList);
                     this.gbGear.Text = "Item Backpack";
                     this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
+
                 case "Bank":
                     GearTL = new InventoryTreeList(GearTree, GameData.BankList);
                     this.gbGear.Text = "Bank";
@@ -80,15 +86,16 @@ namespace WillowTree.Plugins
             // The index translators control the caption that goes over the top of each
             // level or quality SlideSelector.  Attach each translator then signal the
             // value changed event to cause the translator to update the caption.
-            this.LevelIndexGear.IndexTranslator += new WillowTree.CustomControls.WTSlideSelector.SlideIndexTranslator(Util.LevelTranslator);
-            this.QualityGear.IndexTranslator += new WillowTree.CustomControls.WTSlideSelector.SlideIndexTranslator(Util.QualityTranslator);
+            this.LevelIndexGear.IndexTranslator += LevelTranslator;
+            this.QualityGear.IndexTranslator += QualityTranslator;
             this.LevelIndexGear.OnValueChanged(EventArgs.Empty);
             this.QualityGear.OnValueChanged(EventArgs.Empty);
-            
+
             HighlightFont = new Font(GearTree.Font, FontStyle.Italic | FontStyle.Bold);
 
             this.Enabled = false;
         }
+
         private void Init()
         {
             string tabName = this.Text;
@@ -156,6 +163,7 @@ namespace WillowTree.Plugins
                     //    0,
                     //    0});
                     break;
+
                 default:
                     break;
             }
@@ -163,8 +171,8 @@ namespace WillowTree.Plugins
 
         public void ReleasePlugin()
         {
-            this.LevelIndexGear.IndexTranslator -= new WillowTree.CustomControls.WTSlideSelector.SlideIndexTranslator(Util.LevelTranslator);
-            this.QualityGear.IndexTranslator -= new WillowTree.CustomControls.WTSlideSelector.SlideIndexTranslator(Util.QualityTranslator);
+            this.LevelIndexGear.IndexTranslator -= LevelTranslator;
+            this.QualityGear.IndexTranslator -= QualityTranslator;
 
             pluginManager = null;
             HighlightFont = null;
@@ -185,10 +193,12 @@ namespace WillowTree.Plugins
                 case "Weapons Bank":
                     gearFileName = CurrentWSG.CharacterName + "'s " + gearTextName + "s";
                     break;
+
                 case "Items":
                 case "Items Bank":
                     gearFileName = CurrentWSG.CharacterName + "'s " + gearTextName + "s";
                     break;
+
                 default:
                     break;
             }
@@ -211,37 +221,42 @@ namespace WillowTree.Plugins
             string TabsLine = System.IO.File.ReadAllText(GameData.DataPath + textFile);
             string[] TabsList = TabsLine.Split(new char[] { (char)';' });
             for (int Progress = 0; Progress < TabsList.Length; Progress++)
-                Util.DoPartsCategory(TabsList[Progress], PartSelectorGear);
+                DoPartsCategory(TabsList[Progress], PartSelectorGear);
         }
-        
+
         private void NewGear_Click(object sender, EventArgs e)
         {
             GearTL.AddNew(GearTL.Unsorted.invType);//Bank AddNewWeapon/Item
             GearTL.AdjustSelectionAfterAdd();
             GearTree.EnsureVisible(GearTree.SelectedNode);
         }
+
         private void DeletePartGear_Click(object sender, EventArgs e)
         {
             if (PartsGear.SelectedIndex != -1)
                 PartsGear.Items[PartsGear.SelectedIndex] = "None";
         }
+
         private void DeleteGear_Click(object sender, EventArgs e)
         {
             GearTL.DeleteSelected();
         }
+
         private void DuplicateGear_Click(object sender, EventArgs e)
         {
             GearTL.DuplicateSelected();
         }
-        
+
         private void MoveGear_Click(object sender, EventArgs e)
         {
             GearTL.CopySelected(GameData.LockerList, true);
         }
+
         private void CopyLocker_Click(object sender, EventArgs e)
         {
             GearTL.CopySelected(GameData.LockerList, false);
         }
+
         private void CopyBackpack_Click(object sender, EventArgs e)
         {
             foreach (TreeNodeAdv node in GearTree.SelectedNodes)
@@ -254,14 +269,17 @@ namespace WillowTree.Plugins
                         GameData.ItemList.Duplicate(entry); //LockerTL.CopySelected(db.ItemList, false);
                 }
         }
+
         private void CopyBank_Click(object sender, EventArgs e)
         {
             GearTL.CopySelected(GameData.BankList, false);
         }
+
         private void ClearAllGear_Click(object sender, EventArgs e)
         {
             GearTL.Clear();
         }
+
         private void PurgeDuplicatesGear_Click(object sender, EventArgs e)
         {
             GearTL.PurgeDuplicates();
@@ -273,7 +291,7 @@ namespace WillowTree.Plugins
 
             for (int Progress = 0; Progress < PartsGear.Items.Count; Progress++)
                 InOutParts.Add((string)PartsGear.Items[Progress]);
-            
+
             List<int> values = InventoryEntry.CalculateValues((int)QuantityGear.Value,
                 (int)QualityGear.Value, (int)EquippedSlotGear.SelectedIndex, (int)LevelIndexGear.Value, (int)JunkGear.Value, (int)LockedGear.Value, ((string)PartsGear.Items[0]));
 
@@ -283,6 +301,7 @@ namespace WillowTree.Plugins
 
             return string.Join("\r\n", InOutParts.ToArray()) + "\r\n";
         }
+
         private void ExportToClipboardGear_Click(object sender, EventArgs e)
         {
             try
@@ -291,12 +310,14 @@ namespace WillowTree.Plugins
             }
             catch { MessageBox.Show("Export to clipboard failed."); }
         }
+
         private void ExportToFileGear_Click(object sender, EventArgs e)
         {
             Util.WTSaveFileDialog ToFile = new Util.WTSaveFileDialog("txt", GearPartsGroup.Text);
             if (ToFile.ShowDialog() == DialogResult.OK)
                 System.IO.File.WriteAllText(ToFile.FileName(), ExportToTextGear());
         }
+
         private void ExportToXmlGears_Click(object sender, EventArgs e)
         {
             Util.WTSaveFileDialog fileDlg = new Util.WTSaveFileDialog("xml", gearFileName);
@@ -314,6 +335,7 @@ namespace WillowTree.Plugins
             GearTL.Add(gear);
             return true;
         }
+
         private void ImportFromClipboardGear_Click(object sender, EventArgs e)
         {
             try
@@ -324,13 +346,13 @@ namespace WillowTree.Plugins
                     InventoryEntry gear = GearTree.SelectedNode.GetEntry() as InventoryEntry;
                     RefreshGearTree(gear);
                 }
-                    
             }
             catch
             {
                 MessageBox.Show("Invalid clipboard data, " + gearTextName + " not inserted.");
             }
         }
+
         private void ImportFromFilesGears_Click(object sender, EventArgs e)
         {
             Util.WTOpenFileDialog FromFile = new Util.WTOpenFileDialog("txt", gearFileName);
@@ -353,6 +375,7 @@ namespace WillowTree.Plugins
                 }
             }
         }
+
         private void ImportAllFromXmlGears_Click(object sender, EventArgs e)
         {
             Util.WTOpenFileDialog fileDlg = new Util.WTOpenFileDialog("xml", gearFileName);
@@ -360,7 +383,7 @@ namespace WillowTree.Plugins
             if (fileDlg.ShowDialog() == DialogResult.OK)
                 GearTL.ImportFromXml(fileDlg.FileName(), GearTL.Unsorted.invType);
         }
-        
+
         private void GearTree_SelectionChanged(object sender, EventArgs e)
         {
             int OldPartIndex = PartsGear.SelectedIndex;
@@ -380,7 +403,7 @@ namespace WillowTree.Plugins
             Init();
             for (int i = 0; i < gear.Parts.Count; i++)
                 PartsGear.Items.Add(gear.Parts[i]);
-            
+
             WTSlideSelector.MinMaxAdvanced(gear.UsesBigLevel, ref LevelIndexGear);
 
             Util.SetNumericUpDown(QuantityGear, gear.Quantity);
@@ -410,7 +433,7 @@ namespace WillowTree.Plugins
             RefreshGearTree(gear);
         }
 
-        void RefreshGearTree(InventoryEntry gear)
+        private void RefreshGearTree(InventoryEntry gear)
         {
             for (int Progress = 0; Progress < PartsGear.Items.Count; Progress++)
                 gear.Parts[Progress] = (string)PartsGear.Items[Progress];
@@ -432,10 +455,10 @@ namespace WillowTree.Plugins
             gear.BuildName();
 
             // When the item changes, it may not belong in the same location in
-            // in the sorted tree because the name, level, or other sort key 
-            // has changed.  Remove the node then place it back into the tree to 
-            // make sure it is relocated to the proper location, then select the 
-            // node and make sure it is visible so the user is focused on the new 
+            // in the sorted tree because the name, level, or other sort key
+            // has changed.  Remove the node then place it back into the tree to
+            // make sure it is relocated to the proper location, then select the
+            // node and make sure it is visible so the user is focused on the new
             // location after the changes.
             GearTL.RemoveFromTreeView(GearTree.SelectedNode, false);
             GearTL.AddToTreeView(gear);
@@ -466,6 +489,7 @@ namespace WillowTree.Plugins
             }
             this.Refresh(); //LockerTree_SelectionChanged is not needed for visual update
         }
+
         private void GearSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -473,7 +497,7 @@ namespace WillowTree.Plugins
                 btnGearSearch_Click(this, KeyEventArgs.Empty);
             }
         }
-        
+
         private void EditQualityAllGears_Click(object sender, EventArgs e)
         {
             int quality;
@@ -490,6 +514,7 @@ namespace WillowTree.Plugins
 
             QualityGear.Value = quality;
         }
+
         private void EditLevelAllGears_Click(object sender, EventArgs e)
         {
             int level;
@@ -530,12 +555,13 @@ namespace WillowTree.Plugins
             }
             catch { }
         }
+
         private void PartSelectorGear_NodeDoubleClick(object sender, MouseEventArgs e)
         {
             if (PartsGear.SelectedItem != null && PartSelectorGear.SelectedNode.Children.Count == 0)
             {
-                // If part selector tracking is active it'll reposition the node 
-                // when the selected item is changed, so temporarily disable it.  
+                // If part selector tracking is active it'll reposition the node
+                // when the selected item is changed, so temporarily disable it.
                 bool tracking = GlobalSettings.PartSelectorTracking;
                 GlobalSettings.PartSelectorTracking = false;
                 PartsGear.Items[PartsGear.SelectedIndex] = PartSelectorGear.SelectedNode.Parent.GetKey() + "." + PartSelectorGear.SelectedNode.GetText();
@@ -549,6 +575,7 @@ namespace WillowTree.Plugins
             if (tempManualPart != "")
                 PartsGear.Items[PartsGear.SelectedIndex] = tempManualPart;
         }
+
         private void PartsGear_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (PartsGear.SelectedIndex == -1)
@@ -566,7 +593,7 @@ namespace WillowTree.Plugins
                     PartSelectorGear.CollapseAll();
                     PartSelectorGear.SelectedNode = partNode;
                     if (partNode != null)
-                        Util.CenterNode(PartSelectorGear.SelectedNode, gearVisibleLine);
+                        CenterNode(PartSelectorGear.SelectedNode, gearVisibleLine);
                 }
                 PartSelectorGear.EndUpdate();
             }
@@ -580,6 +607,7 @@ namespace WillowTree.Plugins
                     PartInfoGear.Lines = xmlSection.ToArray();
             }
         }
+
         private void PartsGear_SelectedValueChanged(object sender, EventArgs e)
         {
             if (PartsGear.SelectedIndex == 0)
@@ -593,7 +621,7 @@ namespace WillowTree.Plugins
                 {
                     LevelIndexGear.MaximumAdvanced = short.MaxValue;
                     LevelIndexGear.MinimumAdvanced = short.MinValue;
-                }            
+                }
             }
         }
 
@@ -610,6 +638,7 @@ namespace WillowTree.Plugins
             else if (e.KeyData == (Keys.Control | Keys.L))
                 CopyLocker_Click(this, EventArgs.Empty);
         }
+
         private void PartsGear_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -627,6 +656,94 @@ namespace WillowTree.Plugins
             //else if (GearTree.SelectedNode.GetEntry().Type == InventoryType.Item)
             //    if (GearTree.SelectedNode.GetEntry() != null)
             //        txtGearInformation.Text = db.ItemInfo(GearTree.SelectedNode.GetEntry());
+        }
+
+        private static void CenterNode(TreeNodeAdv node, int visibleLines)
+        {
+            // This function will only work properly if:
+            // 1) All TreeNodes have a fixed vertical height
+            // 2) The tree is fully collapsed except the ancestors
+            //    of this node.
+            // 3) visibleLines is the actual number of nodes that can be
+            //    displayed in the window vertically.
+            int paddingabove = (visibleLines - 1) / 2;
+            int paddingbelow = visibleLines - 1 - paddingabove;
+
+            TreeViewAdv tree = node.Tree;
+            TreeNodeAdv viewtop = node;
+            while (paddingabove > 0)
+            {
+                if (viewtop.PreviousNode != null)
+                    viewtop = viewtop.PreviousNode;
+                else if (viewtop.Parent != null)
+                    viewtop = viewtop.Parent;
+                else
+                    break;
+                paddingabove--;
+            }
+            tree.EnsureVisible(viewtop);
+
+            TreeNodeAdv viewbottom = node;
+            node.Tree.EnsureVisible(node);
+            while (paddingbelow > 0)
+            {
+                if (viewbottom.NextNode != null)
+                    viewbottom = viewbottom.NextNode;
+                else if ((viewbottom.Parent != null) && (viewbottom.Parent.NextNode != null))
+                    viewbottom = viewbottom.Parent.NextNode;
+                else
+                    break;
+                paddingbelow--;
+            }
+            tree.EnsureVisible(viewbottom);
+
+            tree.EnsureVisible(node);
+        }
+
+        private static void DoPartsCategory(string Category, TreeViewAdv Tree)
+        {
+            XmlFile PartList = XmlFile.XmlFileFromCache(GameData.DataPath + Category + ".txt");
+            TreeModel model = Tree.Model as TreeModel;
+
+            Tree.BeginUpdate();
+            Tree.Model = model;
+
+            ColoredTextNode parent = new ColoredTextNode(Category);
+            parent.Tag = Category;
+            model.Nodes.Add(parent);
+
+            foreach (string section in PartList.stListSectionNames())
+            {
+                ColoredTextNode child = new ColoredTextNode();
+                child.Text = section;
+                child.Tag = section;
+                parent.Nodes.Add(child);
+            }
+            Tree.EndUpdate();
+        }
+
+        public static string LevelTranslator(object obj)
+        {
+            WTSlideSelector levelindex = (WTSlideSelector)obj;
+
+            return levelindex.InputMode == InputMode.Advanced
+                ? GlobalSettings.UseHexInAdvancedMode
+                    ? "Level Index (hexadecimal)"
+                    : "Level Index (decimal)"
+                : levelindex.Value == 0
+                    ? "Level: Default"
+                    : $"Level: {levelindex.Value - 2}";
+        }
+
+        public static string QualityTranslator(object obj)
+        {
+            WTSlideSelector qualityindex = (WTSlideSelector)obj;
+
+            return qualityindex.InputMode == InputMode.Advanced
+                ? GlobalSettings.UseHexInAdvancedMode
+                    ? "Quality Index (hexadecimal)"
+                    : "Quality Index (decimal)"
+                : $"Quality: {qualityindex.Value}";
         }
     }
 }

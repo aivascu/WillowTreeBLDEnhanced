@@ -69,13 +69,16 @@ namespace WillowTree.Plugins
 
         private void CheckVerPopup()
         {
-            if (VersionFromServer != Util.GetVersion() && VersionFromServer != "" && VersionFromServer != null)
+            if (VersionFromServer != GetVersion() && VersionFromServer != "" && VersionFromServer != null)
             {
                 UpdateButton.Text = "Version " + VersionFromServer + " is now available! Click here to download.";
                 UpdateButton.Show();
             }
         }
-
+        private static string GetVersion()
+        {
+            return "2.2.1";
+        }
         //Recovers the latest version from the sourceforge server.
         public void CheckVersion(object state)
         {
