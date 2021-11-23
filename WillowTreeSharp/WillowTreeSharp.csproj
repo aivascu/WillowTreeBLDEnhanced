@@ -124,7 +124,6 @@
     <Compile Include="CustomControls\CCTabControl.cs" />
     <Compile Include="CustomControls\GroupBox.cs" />
     <Compile Include="db.cs" />
-    <Compile Include="FrameworkCheck.cs" />
     <Compile Include="Inventory\InventoryEntry.cs" />
     <Compile Include="Inventory\InventoryTreeList.cs" />
     <Compile Include="PluginComponentManager.cs" />
