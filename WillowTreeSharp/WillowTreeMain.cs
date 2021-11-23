@@ -29,7 +29,9 @@ namespace WillowTree
             }
 
             if (!File.Exists(db.DataPath + "default.xml"))
+            {
                 File.WriteAllText(db.DataPath + "default.xml", "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
+            }
 
             InitializeComponent();
 
@@ -101,7 +103,10 @@ namespace WillowTree
             // Populate itmList with items created from the WillowSaveGame data lists
             itmList.ClearSilent();
             foreach (var obj in objs)
+            {
                 itmList.AddSilent(new InventoryEntry(itmList.invType, obj.Strings, obj.GetValues()));
+            }
+
             itmList.OnListReload();
 
             objs = null;
@@ -167,7 +172,9 @@ namespace WillowTree
         {
             ucGeneral eGeneral = PluginManager.GetPlugin(typeof(ucGeneral)) as ucGeneral;
             if (eGeneral != null)
+            {
                 eGeneral.DoWindowTitle();
+            }
         }
 
         private void ExitWT_Click(object sender, EventArgs e)
@@ -180,7 +187,9 @@ namespace WillowTree
         {
             IPlugin page = tabControl1.TabPages[tabControl1.SelectedIndex] as IPlugin;
             if (page != null)
+            {
                 PluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.IncreaseNavigationDepth));
+            }
         }
 
         private void MenuItemPartSelectorTracking_Click(object sender, EventArgs e)
@@ -192,7 +201,9 @@ namespace WillowTree
         {
             IPlugin page = tabControl1.TabPages[tabControl1.SelectedIndex] as IPlugin;
             if (page != null)
+            {
                 PluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.ChangeSortMode));
+            }
         }
 
         private void Open_Click(object sender, EventArgs e)
@@ -222,7 +233,9 @@ namespace WillowTree
                         MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                     if (result == DialogResult.No)
+                    {
                         throw new FileFormatException("Savegame file is corrupt.");
+                    }
                 }
 
                 ConvertListForEditing(db.WeaponList, ref CurrentWSG.Weapons);
@@ -236,7 +249,9 @@ namespace WillowTree
                 SelectFormat.Enabled = true;
             }
             else
+            {
                 fileName = "";
+            }
         }
 
         private void optionsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -251,12 +266,16 @@ namespace WillowTree
         private void PCFormat_Click(object sender, EventArgs e)
         {
             if (CurrentWSG.Platform == "PC")
+            {
                 return;
+            }
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.LittleEndian))
             {
                 if (!UIAction_RemoveRawData())
+                {
                     return;
+                }
             }
 
             CurrentWSG.Platform = "PC";
@@ -269,12 +288,16 @@ namespace WillowTree
         private void PS3Format_Click(object sender, EventArgs e)
         {
             if (CurrentWSG.Platform == "PS3")
+            {
                 return;
+            }
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
             {
                 if (!UIAction_RemoveRawData())
+                {
                     return;
+                }
             }
 
             CurrentWSG.Platform = "PS3";
@@ -325,7 +348,9 @@ namespace WillowTree
                                                                   oldParts[4], oldParts[5], oldParts[7], oldParts[8] };
                 }
                 else
+                {
                     itm.Strings = new List<string>(item.Parts);
+                }
 
                 //Item/Weapon in bank have their type increase by 1, we  increase TypeId by 1 to restore them to their natural value
                 itm.TypeId = (byte)(item.Type + 1);
@@ -355,11 +380,16 @@ namespace WillowTree
             {
                 File.Copy(CurrentWSG.OpenedWsg, CurrentWSG.OpenedWsg + ".bak0", true);
                 if (File.Exists(CurrentWSG.OpenedWsg + ".bak10") == true)
+                {
                     File.Delete(CurrentWSG.OpenedWsg + ".bak10");
+                }
+
                 for (int i = 9; i >= 0; i--)
                 {
                     if (File.Exists(CurrentWSG.OpenedWsg + ".bak" + i) == true)
+                    {
                         File.Move(CurrentWSG.OpenedWsg + ".bak" + i, CurrentWSG.OpenedWsg + ".bak" + (i + 1));
+                    }
                 }
             }
             catch { }
@@ -417,9 +447,13 @@ namespace WillowTree
             TreeViewTheme theme;
 
             if (UseColor)
+            {
                 theme = Services.AppThemes.treeViewTheme1;
+            }
             else
+            {
                 theme = null;
+            }
 
             db.ItemList.OnTreeThemeChanged(theme);
             db.WeaponList.OnTreeThemeChanged(theme);
@@ -453,17 +487,23 @@ namespace WillowTree
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
+            {
                 PluginManager.OnPluginUnselected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
+            }
 
             int selected = tabControl1.SelectedIndex;
             if (selected >= 0)
             {
                 SelectedTabObject = tabControl1.Controls[selected];
                 if ((SelectedTabObject != null) && (SelectedTabObject is IPlugin))
+                {
                     PluginManager.OnPluginSelected(SelectedTabObject as IPlugin, new PluginEventArgs(this, null));
+                }
             }
             else
+            {
                 SelectedTabObject = null;
+            }
 
             //if (tabControl1.SelectedIndex == tabControl1.GetTabIndex(DebugTab))
             //{
@@ -482,7 +522,9 @@ namespace WillowTree
         {
             DialogResult result = MessageBox.Show("This savegame contains some unexpected or possibly corrupt DLC data that WillowTree# does not know how to parse, so it cannot be rewritten in a different machine byte order.  The extra data can be discarded to allow you to convert the savegame, but this will cause DLC data loss if the unknown DLC data is actually used by Borderlands.  It is typical for Steam PC savegames to have a data section like this and it must be removed to convert to Xbox 360 or PS3 format.  The data probably serves no gameplay purpose because it doesn't exist in the PC DVD version.\r\n\r\nDo you want to discard the raw data to allow the conversion?", "Unexpected Raw Data", MessageBoxButtons.YesNo);
             if (result == DialogResult.No)
+            {
                 return false;
+            }
 
             CurrentWSG.DiscardRawData();
             return true;
@@ -504,12 +546,16 @@ namespace WillowTree
         private void XBoxFormat_Click(object sender, EventArgs e)
         {
             if (CurrentWSG.Platform == "X360")
+            {
                 return;
+            }
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
             {
                 if (!UIAction_RemoveRawData())
+                {
                     return;
+                }
             }
 
             if (CurrentWSG.DeviceId == null)
@@ -523,7 +569,9 @@ namespace WillowTree
                     Array.Copy(dlgXBoxID.ID.DeviceID, CurrentWSG.DeviceId, DeviceIDLength);
                 }
                 else
+                {
                     return;
+                }
             }
             CurrentWSG.Platform = "X360";
             CurrentWSG.EndianWsg = ByteOrder.BigEndian;
@@ -535,12 +583,16 @@ namespace WillowTree
         private void XBoxJPFormat_Click(object sender, EventArgs e)
         {
             if (CurrentWSG.Platform == "X360JP")
+            {
                 return;
+            }
 
             if ((CurrentWSG.ContainsRawData == true) && (CurrentWSG.EndianWsg != ByteOrder.BigEndian))
             {
                 if (!UIAction_RemoveRawData())
+                {
                     return;
+                }
             }
 
             if (CurrentWSG.DeviceId == null)
@@ -554,7 +606,9 @@ namespace WillowTree
                     Array.Copy(dlgXBoxID.ID.DeviceID, CurrentWSG.DeviceId, DeviceIDLength);
                 }
                 else
+                {
                     return;
+                }
             }
             CurrentWSG.Platform = "X360JP";
             CurrentWSG.EndianWsg = ByteOrder.BigEndian;
