@@ -221,7 +221,7 @@ namespace WillowTree
         {
             string fileName = (currentWsg != null) ? currentWsg.OpenedWsg : "";
 
-            Util.WTOpenFileDialog openDlg = new Util.WTOpenFileDialog("sav", fileName);
+            WTOpenFileDialog openDlg = new WTOpenFileDialog("sav", fileName);
             if (openDlg.ShowDialog() != DialogResult.OK) return;
 
             fileName = openDlg.FileName();
@@ -414,7 +414,7 @@ namespace WillowTree
 
         private void SaveAs_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog tempSave = new Util.WTSaveFileDialog("sav", currentWsg.OpenedWsg);
+            WTSaveFileDialog tempSave = new WTSaveFileDialog("sav", currentWsg.OpenedWsg);
 
             if (tempSave.ShowDialog() != DialogResult.OK) return;
 

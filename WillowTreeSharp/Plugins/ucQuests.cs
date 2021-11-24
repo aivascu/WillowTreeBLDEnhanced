@@ -912,7 +912,7 @@ namespace WillowTree.Plugins
 
             try
             {
-                Util.WTSaveFileDialog tempExport = new Util.WTSaveFileDialog("quests", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".quests");
+                WTSaveFileDialog tempExport = new WTSaveFileDialog("quests", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".quests");
 
                 if (tempExport.ShowDialog() == DialogResult.OK)
                 {
@@ -934,7 +934,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            Util.WTSaveFileDialog tempSave = new Util.WTSaveFileDialog("quests", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".quests");
+            WTSaveFileDialog tempSave = new WTSaveFileDialog("quests", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".quests");
 
             try
             {
@@ -959,7 +959,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            Util.WTOpenFileDialog tempImport = new Util.WTOpenFileDialog("quests", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".quests");
+            WTOpenFileDialog tempImport = new WTOpenFileDialog("quests", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".quests");
 
             if (tempImport.ShowDialog() == DialogResult.OK)
             {
@@ -988,7 +988,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("sav", "");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
@@ -1051,7 +1051,7 @@ namespace WillowTree.Plugins
                 return;
             }
             
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("quests", "Default.quests");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("quests", "Default.quests");
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -1076,7 +1076,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("sav", "");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {

@@ -421,7 +421,7 @@ namespace WillowTree.Plugins
 
         private void ExportAllToFileLocations_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog tempSave = new Util.WTSaveFileDialog("locations", "Default.locations");
+            WTSaveFileDialog tempSave = new WTSaveFileDialog("locations", "Default.locations");
             try
             {
                 if (tempSave.ShowDialog() == DialogResult.OK)
@@ -438,7 +438,7 @@ namespace WillowTree.Plugins
 
         private void ExportSelectedToFileLocations_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog tempSave = new Util.WTSaveFileDialog("locations", "Default.locations");
+            WTSaveFileDialog tempSave = new WTSaveFileDialog("locations", "Default.locations");
 
             try
             {
@@ -456,7 +456,7 @@ namespace WillowTree.Plugins
 
         private void ImportAllFromFileLocations_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("locations", "Default.locations");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("locations", "Default.locations");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
@@ -478,7 +478,7 @@ namespace WillowTree.Plugins
 
         private void MergeAllFromFileLocations_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("locations", "Default.locations");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("locations", "Default.locations");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
@@ -497,7 +497,7 @@ namespace WillowTree.Plugins
 
         private void MergeFromSaveLocations_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("sav", "");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
@@ -527,7 +527,7 @@ namespace WillowTree.Plugins
 
         private void ImportAllFromSaveLocations_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("sav", "");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {

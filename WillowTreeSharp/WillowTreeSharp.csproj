@@ -202,6 +202,8 @@
     <Compile Include="WillowTreeMain.Designer.cs">
       <DependentUpon>WillowTreeMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="WTOpenFileDialog.cs" />
+    <Compile Include="WTSaveFileDialog.cs" />
     <Compile Include="XBoxIDDialog.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -313,14 +313,14 @@ namespace WillowTree.Plugins
 
         private void ExportToFileGear_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog ToFile = new Util.WTSaveFileDialog("txt", GearPartsGroup.Text);
+            WTSaveFileDialog ToFile = new WTSaveFileDialog("txt", GearPartsGroup.Text);
             if (ToFile.ShowDialog() == DialogResult.OK)
                 System.IO.File.WriteAllText(ToFile.FileName(), ExportToTextGear());
         }
 
         private void ExportToXmlGears_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog fileDlg = new Util.WTSaveFileDialog("xml", gearFileName);
+            WTSaveFileDialog fileDlg = new WTSaveFileDialog("xml", gearFileName);
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
                 GearTL.SaveToXml(fileDlg.FileName());
@@ -355,7 +355,7 @@ namespace WillowTree.Plugins
 
         private void ImportFromFilesGears_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog FromFile = new Util.WTOpenFileDialog("txt", gearFileName);
+            WTOpenFileDialog FromFile = new WTOpenFileDialog("txt", gearFileName);
             FromFile.Multiselect(true);
 
             if (FromFile.ShowDialog() == DialogResult.OK)
@@ -377,7 +377,7 @@ namespace WillowTree.Plugins
 
         private void ImportAllFromXmlGears_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog fileDlg = new Util.WTOpenFileDialog("xml", gearFileName);
+            WTOpenFileDialog fileDlg = new WTOpenFileDialog("xml", gearFileName);
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
                 GearTL.ImportFromXml(fileDlg.FileName(), GearTL.Unsorted.invType);

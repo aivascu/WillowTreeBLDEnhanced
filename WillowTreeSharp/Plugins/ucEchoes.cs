@@ -386,7 +386,7 @@ namespace WillowTree.Plugins
                 return;
             }
             
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("sav", "");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
@@ -525,7 +525,7 @@ namespace WillowTree.Plugins
 
             try
             {
-                Util.WTSaveFileDialog tempExport = new Util.WTSaveFileDialog("echologs", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".echologs");
+                WTSaveFileDialog tempExport = new WTSaveFileDialog("echologs", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".echologs");
 
                 if (tempExport.ShowDialog() == DialogResult.OK)
                 {
@@ -547,7 +547,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            Util.WTSaveFileDialog tempSave = new Util.WTSaveFileDialog("echologs", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".echologs");
+            WTSaveFileDialog tempSave = new WTSaveFileDialog("echologs", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".echologs");
 
             try
             {
@@ -572,7 +572,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("echologs", "Default.echologs");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("echologs", "Default.echologs");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
@@ -650,7 +650,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("echologs", "Default.echologs");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("echologs", "Default.echologs");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
@@ -676,7 +676,7 @@ namespace WillowTree.Plugins
                 return;
             }
             
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("sav", "");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {

@@ -213,14 +213,14 @@ namespace WillowTree.Plugins
 
         private void ExportToFileLocker_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog ToFile = new Util.WTSaveFileDialog("txt", LockerPartsGroup.Text);
+            WTSaveFileDialog ToFile = new WTSaveFileDialog("txt", LockerPartsGroup.Text);
             if (ToFile.ShowDialog() == DialogResult.OK)
                 System.IO.File.WriteAllText(ToFile.FileName(), ExportToTextLocker());
         }
 
         private void ExportToXmlLocker_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog fileDlg = new Util.WTSaveFileDialog("xml", GameData.OpenedLockerFilename());
+            WTSaveFileDialog fileDlg = new WTSaveFileDialog("xml", GameData.OpenedLockerFilename());
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
                 LockerTL.SaveToXml(fileDlg.FileName());
@@ -251,7 +251,7 @@ namespace WillowTree.Plugins
 
         private void ImportFromFilesLocker_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog FromFile = new Util.WTOpenFileDialog("txt", "");
+            WTOpenFileDialog FromFile = new WTOpenFileDialog("txt", "");
             FromFile.Multiselect(true);
 
             if (FromFile.ShowDialog() == DialogResult.OK)
@@ -273,7 +273,7 @@ namespace WillowTree.Plugins
 
         private void ImportAllFromXmlLocker_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog fileDlg = new Util.WTOpenFileDialog("xml", "");
+            WTOpenFileDialog fileDlg = new WTOpenFileDialog("xml", "");
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
                 LockerTL.ImportFromXml(fileDlg.FileName(), InventoryType.Any);
@@ -417,7 +417,7 @@ namespace WillowTree.Plugins
 
         private void OpenLocker_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog FromFile = new Util.WTOpenFileDialog("xml", GameData.OpenedLockerFilename());
+            WTOpenFileDialog FromFile = new WTOpenFileDialog("xml", GameData.OpenedLockerFilename());
 
             try
             {

@@ -230,7 +230,7 @@ namespace WillowTree.Plugins
 
         private void ExportToFileSkills_Click(object sender, EventArgs e)
         {
-            Util.WTSaveFileDialog tempExport = new Util.WTSaveFileDialog("skills", CurrentWSG.CharacterName + ".skills");
+            WTSaveFileDialog tempExport = new WTSaveFileDialog("skills", CurrentWSG.CharacterName + ".skills");
 
             if (tempExport.ShowDialog() == DialogResult.OK)
             {
@@ -268,7 +268,7 @@ namespace WillowTree.Plugins
 
         private void ImportFromFileSkills_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog tempImport = new Util.WTOpenFileDialog("skills", CurrentWSG.CharacterName + ".skills");
+            WTOpenFileDialog tempImport = new WTOpenFileDialog("skills", CurrentWSG.CharacterName + ".skills");
 
             if (tempImport.ShowDialog() == DialogResult.OK)
             {

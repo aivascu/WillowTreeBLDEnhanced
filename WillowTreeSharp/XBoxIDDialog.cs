@@ -37,7 +37,7 @@ namespace WillowTree
    
         private void button1_Click(object sender, EventArgs e)
         {
-            Util.WTOpenFileDialog tempOpen = new Util.WTOpenFileDialog("sav", "");
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {

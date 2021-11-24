@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace WillowTree
 {
@@ -17,53 +16,6 @@ namespace WillowTree
             }
 
             updown.Value = value;
-        }
-
-        public class WTOpenFileDialog
-        {
-            private OpenFileDialog fDlg = null;
-
-            public WTOpenFileDialog(String fileExt, String fileName)
-            {
-                if (string.IsNullOrEmpty(fileName))
-                    fileName = "";
-
-                fDlg = new OpenFileDialog();
-                fDlg.DefaultExt = "*." + fileExt;
-                fDlg.Filter = "WillowTree (*." + fileExt + ")|*." + fileExt + "|All Files (*.*)|*.*";
-                fDlg.FileName = fileName;
-            }
-
-            public DialogResult ShowDialog()
-            { return fDlg.ShowDialog(); }
-
-            public String FileName()
-            { return fDlg.FileName; }
-
-            public String[] FileNames()
-            { return fDlg.FileNames; }
-
-            public void Multiselect(bool multiselect)
-            { fDlg.Multiselect = multiselect; }
-        }
-
-        public class WTSaveFileDialog
-        {
-            private SaveFileDialog fDlg = null;
-
-            public WTSaveFileDialog(String fileExt, String fileName)
-            {
-                fDlg = new SaveFileDialog();
-                fDlg.DefaultExt = "*." + fileExt;
-                fDlg.Filter = "WillowTree (*." + fileExt + ")|*." + fileExt + "|All Files (*.*)|*.*";
-                fDlg.FileName = fileName;
-            }
-
-            public DialogResult ShowDialog()
-            { return fDlg.ShowDialog(); }
-
-            public String FileName()
-            { return fDlg.FileName; }
         }
     }
 }
