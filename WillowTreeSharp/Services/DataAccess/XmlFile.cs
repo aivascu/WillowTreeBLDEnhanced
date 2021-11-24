@@ -1,11 +1,12 @@
-﻿using Aga.Controls.Tree;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Text;
 using System.Xml;
+using Aga.Controls.Tree;
 
-namespace WillowTree
+namespace WillowTree.Services.DataAccess
 {
     /// <summary>
     /// Create a New XML file to store or load data
@@ -16,6 +17,9 @@ namespace WillowTree
         public XmlDocument xmlrdrdoc = null;
         private static readonly Dictionary<string, XmlFile> XmlCache = new Dictionary<string, XmlFile>();
         private readonly List<string> listListSectionNames = new List<string>();
+
+        public IPath Path { get; set; } = new PathWrapper(new FileSystem());
+        public IDirectory Directory { get; set; } = new DirectoryWrapper(new FileSystem());
 
         public XmlFile(string filePath)
             : this(GameData.DataPath, GameData.XmlPath, filePath)
@@ -63,7 +67,7 @@ namespace WillowTree
                     // code though.
                     folder = folder + "Xml" + Path.DirectorySeparatorChar;
                 }
-                string targetfile = Path.Combine(folder, filename + ".xml");
+                string targetfile = Path.Combine(folder, $"{filename}.xml");
                 if (!Directory.Exists(Path.GetDirectoryName(targetfile)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(targetfile));

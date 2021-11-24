@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.IO.Abstractions;
 using WillowTree.Plugins;
+using WillowTree.Services.DataAccess;
 
 namespace WillowTree
 {

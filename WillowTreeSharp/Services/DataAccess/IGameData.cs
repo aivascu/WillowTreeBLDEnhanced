@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using WillowTree.Inventory;
 
-namespace WillowTree
+namespace WillowTree.Services.DataAccess
 {
     public interface IGameData
     {

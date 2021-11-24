@@ -25,6 +25,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using WillowTree.Controls;
+using WillowTree.Services.DataAccess;
 
 namespace WillowTree.Plugins
 {

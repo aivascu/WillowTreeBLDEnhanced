@@ -29,7 +29,7 @@ using System.Text;
 using X360.IO;
 using X360.STFS;
 
-namespace WillowTree
+namespace WillowTree.Services.DataAccess
 {
     public enum ByteOrder
     {

@@ -1,6 +1,7 @@
 ﻿using Aga.Controls.Tree;
 using System.Collections.Generic;
 using WillowTree.CustomControls;
+using WillowTree.Services.DataAccess;
 
 namespace WillowTree.Inventory
 {

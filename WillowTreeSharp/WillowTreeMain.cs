@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using WillowTree.Controls;
 using WillowTree.Inventory;
 using WillowTree.Plugins;
+using WillowTree.Services.DataAccess;
 
 namespace WillowTree
 {

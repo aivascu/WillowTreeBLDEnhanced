@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using WillowTree.Inventory;
 
-namespace WillowTree
+namespace WillowTree.Services.DataAccess
 {
     public static class GameData
     {

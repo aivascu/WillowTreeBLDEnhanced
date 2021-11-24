@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using WillowTree.Services.DataAccess;
 
 namespace WillowTree.Inventory
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace WillowTree
+namespace WillowTree.Services.DataAccess
 {
     public static class XmlNodeExtensions
     {

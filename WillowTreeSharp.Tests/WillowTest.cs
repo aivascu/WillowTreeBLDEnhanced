@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using WillowTree;
+using WillowTree.Services.DataAccess;
 
 namespace Test
 {
