@@ -73,7 +73,7 @@ namespace WillowTree.Plugins
 
         public void DoQuestList()
         {
-            List<string> sectionNames = QuestsXml.stListSectionNames();
+            List<string> sectionNames = QuestsXml.StListSectionNames();
 
             foreach (string section in sectionNames)
                 QuestList.Items.Add(QuestsXml.XmlReadValue(section, "MissionName"));
@@ -635,7 +635,7 @@ namespace WillowTree.Plugins
                 {
                     WillowSaveGame.QuestTable qt = CurrentWSG.QuestLists[index];
 
-                    List<string> sectionNames = QuestsXml.stListSectionNames();
+                    List<string> sectionNames = QuestsXml.StListSectionNames();
                        
                     WillowSaveGame.QuestEntry qe = new WillowSaveGame.QuestEntry();
                     string name = sectionNames[SelectedItem];

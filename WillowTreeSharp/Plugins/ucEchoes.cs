@@ -65,7 +65,7 @@ namespace WillowTree.Plugins
 
         public void DoEchoList()
         {
-            foreach (string section in EchoesXml.stListSectionNames())
+            foreach (string section in EchoesXml.StListSectionNames())
             {
                 string name = EchoesXml.XmlReadValue(section, "Subject");
                 if (name != "")
@@ -486,7 +486,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            string name = EchoesXml.stListSectionNames()[EchoList.SelectedIndex];
+            string name = EchoesXml.StListSectionNames()[EchoList.SelectedIndex];
 
             // Create a new echo entry and populate it
             WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry();

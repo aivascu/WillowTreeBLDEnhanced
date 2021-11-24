@@ -115,11 +115,11 @@ namespace WillowTree.Plugins
 
             lastClass = CurrentWSG.Class;
             xml = GetClassSkillXml(lastClass);
-            foreach (string section in xml.stListSectionNames())
+            foreach (string section in xml.StListSectionNames())
                 SkillList.Items.Add((string)xml.XmlReadValue(section, "SkillName"));
 
             xml = SkillsCommonXml;
-            foreach (string section in xml.stListSectionNames())
+            foreach (string section in xml.StListSectionNames())
                 SkillList.Items.Add((string)xml.XmlReadValue(section, "SkillName"));
         }
 
@@ -275,7 +275,7 @@ namespace WillowTree.Plugins
             if (tempImport.ShowDialog() == DialogResult.OK)
             {
                 XmlFile ImportSkills = new XmlFile(tempImport.FileName());
-                List<string> sectionNames = ImportSkills.stListSectionNames();
+                List<string> sectionNames = ImportSkills.StListSectionNames();
 
                 int sectionCount = sectionNames.Count;
 

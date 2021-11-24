@@ -196,7 +196,7 @@ namespace WillowTree.Plugins
         {
             LocationsList.Items.Clear();
 
-            foreach (string section in LocationsXml.stListSectionNames())
+            foreach (string section in LocationsXml.StListSectionNames())
             {
                 string outpostname = LocationsXml.XmlReadValue(section, "OutpostDisplayName");
                 if (outpostname == "")
@@ -554,7 +554,7 @@ namespace WillowTree.Plugins
                 int SelectedItem = LocationsList.SelectedIndex;
                 CurrentWSG.TotalLocations = CurrentWSG.TotalLocations + 1;
                 ArrayHelper.ResizeArrayLarger(ref CurrentWSG.LocationStrings, CurrentWSG.TotalLocations);
-                CurrentWSG.LocationStrings[CurrentWSG.TotalLocations - 1] = LocationsXml.stListSectionNames()[SelectedItem];
+                CurrentWSG.LocationStrings[CurrentWSG.TotalLocations - 1] = LocationsXml.StListSectionNames()[SelectedItem];
                 DoLocationTree();
             }
             catch { }

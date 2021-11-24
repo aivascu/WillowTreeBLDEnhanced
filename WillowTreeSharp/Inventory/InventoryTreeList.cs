@@ -501,7 +501,7 @@ namespace WillowTree.Inventory
             string lastGoodFile = GameData.OpenedLockerFilename();    //Keep last valid locker path file
             string tempfile = GameData.DataPath + "purgeduplicates.temp";
             SaveToXml(tempfile);
-            XmlFile.PurgeDuplicates(tempfile);
+            XmlFileCache.PurgeDuplicates(tempfile);
             LoadFromXml(tempfile, InventoryType.Any);
             File.Delete(tempfile);
 
