@@ -123,14 +123,14 @@ namespace WillowTree.Plugins
         }
 
         public static string EchoSearchKey;
-        public bool EchoSearchByName(WillowSaveGame.EchoEntry ee)
+        public bool EchoSearchByName(EchoEntry ee)
         {
             return ee.Name == EchoSearchKey;
         }
 
         public void DeleteAllEchoes(int index)
         {
-            WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+            EchoTable et = CurrentWSG.EchoLists[index];
             et.Echoes.Clear();
             et.TotalEchoes = 0;
 
@@ -178,7 +178,7 @@ namespace WillowTree.Plugins
 
             int count = echonodes.Count;
 
-            WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+            EchoTable et = CurrentWSG.EchoLists[index];
             et.Echoes.Clear();
             et.TotalEchoes = 0;
 
@@ -187,7 +187,7 @@ namespace WillowTree.Plugins
             for (int i = 0; i < count; i++)
             {
                 // Create a new echo entry and populate it from the xml node
-                WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry();
+                EchoEntry ee = new EchoEntry();
                 XmlNode node = echonodes[i];
                 string name = node.GetElement("Name", "");
                 ee.Name = name;
@@ -224,13 +224,13 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WillowSaveGame.EchoTable etOther = OtherSave.EchoLists[index];
-            WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+            EchoTable etOther = OtherSave.EchoLists[index];
+            EchoTable et = CurrentWSG.EchoLists[index];
 
             EchoTree.BeginUpdate();
 
             // Copy only the locations that are not duplicates from the other save
-            foreach (WillowSaveGame.EchoEntry ee in CurrentWSG.EchoLists[index].Echoes)
+            foreach (EchoEntry ee in CurrentWSG.EchoLists[index].Echoes)
             {
                 string name = ee.Name;
 
@@ -276,7 +276,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+            EchoTable et = CurrentWSG.EchoLists[index];
 
             EchoTree.BeginUpdate();
 
@@ -293,7 +293,7 @@ namespace WillowTree.Plugins
                 }
 
                 // Create a new echo entry an populate it from the node
-                WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry
+                EchoEntry ee = new EchoEntry
                 {
                     Name = name,
                     DlcValue1 = node.GetElementAsInt("DLCValue1", 0),
@@ -330,12 +330,12 @@ namespace WillowTree.Plugins
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Echoes");
 
-            WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+            EchoTable et = CurrentWSG.EchoLists[index];
 
             int count = CurrentWSG.EchoLists[index].TotalEchoes;
             for (int i = 0; i < count; i++)
             {
-                WillowSaveGame.EchoEntry ee = et.Echoes[i];
+                EchoEntry ee = et.Echoes[i];
                 writer.WriteStartElement("Echo");
                 writer.WriteElementString("Name", ee.Name);
                 writer.WriteElementString("DLCValue1", ee.DlcValue1.ToString());
@@ -371,7 +371,7 @@ namespace WillowTree.Plugins
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Echoes");
 
-            WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+            EchoTable et = CurrentWSG.EchoLists[index];
 
             foreach (TreeNodeAdv nodeAdv in selected)
             {
@@ -384,7 +384,7 @@ namespace WillowTree.Plugins
                     continue;
                 }
 
-                WillowSaveGame.EchoEntry ee = et.Echoes[i];
+                EchoEntry ee = et.Echoes[i];
                 writer.WriteStartElement("Echo");
                 writer.WriteElementString("Name", ee.Name);
                 writer.WriteElementString("DLCValue1", ee.DlcValue1.ToString());
@@ -401,10 +401,10 @@ namespace WillowTree.Plugins
             int index = CurrentWSG.NumberOfEchoLists;
 
             // Create an empty echo table
-            WillowSaveGame.EchoTable et = new WillowSaveGame.EchoTable
+            EchoTable et = new EchoTable
             {
                 Index = CurrentWSG.NumberOfEchoLists,
-                Echoes = new List<WillowSaveGame.EchoEntry>(),
+                Echoes = new List<EchoEntry>(),
                 TotalEchoes = 0
             };
 
@@ -467,7 +467,7 @@ namespace WillowTree.Plugins
                 // Replace the old entries in the echo table with the new ones
                 CurrentWSG.EchoLists[index] = OtherSave.EchoLists[index];
 
-                WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+                EchoTable et = CurrentWSG.EchoLists[index];
 
                 EchoTree.BeginUpdate();
                 TreeNodeAdv parent = EchoTree.Root.Children[index];
@@ -480,7 +480,7 @@ namespace WillowTree.Plugins
                 }
 
                 // Add the new entries to the tree view
-                foreach (WillowSaveGame.EchoEntry ee in et.Echoes)
+                foreach (EchoEntry ee in et.Echoes)
                 {
                     string name = ee.Name;
 
@@ -523,7 +523,7 @@ namespace WillowTree.Plugins
                     continue;
                 }
 
-                WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+                EchoTable et = CurrentWSG.EchoLists[index];
 
                 // Remove the echo from the echo list
                 et.TotalEchoes--;
@@ -560,7 +560,7 @@ namespace WillowTree.Plugins
             string name = EchoesXml.StListSectionNames()[EchoList.SelectedIndex];
 
             // Create a new echo entry and populate it
-            WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry
+            EchoEntry ee = new EchoEntry
             {
                 Name = name,
                 // file then it needs to be looked up here.
@@ -571,7 +571,7 @@ namespace WillowTree.Plugins
             };
 
             // Add the new echo to the echo list
-            WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
+            EchoTable et = CurrentWSG.EchoLists[index];
             et.Echoes.Add(ee);
             et.TotalEchoes++;
 
@@ -718,7 +718,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WillowSaveGame.EchoEntry ee = CurrentWSG.EchoLists[index].Echoes[EchoTree.SelectedNode.Index];
+            EchoEntry ee = CurrentWSG.EchoLists[index].Echoes[EchoTree.SelectedNode.Index];
 
             EchoDLCValue1.Value = ee.DlcValue1;
             EchoDLCValue2.Value = ee.DlcValue2;

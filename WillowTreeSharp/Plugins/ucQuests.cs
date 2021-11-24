@@ -24,7 +24,7 @@ namespace WillowTree.Plugins
 
         public void DeleteAllQuests(int index)
         {
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = currentWsg.QuestLists[index];
             qt.Quests.Clear();
             qt.TotalQuests = 0;
 
@@ -78,7 +78,7 @@ namespace WillowTree.Plugins
                 };
                 model.Nodes.Add(parent);
 
-                WillowSaveGame.QuestTable qt = currentWsg.QuestLists[listIndex];
+                QuestTable qt = currentWsg.QuestLists[listIndex];
                 // Create all the actual quest nodes for this playthrough
                 //     Text = human readable quest name
                 //     Tag = internal quest name
@@ -130,7 +130,7 @@ namespace WillowTree.Plugins
 
             int count = questnodes.Count;
 
-            WillowSaveGame.QuestTable questTable = currentWsg.QuestLists[index];
+            QuestTable questTable = currentWsg.QuestLists[index];
             questTable.Quests.Clear();
             questTable.TotalQuests = count;
 
@@ -147,7 +147,7 @@ namespace WillowTree.Plugins
             for (int nodeIndex = 0; nodeIndex < count; nodeIndex++)
             {
                 XmlNode node = questnodes[nodeIndex];
-                WillowSaveGame.QuestEntry questEntry = new WillowSaveGame.QuestEntry
+                QuestEntry questEntry = new QuestEntry
                 {
                     Name = node.GetElement("Name", ""),
                     Progress = node.GetElementAsInt("Progress", 0),
@@ -157,7 +157,7 @@ namespace WillowTree.Plugins
 
                 int objectiveCount = node.GetElementAsInt("Objectives", 0);
                 questEntry.NumberOfObjectives = objectiveCount;
-                questEntry.Objectives = new WillowSaveGame.QuestObjective[objectiveCount];
+                questEntry.Objectives = new QuestObjective[objectiveCount];
 
                 for (int objectiveIndex = 0; objectiveIndex < objectiveCount; objectiveIndex++)
                 {
@@ -204,7 +204,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = currentWsg.QuestLists[index];
 
             QuestTree.BeginUpdate();
             // Copy only the quests that are not duplicates from the XML file
@@ -220,7 +220,7 @@ namespace WillowTree.Plugins
                 {
                     // This quest entry exists in both lists.  If the progress is
                     // not greater then don't do anything with it.
-                    WillowSaveGame.QuestEntry old = qt.Quests[prevIndex];
+                    QuestEntry old = qt.Quests[prevIndex];
                     if (progress <= old.Progress)
                     {
                         continue;
@@ -234,7 +234,7 @@ namespace WillowTree.Plugins
 
                     int newObjectiveCount = node.GetElementAsInt("Objectives", 0);
                     old.NumberOfObjectives = newObjectiveCount;
-                    old.Objectives = new WillowSaveGame.QuestObjective[newObjectiveCount];
+                    old.Objectives = new QuestObjective[newObjectiveCount];
 
                     for (int objectiveIndex = 0; objectiveIndex < newObjectiveCount; objectiveIndex++)
                     {
@@ -249,7 +249,7 @@ namespace WillowTree.Plugins
                 }
 
                 // Create a new quest entry from the quest's xml node data
-                WillowSaveGame.QuestEntry qe = new WillowSaveGame.QuestEntry
+                QuestEntry qe = new QuestEntry
                 {
                     Name = name,
                     Progress = progress,
@@ -259,7 +259,7 @@ namespace WillowTree.Plugins
 
                 int objectiveCount = node.GetElementAsInt("Objectives", 0);
                 qe.NumberOfObjectives = objectiveCount;
-                qe.Objectives = new WillowSaveGame.QuestObjective[objectiveCount];
+                qe.Objectives = new QuestObjective[objectiveCount];
 
                 for (int objectiveIndex = 0; objectiveIndex < objectiveCount; objectiveIndex++)
                 {
@@ -301,11 +301,11 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WillowSaveGame.QuestTable qtOther = otherSave.QuestLists[index];
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qtOther = otherSave.QuestLists[index];
+            QuestTable qt = currentWsg.QuestLists[index];
 
             QuestTree.BeginUpdate();
-            foreach (WillowSaveGame.QuestEntry qe in otherSave.QuestLists[index].Quests)
+            foreach (QuestEntry qe in otherSave.QuestLists[index].Quests)
             {
                 string name = qe.Name;
                 int progress = qe.Progress;
@@ -317,7 +317,7 @@ namespace WillowTree.Plugins
                 {
                     // This quest entry exists in both lists.  If the progress is
                     // not greater then don't do anything with it.
-                    WillowSaveGame.QuestEntry old = qt.Quests[prevIndex];
+                    QuestEntry old = qt.Quests[prevIndex];
                     if (progress < old.Progress)
                     {
                         continue;
@@ -384,7 +384,7 @@ namespace WillowTree.Plugins
 
         public bool MultipleIntroStateSaver(int playthroughIndex)
         {
-            WillowSaveGame.QuestTable questTable = currentWsg.QuestLists[playthroughIndex];
+            QuestTable questTable = currentWsg.QuestLists[playthroughIndex];
             int questCount = questTable.TotalQuests;
 
             int totalFound = 0;
@@ -413,7 +413,7 @@ namespace WillowTree.Plugins
             Enabled = true;
         }
 
-        public bool QuestSearchByName(WillowSaveGame.QuestEntry qe)
+        public bool QuestSearchByName(QuestEntry qe)
         {
             return qe.Name == questSearchKey;
         }
@@ -438,11 +438,11 @@ namespace WillowTree.Plugins
             int index = currentWsg.NumberOfQuestLists;
 
             // Create an empty quest table
-            WillowSaveGame.QuestTable qt = new WillowSaveGame.QuestTable
+            QuestTable qt = new QuestTable
             {
                 Index = index,
                 TotalQuests = 0,
-                Quests = new List<WillowSaveGame.QuestEntry>()
+                Quests = new List<QuestEntry>()
             };
 
             // Add the new table to the list
@@ -468,7 +468,7 @@ namespace WillowTree.Plugins
 
         private void AddQuestByName(string name, int index)
         {
-            WillowSaveGame.QuestEntry qe = new WillowSaveGame.QuestEntry
+            QuestEntry qe = new QuestEntry
             {
                 Name = name,
                 // is added to the data files these should be changed.
@@ -479,13 +479,13 @@ namespace WillowTree.Plugins
                 DlcValue2 = 0
             };
 
-            List<WillowSaveGame.QuestObjective> objectives = new List<WillowSaveGame.QuestObjective>();
+            List<QuestObjective> objectives = new List<QuestObjective>();
 
             int objectiveCount;
 
             for (objectiveCount = 0; ; objectiveCount++)
             {
-                WillowSaveGame.QuestObjective objective;
+                QuestObjective objective;
                 string desc = questsXml.XmlReadValue(qe.Name, $"Objectives{objectiveCount}");
                 if (desc == "")
                 {
@@ -509,7 +509,7 @@ namespace WillowTree.Plugins
             }
 
             // Add the quest entry to the quest list
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = currentWsg.QuestLists[index];
             qt.Quests.Add(qe);
             qt.TotalQuests++;
 
@@ -584,7 +584,7 @@ namespace WillowTree.Plugins
 
         private void DeleteQuestEntry(int listIndex, int entryIndex)
         {
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[listIndex];
+            QuestTable qt = currentWsg.QuestLists[listIndex];
             qt.TotalQuests--;
             qt.Quests.RemoveAt(entryIndex);
         }
@@ -734,7 +734,7 @@ namespace WillowTree.Plugins
                 // Replace the old entries in the quest table with the new ones
                 currentWsg.QuestLists[index] = otherSave.QuestLists[index];
 
-                WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+                QuestTable qt = currentWsg.QuestLists[index];
 
                 QuestTree.BeginUpdate();
                 TreeNodeAdv parent = QuestTree.Root.Children[index];
@@ -746,7 +746,7 @@ namespace WillowTree.Plugins
                 }
 
                 // Add the new entries to the tree view
-                foreach (WillowSaveGame.QuestEntry qe in qt.Quests)
+                foreach (QuestEntry qe in qt.Quests)
                 {
                     string nodeName = qe.Name;
 
@@ -893,11 +893,11 @@ namespace WillowTree.Plugins
             {
                 if (selectedItem != -1)
                 {
-                    WillowSaveGame.QuestTable questTable = currentWsg.QuestLists[index];
+                    QuestTable questTable = currentWsg.QuestLists[index];
 
                     List<string> sectionNames = questsXml.StListSectionNames();
 
-                    WillowSaveGame.QuestEntry questEntry = new WillowSaveGame.QuestEntry();
+                    QuestEntry questEntry = new QuestEntry();
                     string name = sectionNames[selectedItem];
                     questEntry.Name = name;
                     questEntry.Progress = 1;
@@ -908,7 +908,7 @@ namespace WillowTree.Plugins
                     questEntry.DlcValue1 = 0;
                     questEntry.DlcValue2 = 0;
 
-                    List<WillowSaveGame.QuestObjective> objectives = new List<WillowSaveGame.QuestObjective>();
+                    List<QuestObjective> objectives = new List<QuestObjective>();
 
                     int objectiveCount;
 
@@ -917,7 +917,7 @@ namespace WillowTree.Plugins
 
                     for (objectiveCount = 0; ; objectiveCount++)
                     {
-                        WillowSaveGame.QuestObjective objective;
+                        QuestObjective objective;
 
                         string desc = questXmlNode.GetElement($"Objectives{objectiveCount}", "");
                         if (desc == "")
@@ -970,10 +970,10 @@ namespace WillowTree.Plugins
 
             try
             {
-                WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+                QuestTable qt = currentWsg.QuestLists[index];
                 if (clicked)
                 {
-                    WillowSaveGame.QuestEntry qe = qt.Quests[QuestTree.SelectedNode.Index];
+                    QuestEntry qe = qt.Quests[QuestTree.SelectedNode.Index];
 
                     if (qe.Progress == 4 && QuestProgress.SelectedIndex < 3)
                     {
@@ -982,14 +982,14 @@ namespace WillowTree.Plugins
                         // removed when the quest is turned in.
                         Objectives.Items.Clear();
 
-                        List<WillowSaveGame.QuestObjective> objectives = new List<WillowSaveGame.QuestObjective>();
+                        List<QuestObjective> objectives = new List<QuestObjective>();
 
                         XmlNode questXmlNode = questsXml.XmlReadNode(qe.Name);
 
                         int objectiveCount;
                         for (objectiveCount = 0; ; objectiveCount++)
                         {
-                            WillowSaveGame.QuestObjective objective;
+                            QuestObjective objective;
                             string desc = questXmlNode.GetElement($"Objectives{objectiveCount}", "");
                             if (desc == "")
                             {
@@ -1022,7 +1022,7 @@ namespace WillowTree.Plugins
                         // The quest was not marked as turned in but now it will be.  Clear the
                         // objective list since turned in quests no longer should have one.
                         Objectives.Items.Clear();
-                        qe.Objectives = Array.Empty<WillowSaveGame.QuestObjective>();
+                        qe.Objectives = Array.Empty<QuestObjective>();
                         qe.Progress = 4;
                         qe.NumberOfObjectives = 0;
                     }
@@ -1059,7 +1059,7 @@ namespace WillowTree.Plugins
 
             try
             {
-                WillowSaveGame.QuestEntry qe = currentWsg.QuestLists[index].Quests[QuestTree.SelectedNode.Index];
+                QuestEntry qe = currentWsg.QuestLists[index].Quests[QuestTree.SelectedNode.Index];
 
                 SelectedQuestGroup.Text = QuestTree.SelectedNode.GetText();
                 string key = QuestTree.SelectedNode.GetKey();
@@ -1158,7 +1158,7 @@ namespace WillowTree.Plugins
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Quests");
 
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = currentWsg.QuestLists[index];
 
             foreach (TreeNodeAdv nodeAdv in selected)
             {
@@ -1171,7 +1171,7 @@ namespace WillowTree.Plugins
                     continue;
                 }
 
-                WillowSaveGame.QuestEntry qe = qt.Quests[i];
+                QuestEntry qe = qt.Quests[i];
                 writer.WriteStartElement("Quest");
                 writer.WriteElementString("Name", qe.Name);
                 writer.WriteElementString("Progress", qe.Progress.ToString());
@@ -1205,12 +1205,12 @@ namespace WillowTree.Plugins
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Quests");
 
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = currentWsg.QuestLists[index];
 
             int count = currentWsg.QuestLists[index].TotalQuests;
             for (int i = 0; i < count; i++)
             {
-                WillowSaveGame.QuestEntry qe = qt.Quests[i];
+                QuestEntry qe = qt.Quests[i];
                 writer.WriteStartElement("Quest");
                 writer.WriteElementString("Name", qe.Name);
                 writer.WriteElementString("Progress", qe.Progress.ToString());
@@ -1241,7 +1241,7 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WillowSaveGame.QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = currentWsg.QuestLists[index];
             string currentQuest = QuestTree.SelectedNode.GetKey();
             qt.CurrentQuest = currentQuest;
 

@@ -119,7 +119,7 @@ namespace WillowTree
             SetUiTreeStyles(this.settings.UseColor);
         }
 
-        private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.Object
+        private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.WillowObject
         {
             // Populate itmList with items created from the WillowSaveGame data lists
             itmList.ClearSilent();
@@ -324,7 +324,7 @@ namespace WillowTree
         }
 
         private void RepopulateListForSaving<T>(InventoryList itmList, ref List<T> objs)
-            where T : WillowSaveGame.Object, new()
+            where T : WillowSaveGame.WillowObject, new()
         {
             objs = new List<T>();
             foreach (InventoryEntry item in itmList.Items.Values)
