@@ -151,7 +151,7 @@ namespace WillowTree.Services.DataAccess
         }
 
         /// <summary> Look for any non-ASCII characters in the input.</summary>
-        protected static bool IsUnicode(string value)
+        private static bool IsUnicode(string value)
         {
             return value.Any(t => t > 256);
         }
@@ -339,10 +339,69 @@ namespace WillowTree.Services.DataAccess
             return strings;
         }
 
-        protected static bool Eof(BinaryReader binaryReader)
+        protected static bool IsEndOfFile(BinaryReader binaryReader)
         {
             var bs = binaryReader.BaseStream;
             return (bs.Position == bs.Length);
+        }
+
+        ///<summary>Reports back the expected platform this WSG was created on.</summary>
+        protected static string ReadPlatform(Stream inputWsg)
+        {
+            BinaryReader saveReader = new BinaryReader(inputWsg);
+
+            byte byte1 = saveReader.ReadByte();
+            byte byte2 = saveReader.ReadByte();
+            byte byte3 = saveReader.ReadByte();
+            if (byte1 == 'C' && byte2 == 'O' && byte3 == 'N')
+            {
+                byte byte4 = saveReader.ReadByte();
+                if (byte4 == ' ')
+                {
+                    // This is a really lame way to check for the WSG data...
+                    saveReader.BaseStream.Seek(0xCFFC, SeekOrigin.Current);
+
+                    byte1 = saveReader.ReadByte();
+                    byte2 = saveReader.ReadByte();
+                    byte3 = saveReader.ReadByte();
+                    if (byte1 == 'W' && byte2 == 'S' && byte3 == 'G')
+                    {
+                        saveReader.BaseStream.Seek(0x360, SeekOrigin.Begin);
+                        uint titleId = ((uint)saveReader.ReadByte() << 0x18) + ((uint)saveReader.ReadByte() << 0x10) +
+                                       ((uint)saveReader.ReadByte() << 0x8) + saveReader.ReadByte();
+                        switch (titleId)
+                        {
+                            case 0x545407E7: return "X360";
+                            case 0x54540866: return "X360JP";
+                            default: return "unknown";
+                        }
+                    }
+                }
+            }
+            else if (byte1 == 'W' && byte2 == 'S' && byte3 == 'G')
+            {
+                int wsgVersion = saveReader.ReadInt32();
+
+                // BinaryReader.ReadInt32 always uses little-endian byte order.
+                bool littleEndian;
+                switch (wsgVersion)
+                {
+                    case 0x02000000: // 33554432 decimal
+                        littleEndian = false;
+                        break;
+
+                    case 0x00000002:
+                        littleEndian = true;
+                        break;
+
+                    default:
+                        return "unknown";
+                }
+
+                return littleEndian ? "PC" : "PS3";
+            }
+
+            return "Not WSG";
         }
     }
 }

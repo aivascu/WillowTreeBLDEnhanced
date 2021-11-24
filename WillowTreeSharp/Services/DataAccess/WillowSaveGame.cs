@@ -226,65 +226,6 @@ namespace WillowTree.Services.DataAccess
 
         #endregion Members
 
-        ///<summary>Reports back the expected platform this WSG was created on.</summary>
-        public static string WsgType(Stream inputWsg)
-        {
-            BinaryReader saveReader = new BinaryReader(inputWsg);
-
-            byte byte1 = saveReader.ReadByte();
-            byte byte2 = saveReader.ReadByte();
-            byte byte3 = saveReader.ReadByte();
-            if (byte1 == 'C' && byte2 == 'O' && byte3 == 'N')
-            {
-                byte byte4 = saveReader.ReadByte();
-                if (byte4 == ' ')
-                {
-                    // This is a really lame way to check for the WSG data...
-                    saveReader.BaseStream.Seek(0xCFFC, SeekOrigin.Current);
-
-                    byte1 = saveReader.ReadByte();
-                    byte2 = saveReader.ReadByte();
-                    byte3 = saveReader.ReadByte();
-                    if (byte1 == 'W' && byte2 == 'S' && byte3 == 'G')
-                    {
-                        saveReader.BaseStream.Seek(0x360, SeekOrigin.Begin);
-                        uint titleId = ((uint)saveReader.ReadByte() << 0x18) + ((uint)saveReader.ReadByte() << 0x10) +
-                                       ((uint)saveReader.ReadByte() << 0x8) + saveReader.ReadByte();
-                        switch (titleId)
-                        {
-                            case 0x545407E7: return "X360";
-                            case 0x54540866: return "X360JP";
-                            default: return "unknown";
-                        }
-                    }
-                }
-            }
-            else if (byte1 == 'W' && byte2 == 'S' && byte3 == 'G')
-            {
-                int wsgVersion = saveReader.ReadInt32();
-
-                // BinaryReader.ReadInt32 always uses little-endian byte order.
-                bool littleEndian;
-                switch (wsgVersion)
-                {
-                    case 0x02000000: // 33554432 decimal
-                        littleEndian = false;
-                        break;
-
-                    case 0x00000002:
-                        littleEndian = true;
-                        break;
-
-                    default:
-                        return "unknown";
-                }
-
-                return littleEndian ? "PC" : "PS3";
-            }
-
-            return "Not WSG";
-        }
-
         ///<summary>Extracts a WSG from a CON (Xbox 360 Container File).</summary>
         public MemoryStream OpenXboxWsgStream(Stream inputX360File)
         {
@@ -329,7 +270,7 @@ namespace WillowTree.Services.DataAccess
         {
             using (FileStream fileStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                Platform = WsgType(fileStream);
+                Platform = ReadPlatform(fileStream);
                 fileStream.Seek(0, SeekOrigin.Begin);
 
                 if (string.Equals(Platform, "X360", StringComparison.Ordinal) ||
@@ -765,7 +706,7 @@ namespace WillowTree.Services.DataAccess
 
                 //Padding at the end of file, don't know exactly why
                 var temp = new List<byte>();
-                while (!Eof(testReader))
+                while (!IsEndOfFile(testReader))
                 {
                     temp.Add(ReadBytes(testReader, 1, EndianWsg)[0]);
                 }
