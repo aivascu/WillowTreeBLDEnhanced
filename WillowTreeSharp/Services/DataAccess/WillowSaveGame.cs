@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,314 +10,8 @@ using X360.STFS;
 
 namespace WillowTree.Services.DataAccess
 {
-    public class WillowSaveGame
+    public class WillowSaveGame : WillowSaveGameBase
     {
-        private static byte[] ReadBytes(BinaryReader br, int fieldSize, ByteOrder byteOrder)
-        {
-            byte[] bytes = br.ReadBytes(fieldSize);
-            if (bytes.Length != fieldSize)
-            {
-                throw new EndOfStreamException();
-            }
-
-            if (BitConverter.IsLittleEndian)
-            {
-                if (byteOrder == ByteOrder.BigEndian)
-                {
-                    Array.Reverse(bytes);
-                }
-            }
-            else
-            {
-                if (byteOrder == ByteOrder.LittleEndian)
-                {
-                    Array.Reverse(bytes);
-                }
-            }
-
-            return bytes;
-        }
-
-        private static byte[] ReadBytes(byte[] inBytes, int fieldSize, ByteOrder byteOrder)
-        {
-            Debug.Assert(inBytes != null, "inBytes != null");
-            Debug.Assert(inBytes.Length >= fieldSize, "inBytes.Length >= fieldSize");
-
-            var outBytes = new byte[fieldSize];
-            Buffer.BlockCopy(inBytes, 0, outBytes, 0, fieldSize);
-
-            if (BitConverter.IsLittleEndian)
-            {
-                if (byteOrder == ByteOrder.BigEndian)
-                {
-                    Array.Reverse(outBytes, 0, fieldSize);
-                }
-            }
-            else
-            {
-                if (byteOrder == ByteOrder.LittleEndian)
-                {
-                    Array.Reverse(outBytes, 0, fieldSize);
-                }
-            }
-
-            return outBytes;
-        }
-
-        private static float ReadSingle(BinaryReader reader, ByteOrder endian)
-        {
-            return BitConverter.ToSingle(ReadBytes(reader, sizeof(float), endian), 0);
-        }
-
-        private static int ReadInt32(BinaryReader reader, ByteOrder endian)
-        {
-            return BitConverter.ToInt32(ReadBytes(reader, sizeof(int), endian), 0);
-        }
-
-        private static short ReadInt16(BinaryReader reader, ByteOrder endian)
-        {
-            return BitConverter.ToInt16(ReadBytes(reader, sizeof(short), endian), 0);
-        }
-
-        private static List<int> ReadListInt32(BinaryReader reader, ByteOrder endian)
-        {
-            var count = ReadInt32(reader, endian);
-            var list = new List<int>(count);
-            for (var i = 0; i < count; i++)
-            {
-                var value = ReadInt32(reader, endian);
-                list.Add(value);
-            }
-
-            return list;
-        }
-
-        private static void Write(BinaryWriter writer, float value, ByteOrder endian)
-        {
-            writer.Write(BitConverter.ToSingle(ReadBytes(BitConverter.GetBytes(value), sizeof(float), endian), 0));
-        }
-
-        private static void Write(BinaryWriter writer, int value, ByteOrder endian)
-        {
-            writer.Write(BitConverter.ToInt32(ReadBytes(BitConverter.GetBytes(value), sizeof(int), endian), 0));
-        }
-
-        private static void Write(BinaryWriter writer, short value, ByteOrder endian)
-        {
-            writer.Write(ReadBytes(BitConverter.GetBytes(value), sizeof(short), endian));
-        }
-
-        private static byte[] GetBytesFromInt(int value, ByteOrder endian)
-        {
-            return ReadBytes(BitConverter.GetBytes(value), sizeof(int), endian);
-        }
-
-        private static byte[] GetBytesFromInt(uint value, ByteOrder endian)
-        {
-            return ReadBytes(BitConverter.GetBytes(value), sizeof(int), endian);
-        }
-
-        ///<summary>Reads a string in the format used by the WSGs</summary>
-        private static string ReadString(BinaryReader reader, ByteOrder endian)
-        {
-            int tempLengthValue = ReadInt32(reader, endian);
-            if (tempLengthValue == 0)
-            {
-                return string.Empty;
-            }
-
-            string value;
-
-            // matt911: Borderlands doesn't ever use unicode strings as far
-            // as I can tell.  All text seems to be single-byte encoded with a code
-            // page for the current culture so tempLengthValue is always positive.
-            //
-            // da_fileserver implemented the unicode string reading to agree with the
-            // way that unreal engine 3 uses it I think, but I can't test this code
-            // because I know of no place where Borderlands itself actually uses it.
-            //
-            // It appears to me that ReadString and WriteString are filled with a lot of
-            // unnecessary code to deal with unicode, but since the code is already
-            // implemented and I haven't had any problems I'd rather leave in code that
-            // is not necessary than break something that works already
-
-            // Read string data (either single-byte or Unicode).
-            if (tempLengthValue < 0)
-            {
-                // Convert the length value into a unicode byte count.
-                tempLengthValue = -tempLengthValue * 2;
-
-                // If the string length is over 4K assume that the string is invalid.
-                // This prevents an out of memory exception in the case of invalid data.
-                if (tempLengthValue > 4096)
-                {
-                    throw new InvalidDataException("String length was too long.");
-                }
-
-                // Read the byte data (and ensure that the number of bytes
-                // read matches the number of bytes it was supposed to read--
-                // BinaryReader may not return the same number of bytes read).
-                byte[] data = reader.ReadBytes(tempLengthValue);
-                if (data.Length != tempLengthValue)
-                {
-                    throw new EndOfStreamException();
-                }
-
-                // Convert the byte data into a string.
-                value = Encoding.Unicode.GetString(data);
-            }
-            else
-            {
-                // If the string length is over 4K assume that the string is invalid.
-                // This prevents an out of memory exception in the case of invalid data.
-                if (tempLengthValue > 4096)
-                {
-                    throw new InvalidDataException("String length was too long.");
-                }
-
-                // Read the byte data (and ensure that the number of bytes
-                // read matches the number of bytes it was supposed to read--
-                // BinaryReader may not return the same number of bytes read).
-                byte[] data = reader.ReadBytes(tempLengthValue);
-                if (data.Length != tempLengthValue)
-                {
-                    throw new EndOfStreamException();
-                }
-
-                // Convert the byte data into a string.
-                value = SaveEncoding.SingleByteEncoding.GetString(data);
-            }
-
-            // Look for the null terminator character. If not found then then string is
-            // probably corrupt.
-            int nullTerminatorIndex = value.IndexOf('\0');
-            if (nullTerminatorIndex != value.Length - 1)
-            {
-                throw new InvalidDataException("String was not properly terminated with a null character.");
-            }
-
-            // Return the string, excluding the null terminator
-            return value.Substring(0, nullTerminatorIndex);
-        }
-
-        ///<summary>Reads a string in the format used by the WSGs</summary>
-        private static byte[] SearchForString(BinaryReader reader, ByteOrder endian)
-        {
-            var bytes = new List<byte>();
-
-            while (true)
-            {
-                var position = reader.BaseStream.Position;
-                int tempLengthValue = ReadInt32(reader, endian);
-                bool isLess = false;
-                if (tempLengthValue < 0)
-                {
-                    tempLengthValue = -tempLengthValue * 2;
-                    isLess = true;
-                }
-
-                if (tempLengthValue < 5 || tempLengthValue > 4096)
-                {
-                    bytes.AddRange(GetBytesFromInt(tempLengthValue, endian));
-                    continue;
-                }
-
-                var data = reader.ReadBytes(tempLengthValue);
-                if (data.Length != tempLengthValue)
-                {
-                    throw new EndOfStreamException();
-                }
-
-                var value = isLess ? Encoding.Unicode.GetString(data) : SaveEncoding.SingleByteEncoding.GetString(data);
-                int nullTerminatorIndex = value.IndexOf('\0');
-                if (nullTerminatorIndex != value.Length - 1)
-                {
-                    bytes.AddRange(GetBytesFromInt(tempLengthValue, endian));
-                }
-                else
-                {
-                    Console.WriteLine("Value :" + value);
-                    //Found String put the file cursor just before
-                    reader.BaseStream.Position = position;
-                    break;
-                }
-            }
-
-            // Return the string, excluding the null terminator
-            return bytes.ToArray();
-        }
-
-        private static void Write(BinaryWriter writer, string value, ByteOrder endian)
-        {
-            // Null and empty strings are treated the same (with an output
-            // length of zero).
-            if (string.IsNullOrEmpty(value))
-            {
-                writer.Write(0);
-                return;
-            }
-
-            bool requiresUnicode = IsUnicode(value);
-            // Generate the bytes (either single-byte or Unicode, depending on input).
-            if (!requiresUnicode)
-            {
-                // Write character length (including null terminator).
-                Write(writer, value.Length + 1, endian);
-
-                // Write single-byte encoded string.
-                writer.Write(SaveEncoding.SingleByteEncoding.GetBytes(value));
-
-                // Write null terminator.
-                writer.Write((byte)0);
-            }
-            else
-            {
-                // Write character length (including null terminator).
-                Write(writer, -1 - value.Length, endian);
-
-                // Write UTF-16 encoded string.
-                writer.Write(Encoding.Unicode.GetBytes(value));
-
-                // Write null terminator.
-                writer.Write((short)0);
-            }
-        }
-
-        private static byte[] GetBytesFromString(string value, ByteOrder endian)
-        {
-            var bytes = new List<byte>();
-            // Null and empty strings are treated the same (with an output
-            // length of zero).
-            if (string.IsNullOrEmpty(value))
-            {
-                return bytes.ToArray();
-            }
-
-            bool requiresUnicode = IsUnicode(value);
-            // Generate the bytes (either single-byte or Unicode, depending on input).
-            if (!requiresUnicode)
-            {
-                bytes.AddRange(GetBytesFromInt(value.Length + 1, endian));
-                bytes.AddRange(SaveEncoding.SingleByteEncoding.GetBytes(value));
-                bytes.Add(0);
-            }
-            else
-            {
-                bytes.AddRange(GetBytesFromInt(-1 - value.Length, endian));
-                bytes.AddRange(Encoding.Unicode.GetBytes(value));
-                bytes.Add(0);
-                bytes.Add(0);
-            }
-
-            return bytes.ToArray();
-        }
-
-        /// <summary> Look for any non-ASCII characters in the input.</summary>
-        private static bool IsUnicode(string value)
-        {
-            return value.Any(t => t > 256);
-        }
-
         #region Members
 
         private static readonly int EnhancedVersion = 0x27;
@@ -696,7 +389,10 @@ namespace WillowTree.Services.DataAccess
 
             package.AddFile(saveFileName, "SaveGame.sav");
 
-            STFSPackage con = new STFSPackage(package, new RSAParams(Constants.DataPath + "KV.bin"), packageFileName,
+            STFSPackage con = new STFSPackage(
+                package,
+                new RSAParams(Constants.DataPath + "KV.bin"),
+                packageFileName,
                 new X360.Other.LogRecord());
 
             con.FlushPackage(new RSAParams(Constants.DataPath + "KV.bin"));
@@ -704,40 +400,13 @@ namespace WillowTree.Services.DataAccess
             wtIcon.Close();
         }
 
-        private static List<string> ReadItemStrings(BinaryReader reader, ByteOrder byteOrder)
+        private static List<int> ReadObjectValues(BinaryReader reader, ByteOrder byteOrder, int revisionNumber)
         {
-            List<string> strings = new List<string>();
-            for (int index = 0; index < 9; index++)
-            {
-                strings.Add(ReadString(reader, byteOrder));
-            }
-
-            foreach (var item in strings)
-            {
-                Console.WriteLine(item);
-            }
-
-            return strings;
-        }
-
-        private static List<string> ReadWeaponStrings(BinaryReader reader, ByteOrder bo)
-        {
-            List<string> strings = new List<string>();
-            for (int index = 0; index < 14; index++)
-            {
-                strings.Add(ReadString(reader, bo));
-            }
-
-            return strings;
-        }
-
-        private static List<int> ReadObjectValues(BinaryReader reader, ByteOrder bo, int revisionNumber)
-        {
-            int ammoQuantityCount = ReadInt32(reader, bo);
-            uint tempLevelQuality = (uint)ReadInt32(reader, bo);
+            int ammoQuantityCount = ReadInt32(reader, byteOrder);
+            uint tempLevelQuality = (uint)ReadInt32(reader, byteOrder);
             short quality = (short)(tempLevelQuality % 65536);
             short level = (short)(tempLevelQuality / 65536);
-            int equippedSlot = ReadInt32(reader, bo);
+            int equippedSlot = ReadInt32(reader, byteOrder);
 
             var values = new List<int>()
             {
@@ -752,8 +421,8 @@ namespace WillowTree.Services.DataAccess
                 return values;
             }
 
-            int junk = ReadInt32(reader, bo);
-            int locked = ReadInt32(reader, bo);
+            int junk = ReadInt32(reader, byteOrder);
+            int locked = ReadInt32(reader, byteOrder);
             Console.WriteLine(locked);
             if (locked != 0 && locked != 1)
             {
@@ -799,41 +468,43 @@ namespace WillowTree.Services.DataAccess
 
         public void SaveWsg(string filename)
         {
-            if (Platform == "PS3" || Platform == "PC")
+            switch (Platform)
             {
-                using (BinaryWriter save = new BinaryWriter(new FileStream(filename, FileMode.Create)))
+                case "PS3":
+                case "PC":
                 {
-                    save.Write(WriteWsg());
+                    using (var save = new BinaryWriter(new FileStream(filename, FileMode.Create)))
+                    {
+                        save.Write(WriteWsg());
+                    }
+
+                    break;
+                }
+                case "X360":
+                {
+                    string tempSaveName = $"{filename}.temp";
+                    using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                    {
+                        save.Write(WriteWsg());
+                    }
+
+                    BuildXboxPackage(filename, tempSaveName, 1);
+                    File.Delete(tempSaveName);
+                    break;
+                }
+                case "X360JP":
+                {
+                    string tempSaveName = $"{filename}.temp";
+                    using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                    {
+                        save.Write(WriteWsg());
+                    }
+
+                    BuildXboxPackage(filename, tempSaveName, 2);
+                    File.Delete(tempSaveName);
+                    break;
                 }
             }
-            else if (Platform == "X360")
-            {
-                string tempSaveName = filename + ".temp";
-                using (BinaryWriter save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
-                {
-                    save.Write(WriteWsg());
-                }
-
-                BuildXboxPackage(filename, tempSaveName, 1);
-                File.Delete(tempSaveName);
-            }
-            else if (Platform == "X360JP")
-            {
-                string tempSaveName = filename + ".temp";
-                using (BinaryWriter save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
-                {
-                    save.Write(WriteWsg());
-                }
-
-                BuildXboxPackage(filename, tempSaveName, 2);
-                File.Delete(tempSaveName);
-            }
-        }
-
-        private static bool Eof(BinaryReader binaryReader)
-        {
-            var bs = binaryReader.BaseStream;
-            return (bs.Position == bs.Length);
         }
 
         ///<summary>Read savegame data from an open stream</summary>
@@ -898,8 +569,7 @@ namespace WillowTree.Services.DataAccess
                 throw new EndOfStreamException();
             }
 
-            using (BinaryReader challengeReader =
-                new BinaryReader(new MemoryStream(challengeDataBlock, false), Encoding.ASCII))
+            using (var challengeReader = new BinaryReader(new MemoryStream(challengeDataBlock, false), Encoding.ASCII))
             {
                 ChallengeDataBlockId = ReadInt32(challengeReader, EndianWsg);
                 ChallengeDataLength = ReadInt32(challengeReader, EndianWsg);
@@ -952,7 +622,7 @@ namespace WillowTree.Services.DataAccess
                 throw new EndOfStreamException();
             }
 
-            using (BinaryReader dlcDataReader = new BinaryReader(new MemoryStream(dlcDataBlock, false), Encoding.ASCII))
+            using (var dlcDataReader = new BinaryReader(new MemoryStream(dlcDataBlock, false), Encoding.ASCII))
             {
                 int remainingBytes = Dlc.DlcSize;
                 while (remainingBytes > 0)
