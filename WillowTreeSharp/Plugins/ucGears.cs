@@ -41,8 +41,8 @@ namespace WillowTree.Plugins
 
         public InventoryTreeList GearTL;
 
-        private String gearTextName;
-        private String gearFileName;
+        private string gearTextName;
+        private string gearFileName;
         private int gearVisibleLine;
 
         #endregion Members
@@ -215,7 +215,7 @@ namespace WillowTree.Plugins
                 GearTL.NextSort();
         }
 
-        private void DoGearTabs(String textFile)
+        private void DoGearTabs(string textFile)
         {
             PartSelectorGear.Clear();
 
@@ -361,7 +361,7 @@ namespace WillowTree.Plugins
 
             if (FromFile.ShowDialog() == DialogResult.OK)
             {
-                foreach (String file in FromFile.FileNames())
+                foreach (string file in FromFile.FileNames())
                 {
                     try
                     {

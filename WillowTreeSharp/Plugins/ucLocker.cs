@@ -257,7 +257,7 @@ namespace WillowTree.Plugins
 
             if (FromFile.ShowDialog() == DialogResult.OK)
             {
-                foreach (String file in FromFile.FileNames())
+                foreach (string file in FromFile.FileNames())
                 {
                     try
                     {

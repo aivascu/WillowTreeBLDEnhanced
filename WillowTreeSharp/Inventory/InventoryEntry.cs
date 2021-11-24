@@ -467,8 +467,8 @@ namespace WillowTree.Inventory
             if (usesBigLevel)
             {
                 qualityIndex = 0;
-                uint val = (uint)(ushort)(Int16)values[1];
-                levelIndex = (int)((uint)(ushort)(Int16)values[3] * (uint)65536 + (uint)(ushort)(Int16)values[1]);
+                uint val = (uint)(ushort)(short)values[1];
+                levelIndex = (int)((uint)(ushort)(short)values[3] * (uint)65536 + (uint)(ushort)(short)values[1]);
             }
             else
             {
@@ -503,9 +503,9 @@ namespace WillowTree.Inventory
             {
                 return new List<int>() {
                     quantity,
-                    (Int16)((uint)levelIndex % (uint)65536),
+                    (short)((uint)levelIndex % (uint)65536),
                     equippedSlot,
-                    (Int16)((uint)levelIndex / (uint)65536),
+                    (short)((uint)levelIndex / (uint)65536),
                     isJunk,
                     isLocked
                 };

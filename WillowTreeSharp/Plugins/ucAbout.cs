@@ -56,13 +56,13 @@ namespace WillowTree.Plugins
             InitializeComponent();
         }
 
-        public void OnPluginSelected(Object sender, PluginEventArgs e)
+        public void OnPluginSelected(object sender, PluginEventArgs e)
         {
             if (VersionFromServer == null)
                 timer1.Enabled = true;
         }
 
-        public void OnPluginUnselected(Object sender, PluginEventArgs e)
+        public void OnPluginUnselected(object sender, PluginEventArgs e)
         {
             timer1.Enabled = false;
         }

@@ -518,12 +518,12 @@ namespace WillowTree
         public int ChallengeDataBlockLength;
         public int ChallengeDataBlockId;
         public int ChallengeDataLength;
-        public Int16 ChallengeDataEntries;
+        public short ChallengeDataEntries;
         public struct ChallengeDataEntry
         {
-            public Int16 Id;
-            public Byte TypeId;
-            public Int32 Value;
+            public short Id;
+            public byte TypeId;
+            public int Value;
         }
         List<ChallengeDataEntry> _challenges;
 
@@ -870,11 +870,11 @@ namespace WillowTree
 
         private static List<int> ReadObjectValues(BinaryReader reader, ByteOrder bo, int revisionNumber)
         {
-            Int32 ammoQuantityCount = ReadInt32(reader, bo);
-            UInt32 tempLevelQuality = (UInt32)ReadInt32(reader, bo);
-            Int16 quality = (Int16)(tempLevelQuality % 65536);
-            Int16 level = (Int16)(tempLevelQuality / 65536);
-            Int32 equippedSlot = ReadInt32(reader, bo);
+            int ammoQuantityCount = ReadInt32(reader, bo);
+            uint tempLevelQuality = (uint)ReadInt32(reader, bo);
+            short quality = (short)(tempLevelQuality % 65536);
+            short level = (short)(tempLevelQuality / 65536);
+            int equippedSlot = ReadInt32(reader, bo);
 
             var values = new List<int>() {
                 ammoQuantityCount,
@@ -884,8 +884,8 @@ namespace WillowTree
             };
 
             if (revisionNumber < EnhancedVersion) return values;
-            Int32 junk = ReadInt32(reader, bo);
-            Int32 locked = ReadInt32(reader, bo);
+            int junk = ReadInt32(reader, bo);
+            int locked = ReadInt32(reader, bo);
             Console.WriteLine(locked);
             if (locked != 0 && locked != 1)
             {
@@ -1372,8 +1372,8 @@ namespace WillowTree
         private void WriteValues(BinaryWriter Out, List<int> values)
         {
             Write(Out, values[0], EndianWsg);
-            UInt32 tempLevelQuality = (UInt16)values[1] + (UInt16)values[3] * (UInt32)65536;
-            Write(Out, (Int32)tempLevelQuality, EndianWsg);
+            uint tempLevelQuality = (ushort)values[1] + (ushort)values[3] * (uint)65536;
+            Write(Out, (int)tempLevelQuality, EndianWsg);
             Write(Out, values[2], EndianWsg);
             if (RevisionNumber < EnhancedVersion) return;
             Write(Out, values[4], EndianWsg);
@@ -1459,7 +1459,7 @@ namespace WillowTree
 
             WriteObjects(Out, Weapons1); //Write Weapons
 
-            Int16 count = (Int16)_challenges.Count();
+            short count = (short)_challenges.Count();
             Write(Out, count * 7 + 10, EndianWsg);
             Write(Out, ChallengeDataBlockId, EndianWsg);
             Write(Out, count * 7 + 2, EndianWsg);
@@ -1655,7 +1655,7 @@ namespace WillowTree
 
         public sealed class BankEntry : Object
         {
-            public Byte TypeId;
+            public byte TypeId;
 
             public int Quantity
             {
@@ -1688,7 +1688,7 @@ namespace WillowTree
 
                     if (count == 2)
                     {
-                        bytes.AddRange(GetBytesFromInt((UInt16)Quality + (UInt16)Level * (UInt32)65536, endian));
+                        bytes.AddRange(GetBytesFromInt((ushort)Quality + (ushort)Level * (uint)65536, endian));
                     }
                     count++;
                 }
@@ -1737,9 +1737,9 @@ namespace WillowTree
                     part = partName;
                     if (index == 2)
                     {
-                        UInt32 temp = (UInt32)ReadInt32(reader, endian);
-                        Quality = (Int16)(temp % (UInt32)65536);
-                        Level = (Int16)(temp / (UInt32)65536);
+                        uint temp = (uint)ReadInt32(reader, endian);
+                        Quality = (short)(temp % (uint)65536);
+                        Level = (short)(temp / (uint)65536);
                     }
                 }
             }
