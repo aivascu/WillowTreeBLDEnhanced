@@ -6,7 +6,6 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
 using WillowTree.Controls;
-using WillowTree.CustomControls;
 using WillowTree.Inventory;
 using WillowTree.Plugins;
 
@@ -15,19 +14,20 @@ namespace WillowTree
     public partial class WillowTreeMain : Form
     {
         private WillowSaveGame currentWsg;
-        private readonly PluginComponentManager pluginManager = ServiceLocator.PluginManager;
+        private readonly PluginComponentManager pluginManager;
         private Control selectedTabObject = null;
         private readonly IFile file;
         private readonly IDirectory directory;
         private readonly IGameData gameData;
         private readonly IGlobalSettings settings;
 
-        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData, IGlobalSettings settings)
+        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData, IGlobalSettings settings, PluginComponentManager pluginManager)
         {
             this.file = file;
             this.directory = directory;
             this.gameData = gameData;
             this.settings = settings;
+            this.pluginManager = pluginManager;
 
             this.settings.Load(this.gameData.XmlPath + "options.xml");
 

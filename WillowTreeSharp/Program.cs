@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO.Abstractions;
+using WillowTree.Plugins;
 
 namespace WillowTree
 {
@@ -29,7 +30,8 @@ namespace WillowTree
                     new FileWrapper(fileSystem),
                     new DirectoryWrapper(fileSystem),
                     new GameDataWrapper(),
-                    new GlobalSettingsWrapper());
+                    new GlobalSettingsWrapper(),
+                    new PluginComponentManager());
                 Application.Run(mainForm);
             }
             catch (Exception e)
