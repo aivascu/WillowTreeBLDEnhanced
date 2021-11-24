@@ -9,6 +9,12 @@ namespace WillowTree.Services.DataAccess
 {
     public class WillowSaveGameBase
     {
+        public const byte SubPart = 0x20;
+        public const int Section1Id = 0x43211234;
+        public const int Section2Id = 0x02151984;
+        public const int Section3Id = 0x32235947;
+        public const int Section4Id = 0x234BA901;
+
         protected static byte[] ReadBytes(BinaryReader reader, int fieldSize, ByteOrder byteOrder)
         {
             byte[] bytes = reader.ReadBytes(fieldSize);

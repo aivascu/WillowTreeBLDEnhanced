@@ -588,7 +588,7 @@ namespace WillowTree.Services.DataAccess
                     long sectionStartPos = (int)dlcDataReader.BaseStream.Position;
                     switch (section.Id)
                     {
-                        case DlcData.Section1Id: // 0x43211234
+                        case Section1Id: // 0x43211234
                             this.Dlc.HasSection1 = true;
                             this.Dlc.DlcUnknown1 = dlcDataReader.ReadByte();
                             this.Dlc.BankSize = ReadInt32(dlcDataReader, this.EndianWsg);
@@ -604,7 +604,7 @@ namespace WillowTree.Services.DataAccess
                             Console.WriteLine(@"====== EXIT BANK ======");
                             break;
 
-                        case DlcData.Section2Id: // 0x02151984
+                        case Section2Id: // 0x02151984
                             this.Dlc.HasSection2 = true;
                             this.Dlc.DlcUnknown2 = ReadInt32(dlcDataReader, this.EndianWsg);
                             this.Dlc.DlcUnknown3 = ReadInt32(dlcDataReader, this.EndianWsg);
@@ -612,12 +612,12 @@ namespace WillowTree.Services.DataAccess
                             this.Dlc.SkipDlc2Intro = ReadInt32(dlcDataReader, this.EndianWsg);
                             break;
 
-                        case DlcData.Section3Id: // 0x32235947
+                        case Section3Id: // 0x32235947
                             this.Dlc.HasSection3 = true;
                             this.Dlc.DlcUnknown5 = dlcDataReader.ReadByte();
                             break;
 
-                        case DlcData.Section4Id: // 0x234ba901
+                        case Section4Id: // 0x234ba901
                             this.Dlc.HasSection4 = true;
                             this.Dlc.SecondaryPackEnabled = dlcDataReader.ReadByte();
 
@@ -855,12 +855,12 @@ namespace WillowTree.Services.DataAccess
         public void DiscardRawData()
         {
             // Make a list of all the known data sections to compare against.
-            var knownSectionIds = new List<int>()
+            var knownSectionIds = new List<int>
             {
-                DlcData.Section1Id,
-                DlcData.Section2Id,
-                DlcData.Section3Id,
-                DlcData.Section4Id,
+                Section1Id,
+                Section2Id,
+                Section3Id,
+                Section4Id,
             };
 
             // Traverse the list of data sections from end to beginning because when
@@ -1089,7 +1089,7 @@ namespace WillowTree.Services.DataAccess
                 var memoryWriter = new BinaryWriter(tempStream);
                 switch (section.Id)
                 {
-                    case DlcData.Section1Id:
+                    case Section1Id:
                         memoryWriter.Write(this.Dlc.DlcUnknown1);
                         Write(memoryWriter, this.Dlc.BankSize, this.EndianWsg);
                         Write(memoryWriter, this.Dlc.BankInventory.Count, this.EndianWsg);
@@ -1100,18 +1100,18 @@ namespace WillowTree.Services.DataAccess
 
                         break;
 
-                    case DlcData.Section2Id:
+                    case Section2Id:
                         Write(memoryWriter, this.Dlc.DlcUnknown2, this.EndianWsg);
                         Write(memoryWriter, this.Dlc.DlcUnknown3, this.EndianWsg);
                         Write(memoryWriter, this.Dlc.DlcUnknown4, this.EndianWsg);
                         Write(memoryWriter, this.Dlc.SkipDlc2Intro, this.EndianWsg);
                         break;
 
-                    case DlcData.Section3Id:
+                    case Section3Id:
                         memoryWriter.Write(this.Dlc.DlcUnknown5);
                         break;
 
-                    case DlcData.Section4Id:
+                    case Section4Id:
                         memoryWriter.Write(this.Dlc.SecondaryPackEnabled);
                         // The DLC backpack items
                         this.WriteObjects(memoryWriter, this.Items2);
@@ -1204,8 +1204,6 @@ namespace WillowTree.Services.DataAccess
                 }
             }
         }
-
-        private const byte SubPart = 0x20;
 
         public sealed class BankEntry : WillowObject
         {
@@ -1483,11 +1481,6 @@ namespace WillowTree.Services.DataAccess
 
     public class DlcData
     {
-        public const int Section1Id = 0x43211234;
-        public const int Section2Id = 0x02151984;
-        public const int Section3Id = 0x32235947;
-        public const int Section4Id = 0x234BA901;
-
         public bool HasSection1;
         public bool HasSection2;
         public bool HasSection3;
