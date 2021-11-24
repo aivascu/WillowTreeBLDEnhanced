@@ -1311,37 +1311,6 @@ namespace WillowTree.Services.DataAccess
                 }
             }
 
-            private static void ReadOldFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
-            {
-                var footer = reader.ReadBytes(0xA);
-                entry.EquipedSlot = footer[0x8];
-                entry.Quantity = entry.TypeId == 0x1 ? ReadInt32(reader, endian) : reader.ReadByte();
-            }
-
-            private static void ReadNewFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
-            {
-                var footer = reader.ReadBytes(0xC);
-                entry.EquipedSlot = footer[0x8];
-                if (entry.TypeId == 0x1)
-                {
-                    entry.Quantity = ReadInt32(reader, endian); //Ammo
-                    entry.Junk = footer[0xA];
-                    entry.Locked = footer[0xB];
-                }
-                else
-                {
-                    entry.Quantity = footer[0xA]; //Ammo
-                    entry.Junk = footer[0xB];
-                    entry.Locked = reader.ReadByte();
-                }
-            }
-
-            public static void RepairItem(BinaryReader reader, ByteOrder endian, BankEntry entry, int offset)
-            {
-                reader.BaseStream.Position -= offset + (entry.TypeId == 0x1 ? 0x10 : 0xB);
-                ReadOldFooter(entry, reader, endian);
-            }
-
             public void Deserialize(BinaryReader reader, ByteOrder endian, BankEntry previous)
             {
                 this.TypeId = reader.ReadByte();
@@ -1383,38 +1352,6 @@ namespace WillowTree.Services.DataAccess
                 {
                     ReadOldFooter(this, reader, endian);
                 }
-            }
-
-            private static byte[] SearchNextItem(BinaryReader reader, ByteOrder endian)
-            {
-                var bytes = new List<byte>();
-                var b = ReadBytes(reader, 0x1, endian);
-                short val = b[0x0];
-                if (val == SubPart)
-                {
-                    reader.BaseStream.Position -= 0x2;
-                    return bytes.ToArray();
-                }
-
-                bytes.AddRange(b);
-
-                //Looking for next byte != 0
-                while (val != SubPart)
-                {
-                    b = ReadBytes(reader, 0x1, endian);
-                    val = b[0x0];
-                    if (val != SubPart)
-                    {
-                        bytes.AddRange(b);
-                    }
-                    else
-                    {
-                        bytes.RemoveAt(bytes.Count - 0x1);
-                        reader.BaseStream.Position -= 0x2;
-                    }
-                }
-
-                return bytes.ToArray();
             }
         }
 
