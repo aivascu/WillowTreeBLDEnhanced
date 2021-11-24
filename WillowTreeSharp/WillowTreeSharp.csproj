@@ -146,12 +146,6 @@
     <Compile Include="Plugins\ucAmmo.Designer.cs">
       <DependentUpon>ucAmmo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Plugins\ucDebug.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Plugins\ucDebug.Designer.cs">
-      <DependentUpon>ucDebug.cs</DependentUpon>
-    </Compile>
     <Compile Include="Plugins\ucEchoes.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -226,9 +220,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Plugins\ucAmmo.resx">
       <DependentUpon>ucAmmo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucDebug.resx">
-      <DependentUpon>ucDebug.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Plugins\ucEchoes.resx">
       <DependentUpon>ucEchoes.cs</DependentUpon>

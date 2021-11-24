@@ -72,7 +72,6 @@ namespace WillowTree
             CreatePluginAsTab("Echo Logs", new ucEchoes());
             CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings, xmlCache, this.file));
             CreatePluginAsTab("Locker", new ucLocker());
-            CreatePluginAsTab("Debug", new ucDebug());
             CreatePluginAsTab("About", new UcAbout());
 
             try
