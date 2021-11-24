@@ -375,9 +375,6 @@ namespace WillowTree.Services.DataAccess
         public int[] PoolLevels;
 
         //Delegate for read String and Value
-        public delegate List<string> ReadStringsFunction(BinaryReader reader, ByteOrder bo);
-
-        public delegate List<int> ReadValuesFunction(BinaryReader reader, ByteOrder bo, int revisionNumber);
 
         public abstract class WillowObject
         {
@@ -1833,6 +1830,10 @@ namespace WillowTree.Services.DataAccess
             return entry;
         }
     }
+
+    public delegate List<int> ReadValuesFunction(BinaryReader reader, ByteOrder bo, int revisionNumber);
+
+    public delegate List<string> ReadStringsFunction(BinaryReader reader, ByteOrder bo);
 
     public struct QuestObjective
     {
