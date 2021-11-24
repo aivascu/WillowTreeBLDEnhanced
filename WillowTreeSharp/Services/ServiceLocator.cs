@@ -16,6 +16,7 @@
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
 using WillowTree.CustomControls;
+using WillowTree.Plugins;
 
 namespace WillowTree
 {
