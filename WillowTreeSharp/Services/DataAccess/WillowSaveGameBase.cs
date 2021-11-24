@@ -356,25 +356,29 @@ namespace WillowTree.Services.DataAccess
             if (byte1 == 'C' && byte2 == 'O' && byte3 == 'N')
             {
                 byte byte4 = saveReader.ReadByte();
-                if (byte4 == ' ')
-                {
-                    // This is a really lame way to check for the WSG data...
-                    saveReader.BaseStream.Seek(0xCFFC, SeekOrigin.Current);
+                if (byte4 != ' ') return "Not WSG";
 
-                    byte1 = saveReader.ReadByte();
-                    byte2 = saveReader.ReadByte();
-                    byte3 = saveReader.ReadByte();
-                    if (byte1 == 'W' && byte2 == 'S' && byte3 == 'G')
+                // This is a really lame way to check for the WSG data...
+                saveReader.BaseStream.Seek(0xCFFC, SeekOrigin.Current);
+
+                byte1 = saveReader.ReadByte();
+                byte2 = saveReader.ReadByte();
+                byte3 = saveReader.ReadByte();
+                if (byte1 == 'W' && byte2 == 'S' && byte3 == 'G')
+                {
+                    saveReader.BaseStream.Seek(0x360, SeekOrigin.Begin);
+                    uint titleId = ((uint)saveReader.ReadByte() << 0x18) +
+                                   ((uint)saveReader.ReadByte() << 0x10) +
+                                   ((uint)saveReader.ReadByte() << 0x8) +
+                                   saveReader.ReadByte();
+                    switch (titleId)
                     {
-                        saveReader.BaseStream.Seek(0x360, SeekOrigin.Begin);
-                        uint titleId = ((uint)saveReader.ReadByte() << 0x18) + ((uint)saveReader.ReadByte() << 0x10) +
-                                       ((uint)saveReader.ReadByte() << 0x8) + saveReader.ReadByte();
-                        switch (titleId)
-                        {
-                            case 0x545407E7: return "X360";
-                            case 0x54540866: return "X360JP";
-                            default: return "unknown";
-                        }
+                        case 0x545407E7:
+                            return "X360";
+                        case 0x54540866:
+                            return "X360JP";
+                        default:
+                            return "unknown";
                     }
                 }
             }
