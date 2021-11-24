@@ -2,7 +2,6 @@
 
 namespace WillowTree
 {
-
     public class WTSaveFileDialog
     {
         private readonly SaveFileDialog dialog;

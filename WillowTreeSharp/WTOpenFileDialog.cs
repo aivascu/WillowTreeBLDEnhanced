@@ -2,7 +2,6 @@
 
 namespace WillowTree
 {
-
     public class WTOpenFileDialog
     {
         private readonly OpenFileDialog dialog;
