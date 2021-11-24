@@ -193,7 +193,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Services\DataAccess\WillowSaveGame.cs" />

@@ -31,7 +31,8 @@ namespace WillowTree
                     new DirectoryWrapper(fileSystem),
                     new GameDataWrapper(),
                     new GlobalSettingsWrapper(),
-                    new PluginComponentManager());
+                    new PluginComponentManager(),
+                    new AppThemes());
                 Application.Run(mainForm);
             }
             catch (Exception e)

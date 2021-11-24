@@ -80,7 +80,6 @@ namespace WillowTree
             this.increaseNavigationLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel3 = new WillowTree.CustomControls.WTFlowLayoutPanel();
             this.tabControl1 = new WillowTree.CustomControls.WTTabControl();
-            this.appThemes1 = new WillowTree.AppThemes();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -396,7 +395,6 @@ namespace WillowTree
         private System.Windows.Forms.ToolStripMenuItem showEffectiveLevelsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem increaseNavigationLayersToolStripMenuItem;
         private CustomControls.WTFlowLayoutPanel flowLayoutPanel3;
-        private AppThemes appThemes1;
         private System.Windows.Forms.ToolStripMenuItem xbox360JPToolStripMenuItem;
     }
 }

@@ -20,14 +20,16 @@ namespace WillowTree
         private readonly IDirectory directory;
         private readonly IGameData gameData;
         private readonly IGlobalSettings settings;
+        private readonly AppThemes themes;
 
-        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData, IGlobalSettings settings, PluginComponentManager pluginManager)
+        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData, IGlobalSettings settings, PluginComponentManager pluginManager, AppThemes themes)
         {
             this.file = file;
             this.directory = directory;
             this.gameData = gameData;
             this.settings = settings;
             this.pluginManager = pluginManager;
+            this.themes = themes;
 
             this.settings.Load(this.gameData.XmlPath + "options.xml");
 
@@ -454,7 +456,7 @@ namespace WillowTree
 
         private void SetUiTreeStyles(bool useColor)
         {
-            var theme = useColor ? ServiceLocator.AppThemes.treeViewTheme1 : null;
+            var theme = useColor ? this.themes.treeViewTheme1 : null;
 
             this.gameData.ItemList.OnTreeThemeChanged(theme);
             this.gameData.WeaponList.OnTreeThemeChanged(theme);
