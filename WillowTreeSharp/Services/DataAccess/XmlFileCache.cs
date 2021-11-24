@@ -13,7 +13,7 @@ namespace WillowTree.Services.DataAccess
         // TODO: This is an ugly method that probably could be done in an easier
         // to understand, more correct, or faster way.  It does seem to work
         // though, so I'm not going to try to rewrite it right now.
-        public static void PurgeDuplicates(string InputFile)
+        public static void PurgeDuplicates(string inputFile)
         {
             // A tree model to store the nodes in
             TreeModel model = new TreeModel();
@@ -24,7 +24,7 @@ namespace WillowTree.Services.DataAccess
 
             XmlDocument xmlrdrdoc = new XmlDocument();
 
-            xmlrdrdoc.Load(InputFile);
+            xmlrdrdoc.Load(inputFile);
 
             // get a list of all items
             foreach (XmlNode xn in xmlrdrdoc.SelectNodes("/INI/Section"))
@@ -32,7 +32,7 @@ namespace WillowTree.Services.DataAccess
                 Node ndparent = ndroot;
                 bool bFound;
 
-                string[] strParts = new string[]
+                string[] strParts =
                 {
                     xn.GetElement("Type", ""),
                     xn.GetElement("Part1", ""),
@@ -57,7 +57,7 @@ namespace WillowTree.Services.DataAccess
                     xn.GetElement("Level", ""),
                 };
 
-                for (int partindex = 0; partindex < 21; partindex++)
+                for (int partIndex = 0; partIndex < 21; partIndex++)
                 {
                     // All sections
                     // read the xml values
@@ -65,18 +65,19 @@ namespace WillowTree.Services.DataAccess
 
                     for (int ndcnt = 0; ndcnt < ndparent.Nodes.Count; ndcnt++)
                     {
-                        if (ndparent.Nodes[ndcnt].Text == strParts[partindex])
+                        if (ndparent.Nodes[ndcnt].Text == strParts[partIndex])
                         {
                             bFound = true;
                             ndparent = ndparent.Nodes[ndcnt];
                             break;
                         }
                     }
+
                     if (!bFound)
                     {
                         Node ndchild = new ColoredTextNode
                         {
-                            Text = strParts[partindex]
+                            Text = strParts[partIndex]
                         };
                         ndparent.Nodes.Add(ndchild);
                         ndparent = ndchild;
@@ -84,7 +85,7 @@ namespace WillowTree.Services.DataAccess
                 }
             }
 
-            XmlTextWriter writer = new XmlTextWriter(InputFile, new ASCIIEncoding())
+            XmlTextWriter writer = new XmlTextWriter(inputFile, new ASCIIEncoding())
             {
                 Formatting = Formatting.Indented,
                 Indentation = 2
@@ -131,69 +132,171 @@ namespace WillowTree.Services.DataAccess
                                                 {
                                                     Node ndpart9 = ndpart8.Nodes[ndcntpart8];
 
-                                                    for (int ndcntpart9 = 0; ndcntpart9 < ndpart9.Nodes.Count; ndcntpart9++)
+                                                    for (int ndcntpart9 = 0;
+                                                        ndcntpart9 < ndpart9.Nodes.Count;
+                                                        ndcntpart9++)
                                                     {
                                                         Node ndpart10 = ndpart9.Nodes[ndcntpart9];
 
-                                                        for (int ndcntpart10 = 0; ndcntpart10 < ndpart10.Nodes.Count; ndcntpart10++)
+                                                        for (int ndcntpart10 = 0;
+                                                            ndcntpart10 < ndpart10.Nodes.Count;
+                                                            ndcntpart10++)
                                                         {
                                                             Node ndpart11 = ndpart10.Nodes[ndcntpart10];
 
-                                                            for (int ndcntpart11 = 0; ndcntpart11 < ndpart11.Nodes.Count; ndcntpart11++)
+                                                            for (int ndcntpart11 = 0;
+                                                                ndcntpart11 < ndpart11.Nodes.Count;
+                                                                ndcntpart11++)
                                                             {
                                                                 Node ndpart12 = ndpart11.Nodes[ndcntpart11];
 
-                                                                for (int ndcntpart12 = 0; ndcntpart12 < ndpart12.Nodes.Count; ndcntpart12++)
+                                                                for (int ndcntpart12 = 0;
+                                                                    ndcntpart12 < ndpart12.Nodes.Count;
+                                                                    ndcntpart12++)
                                                                 {
                                                                     Node ndpart13 = ndpart12.Nodes[ndcntpart12];
 
-                                                                    for (int ndcntpart13 = 0; ndcntpart13 < ndpart13.Nodes.Count; ndcntpart13++)
+                                                                    for (int ndcntpart13 = 0;
+                                                                        ndcntpart13 < ndpart13.Nodes.Count;
+                                                                        ndcntpart13++)
                                                                     {
                                                                         Node ndpart14 = ndpart13.Nodes[ndcntpart13];
 
-                                                                        for (int ndcntpart14 = 0; ndcntpart14 < ndpart14.Nodes.Count; ndcntpart14++)
+                                                                        for (int ndcntpart14 = 0;
+                                                                            ndcntpart14 < ndpart14.Nodes.Count;
+                                                                            ndcntpart14++)
                                                                         {
                                                                             Node ndpart15 = ndpart14.Nodes[ndcntpart14];
-                                                                            for (int ndcntpart15 = 0; ndcntpart15 < ndpart15.Nodes.Count; ndcntpart15++)
+                                                                            for (int ndcntpart15 = 0;
+                                                                                ndcntpart15 < ndpart15.Nodes.Count;
+                                                                                ndcntpart15++)
                                                                             {
-                                                                                Node ndpart16 = ndpart15.Nodes[ndcntpart15];
-                                                                                for (int ndcntpart16 = 0; ndcntpart16 < ndpart16.Nodes.Count; ndcntpart16++)
+                                                                                Node ndpart16 =
+                                                                                    ndpart15.Nodes[ndcntpart15];
+                                                                                for (int ndcntpart16 = 0;
+                                                                                    ndcntpart16 < ndpart16.Nodes.Count;
+                                                                                    ndcntpart16++)
                                                                                 {
-                                                                                    Node ndpart17 = ndpart16.Nodes[ndcntpart16];
-                                                                                    for (int ndcntpart17 = 0; ndcntpart17 < ndpart17.Nodes.Count; ndcntpart17++)
+                                                                                    Node ndpart17 =
+                                                                                        ndpart16.Nodes[ndcntpart16];
+                                                                                    for (int ndcntpart17 = 0;
+                                                                                        ndcntpart17 <
+                                                                                        ndpart17.Nodes.Count;
+                                                                                        ndcntpart17++)
                                                                                     {
-                                                                                        Node ndpart18 = ndpart17.Nodes[ndcntpart17];
-                                                                                        for (int ndcntpart18 = 0; ndcntpart18 < ndpart18.Nodes.Count; ndcntpart18++)
+                                                                                        Node ndpart18 =
+                                                                                            ndpart17.Nodes[ndcntpart17];
+                                                                                        for (int ndcntpart18 = 0;
+                                                                                            ndcntpart18 <
+                                                                                            ndpart18.Nodes.Count;
+                                                                                            ndcntpart18++)
                                                                                         {
-                                                                                            Node ndpart19 = ndpart18.Nodes[ndcntpart18];
-                                                                                            for (int ndcntpart19 = 0; ndcntpart19 < ndpart19.Nodes.Count; ndcntpart19++)
+                                                                                            Node ndpart19 =
+                                                                                                ndpart18.Nodes[
+                                                                                                    ndcntpart18];
+                                                                                            for (int ndcntpart19 = 0;
+                                                                                                ndcntpart19 <
+                                                                                                ndpart19.Nodes.Count;
+                                                                                                ndcntpart19++)
                                                                                             {
-                                                                                                Node ndpart20 = ndpart19.Nodes[ndcntpart19];
+                                                                                                Node ndpart20 =
+                                                                                                    ndpart19.Nodes[
+                                                                                                        ndcntpart19];
 
-                                                                                                writer.WriteStartElement("Section");
-                                                                                                writer.WriteElementString("Name", ndpart15.Text);
-                                                                                                writer.WriteElementString("Type", ndtype.Text);
-                                                                                                writer.WriteElementString("Rating", ndpart16.Text);
-                                                                                                writer.WriteElementString("Description", ndpart17.Text.Replace('\"', ' ').Trim());
+                                                                                                writer
+                                                                                                    .WriteStartElement(
+                                                                                                        "Section");
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Name",
+                                                                                                        ndpart15.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Type",
+                                                                                                        ndtype.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Rating",
+                                                                                                        ndpart16.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Description",
+                                                                                                        ndpart17.Text
+                                                                                                            .Replace(
+                                                                                                                '\"',
+                                                                                                                ' ')
+                                                                                                            .Trim());
 
-                                                                                                writer.WriteElementString("Part1", ndpart1.Text);
-                                                                                                writer.WriteElementString("Part2", ndpart2.Text);
-                                                                                                writer.WriteElementString("Part3", ndpart3.Text);
-                                                                                                writer.WriteElementString("Part4", ndpart4.Text);
-                                                                                                writer.WriteElementString("Part5", ndpart5.Text);
-                                                                                                writer.WriteElementString("Part6", ndpart6.Text);
-                                                                                                writer.WriteElementString("Part7", ndpart7.Text);
-                                                                                                writer.WriteElementString("Part8", ndpart8.Text);
-                                                                                                writer.WriteElementString("Part9", ndpart9.Text);
-                                                                                                writer.WriteElementString("Part10", ndpart10.Text);
-                                                                                                writer.WriteElementString("Part11", ndpart11.Text);
-                                                                                                writer.WriteElementString("Part12", ndpart12.Text);
-                                                                                                writer.WriteElementString("Part13", ndpart13.Text);
-                                                                                                writer.WriteElementString("Part14", ndpart14.Text);
-                                                                                                writer.WriteElementString("RemAmmo_Quantity", ndpart18.Text);
-                                                                                                writer.WriteElementString("Quality", ndpart19.Text);
-                                                                                                writer.WriteElementString("Level", ndpart20.Text);
-                                                                                                writer.WriteEndElement();
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part1",
+                                                                                                        ndpart1.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part2",
+                                                                                                        ndpart2.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part3",
+                                                                                                        ndpart3.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part4",
+                                                                                                        ndpart4.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part5",
+                                                                                                        ndpart5.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part6",
+                                                                                                        ndpart6.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part7",
+                                                                                                        ndpart7.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part8",
+                                                                                                        ndpart8.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part9",
+                                                                                                        ndpart9.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part10",
+                                                                                                        ndpart10.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part11",
+                                                                                                        ndpart11.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part12",
+                                                                                                        ndpart12.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part13",
+                                                                                                        ndpart13.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Part14",
+                                                                                                        ndpart14.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "RemAmmo_Quantity",
+                                                                                                        ndpart18.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Quality",
+                                                                                                        ndpart19.Text);
+                                                                                                writer
+                                                                                                    .WriteElementString(
+                                                                                                        "Level",
+                                                                                                        ndpart20.Text);
+                                                                                                writer
+                                                                                                    .WriteEndElement();
                                                                                             }
                                                                                         }
                                                                                     }
