@@ -110,8 +110,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArrayHelper.cs" />
-    <Compile Include="Plugins\StrictNumericUpDown.cs">
+    <Compile Include="Common\ArrayHelper.cs" />
+    <Compile Include="Controls\StrictNumericUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Services\DataAccess\GameData.cs" />
@@ -127,7 +127,7 @@
     <Compile Include="Inventory\InventoryTreeList.cs" />
     <Compile Include="Inventory\InventoryType.cs" />
     <Compile Include="Plugins\PluginComponentManager.cs" />
-    <Compile Include="ParseString.cs" />
+    <Compile Include="Common\ParseString.cs" />
     <Compile Include="Services\Configuration\GlobalSettings.cs" />
     <Compile Include="Plugins\SamplePlugin.cs">
       <SubType>UserControl</SubType>
@@ -196,7 +196,7 @@
     </Compile>
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Properties\Settings.cs" />
-    <Compile Include="StringExtensions.cs" />
+    <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Services\DataAccess\WillowSaveGame.cs" />
     <Compile Include="WillowTreeMain.cs">
       <SubType>Form</SubType>
@@ -204,8 +204,8 @@
     <Compile Include="WillowTreeMain.Designer.cs">
       <DependentUpon>WillowTreeMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="WTOpenFileDialog.cs" />
-    <Compile Include="WTSaveFileDialog.cs" />
+    <Compile Include="Controls\WTOpenFileDialog.cs" />
+    <Compile Include="Controls\WTSaveFileDialog.cs" />
     <Compile Include="XBoxIDDialog.cs">
       <SubType>Form</SubType>
     </Compile>
