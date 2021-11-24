@@ -598,7 +598,7 @@ namespace WillowTree.Plugins
             if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
                 return;
 
-            if (Clicked == true)
+            if (Clicked)
                 ObjectiveValue.Value = CurrentWSG.QuestLists[index].Quests[QuestTree.SelectedNode.Index].Objectives[Objectives.SelectedIndex].Progress;
         }
 
@@ -613,7 +613,7 @@ namespace WillowTree.Plugins
 
             if (Objectives.Items.Count > 0)
             {
-                if (Clicked == true)
+                if (Clicked)
                     CurrentWSG.QuestLists[index].Quests[QuestTree.SelectedNode.Index].Objectives[Objectives.SelectedIndex].Progress = (int)ObjectiveValue.Value;
             }
         }
@@ -698,7 +698,7 @@ namespace WillowTree.Plugins
             try
             {
                 WillowSaveGame.QuestTable qt = CurrentWSG.QuestLists[index];
-                if (Clicked == true)
+                if (Clicked)
                 {
                     WillowSaveGame.QuestEntry qe = qt.Quests[QuestTree.SelectedNode.Index];
 

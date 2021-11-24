@@ -191,7 +191,7 @@ namespace WillowTree.Plugins
 
             List<int> values = null;
 
-            if (OverrideExportSettings.Checked == true)
+            if (OverrideExportSettings.Checked)
                 values = InventoryEntry.CalculateValues((int)RemAmmoOverride.Value,
                     (int)QualityOverride.Value, 0, (int)LevelIndexOverride.Value, (int)JunkLocker.Value, (int)LockedLocker.Value, ((string)PartsLocker.Items[0]));
             else

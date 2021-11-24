@@ -57,7 +57,7 @@ namespace WillowTree.Plugins
         /// </summary>
         public void OnPluginSelected(IPlugin plugin, PluginEventArgs e)
         {
-            if (pluginEventTable.TryGetValue(plugin, out var functions) == true)
+            if (pluginEventTable.TryGetValue(plugin, out var functions))
             {
                 functions.PluginSelected?.Invoke(this, e);
             }
@@ -71,7 +71,7 @@ namespace WillowTree.Plugins
         /// </summary>
         public void OnPluginUnselected(IPlugin plugin, PluginEventArgs e)
         {
-            if (pluginEventTable.TryGetValue(plugin, out var functions) == true)
+            if (pluginEventTable.TryGetValue(plugin, out var functions))
             {
                 functions.PluginUnselected?.Invoke(this, e);
             }
@@ -79,7 +79,7 @@ namespace WillowTree.Plugins
 
         public void OnPluginCommand(IPlugin plugin, PluginCommandEventArgs e)
         {
-            if (pluginEventTable.TryGetValue(plugin, out var functions) == true)
+            if (pluginEventTable.TryGetValue(plugin, out var functions))
             {
                 functions.PluginCommand?.Invoke(this, e);
             }

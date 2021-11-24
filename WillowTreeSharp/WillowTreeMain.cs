@@ -63,13 +63,13 @@ namespace WillowTree
             SelectFormat.Enabled = false;
 
             CreatePluginAsTab("General", new ucGeneral());
-            CreatePluginAsTab("Weapons", new ucGears());
-            CreatePluginAsTab("Items", new ucGears());
+            CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.settings));
+            CreatePluginAsTab("Items", new ucGears(this.gameData, this.settings));
             CreatePluginAsTab("Skills", new ucSkills());
             CreatePluginAsTab("Quest", new ucQuests());
             CreatePluginAsTab("Ammo Pools", new ucAmmo());
             CreatePluginAsTab("Echo Logs", new ucEchoes());
-            CreatePluginAsTab("Bank", new ucGears());
+            CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings));
             CreatePluginAsTab("Locker", new ucLocker());
             CreatePluginAsTab("Debug", new ucDebug());
             CreatePluginAsTab("About", new UcAbout());
