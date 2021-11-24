@@ -285,6 +285,7 @@ namespace WillowTree.Services.DataAccess
                         }
 
                         break;
+
                     case "PS3":
                     case "PC":
                         ReadWsg(fileStream);
@@ -423,38 +424,38 @@ namespace WillowTree.Services.DataAccess
             {
                 case "PS3":
                 case "PC":
-                {
-                    using (var save = new BinaryWriter(new FileStream(filename, FileMode.Create)))
                     {
-                        save.Write(WriteWsg());
-                    }
+                        using (var save = new BinaryWriter(new FileStream(filename, FileMode.Create)))
+                        {
+                            save.Write(WriteWsg());
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "X360":
-                {
-                    var tempSaveName = $"{filename}.temp";
-                    using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
                     {
-                        save.Write(WriteWsg());
-                    }
+                        var tempSaveName = $"{filename}.temp";
+                        using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                        {
+                            save.Write(WriteWsg());
+                        }
 
-                    BuildXboxPackage(filename, tempSaveName, 0x1);
-                    File.Delete(tempSaveName);
-                    break;
-                }
+                        BuildXboxPackage(filename, tempSaveName, 0x1);
+                        File.Delete(tempSaveName);
+                        break;
+                    }
                 case "X360JP":
-                {
-                    var tempSaveName = $"{filename}.temp";
-                    using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
                     {
-                        save.Write(WriteWsg());
-                    }
+                        var tempSaveName = $"{filename}.temp";
+                        using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                        {
+                            save.Write(WriteWsg());
+                        }
 
-                    BuildXboxPackage(filename, tempSaveName, 0x2);
-                    File.Delete(tempSaveName);
-                    break;
-                }
+                        BuildXboxPackage(filename, tempSaveName, 0x2);
+                        File.Delete(tempSaveName);
+                        break;
+                    }
             }
         }
 
@@ -473,10 +474,12 @@ namespace WillowTree.Services.DataAccess
                 case 0x2:
                     EndianWsg = ByteOrder.LittleEndian;
                     break;
+
                 case 0x02000000:
                     VersionNumber = 0x2;
                     EndianWsg = ByteOrder.BigEndian;
                     break;
+
                 default:
                     throw new FileFormatException(
                         $"WSG version number does match any known version ({VersionNumber}).");
@@ -882,11 +885,6 @@ namespace WillowTree.Services.DataAccess
 
             // Now that all the raw data has been removed, reset the raw data flag
             ContainsRawData = false;
-        }
-
-        private static void Write(BinaryWriter writer, byte[] value)
-        {
-            writer.Write(value);
         }
 
         private void WriteValues(BinaryWriter writer, IReadOnlyList<int> values)
@@ -1426,8 +1424,8 @@ namespace WillowTree.Services.DataAccess
         {
             //Create new entry
             var entry = new BankEntry();
-            var previous = Dlc.BankInventory.Count == 0x0 
-                ? null 
+            var previous = Dlc.BankInventory.Count == 0x0
+                ? null
                 : Dlc.BankInventory[Dlc.BankInventory.Count - 0x1];
             entry.Deserialize(reader, EndianWsg, previous);
             return entry;

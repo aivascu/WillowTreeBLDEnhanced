@@ -407,5 +407,10 @@ namespace WillowTree.Services.DataAccess
 
             return "Not WSG";
         }
+
+        protected static void Write(BinaryWriter writer, byte[] value)
+        {
+            writer.Write(value);
+        }
     }
 }
