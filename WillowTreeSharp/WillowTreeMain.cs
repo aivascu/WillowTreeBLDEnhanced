@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Windows.Forms;
 using WillowTree.Controls;
 using WillowTree.Inventory;
@@ -29,6 +28,7 @@ namespace WillowTree
             IGameData gameData,
             IGlobalSettings settings,
             IXmlCache xmlCache,
+            IMessageBox messageBox,
             PluginComponentManager pluginManager,
             AppThemes themes)
         {
@@ -38,6 +38,7 @@ namespace WillowTree
             this.settings = settings;
             this.pluginManager = pluginManager;
             this.themes = themes;
+            MessageBox = messageBox;
 
             this.settings.Load(this.gameData.XmlPath + "options.xml");
 
@@ -86,6 +87,8 @@ namespace WillowTree
         }
 
         public WillowSaveGame SaveData => currentWsg;
+
+        public IMessageBox MessageBox { get; }
 
         public void CreatePluginAsTab(string tabTitle, Control control)
         {
@@ -250,11 +253,7 @@ namespace WillowTree
             if (currentWsg.RequiredRepair)
             {
                 DialogResult result = MessageBox.Show(
-                    "Your savegame contains corrupted data so it cannot be loaded.  " +
-                    "It is possible to discard the invalid data to repair your savegame " +
-                    "so that it can be opened.  Repairing WILL CAUSE SOME DATA LOSS but " +
-                    "should bring your savegame back to a working state.\r\n\r\nDo you want to " +
-                    "repair the savegame?",
+                    "Your savegame contains corrupted data so it cannot be loaded.  It is possible to discard the invalid data to repair your savegame so that it can be opened.  Repairing WILL CAUSE SOME DATA LOSS but should bring your savegame back to a working state.\r\n\r\nDo you want to repair the savegame?",
                     "Recoverable Corruption Detected",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
@@ -310,12 +309,9 @@ namespace WillowTree
                 return;
             }
 
-            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian))
+            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian) && !UIAction_RemoveRawData())
             {
-                if (!UIAction_RemoveRawData())
-                {
-                    return;
-                }
+                return;
             }
 
             currentWsg.Platform = "PS3";
@@ -382,7 +378,6 @@ namespace WillowTree
 
                 List<int> values = item.GetValues();
 
-                //if (Convert.ToBoolean(values[4])) //TODO RSM UsesBigLevel
                 itm.Quantity = values[0]; //Quantity;
                 itm.Quality = (short)values[1]; //QualityIndex;
                 itm.EquipedSlot = (byte)values[2]; //Equipped;
@@ -563,12 +558,9 @@ namespace WillowTree
                 return;
             }
 
-            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian))
+            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian) && !UIAction_RemoveRawData())
             {
-                if (!UIAction_RemoveRawData())
-                {
-                    return;
-                }
+                return;
             }
 
             if (currentWsg.DeviceId == null)
@@ -599,12 +591,9 @@ namespace WillowTree
                 return;
             }
 
-            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian))
+            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian) && !UIAction_RemoveRawData())
             {
-                if (!UIAction_RemoveRawData())
-                {
-                    return;
-                }
+                return;
             }
 
             if (currentWsg.DeviceId == null)

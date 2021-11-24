@@ -111,6 +111,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ArrayHelper.cs" />
+    <Compile Include="Controls\IMessageBox.cs" />
+    <Compile Include="Controls\MessageBoxWrapper.cs" />
     <Compile Include="Controls\StrictNumericUpDown.cs">
       <SubType>Component</SubType>
     </Compile>

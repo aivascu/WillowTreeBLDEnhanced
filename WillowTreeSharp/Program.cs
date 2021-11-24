@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.IO.Abstractions;
 using WillowTree.Plugins;
 using WillowTree.Services.DataAccess;
+using WillowTree.Controls;
 
 namespace WillowTree
 {
@@ -33,6 +34,7 @@ namespace WillowTree
                     new GameDataWrapper(),
                     new GlobalSettingsWrapper(),
                     new XmlCacheWrapper(),
+                    new MessageBoxWrapper(),
                     new PluginComponentManager(),
                     new AppThemes());
                 Application.Run(mainForm);
