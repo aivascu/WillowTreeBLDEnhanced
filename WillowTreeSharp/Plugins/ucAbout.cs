@@ -18,6 +18,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 using System;
 using System.Linq;
 using System.Net;
@@ -28,88 +29,99 @@ using System.Threading;
 
 namespace WillowTree.Plugins
 {
-    public partial class ucAbout : UserControl, IPlugin
+    public partial class UcAbout : UserControl, IPlugin
     {
-        string DownloadURLFromServer;
-        string VersionFromServer;
+        private string downloadUrlFromServer;
+        private string versionFromServer;
 
         public void InitializePlugin(PluginComponentManager pm)
         {
-            PluginEvents events = new PluginEvents();
-            events.PluginSelected = OnPluginSelected;
-            events.PluginUnselected = OnPluginUnselected;
+            var events = new PluginEvents
+            {
+                PluginSelected = OnPluginSelected,
+                PluginUnselected = OnPluginUnselected
+            };
             pm.RegisterPlugin(this, events);
 
 #if !DEBUG
             // Only check for new version if it's not a debug build.
             ThreadPool.QueueUserWorkItem(CheckVersion);
 #endif
-            UpdateButton.Hide();        
+            UpdateButton.Hide();
         }
 
-        public void ReleasePlugin() 
+        public void ReleasePlugin()
         {
         }
 
-        public ucAbout()
+        public UcAbout()
         {
             InitializeComponent();
         }
 
-        public void OnPluginSelected(object sender, PluginEventArgs e)
+        private void OnPluginSelected(object sender, PluginEventArgs e)
         {
-            if (VersionFromServer == null)
+            if (versionFromServer == null)
                 timer1.Enabled = true;
         }
 
-        public void OnPluginUnselected(object sender, PluginEventArgs e)
+        private void OnPluginUnselected(object sender, PluginEventArgs e)
         {
             timer1.Enabled = false;
         }
 
         private void CheckVerPopup()
         {
-            if (VersionFromServer != GetVersion() && VersionFromServer != "" && VersionFromServer != null)
-            {
-                UpdateButton.Text = "Version " + VersionFromServer + " is now available! Click here to download.";
-                UpdateButton.Show();
-            }
+            if (versionFromServer == GetVersion() || string.IsNullOrEmpty(versionFromServer)) return;
+
+            UpdateButton.Text = $"Version {versionFromServer} is now available! Click here to download.";
+            UpdateButton.Show();
         }
+
         private static string GetVersion()
         {
             return "2.2.1";
         }
-        //Recovers the latest version from the sourceforge server.
+
+        /// Recovers the latest version from the sourceforge server.
         public void CheckVersion(object state)
         {
             try
             {
-                using (WebClient webClient = new WebClient())
+                using (var webClient = new WebClient())
                 {
-                    string VersionTextFromServer = webClient.DownloadString("http://willowtree.sourceforge.net/version.txt");
-                    string[] RemoteVersionInfo = VersionTextFromServer.Replace("\r\n", "\n").Split('\n');
-                    if ((RemoteVersionInfo.Count() > 1) || (RemoteVersionInfo.Count() <= 3))
+                    var versionTextFromServer =
+                        webClient.DownloadString("http://willowtree.sourceforge.net/version.txt");
+                    var remoteVersionInfo = versionTextFromServer.Replace("\r\n", "\n").Split('\n');
+                    if (remoteVersionInfo.Length <= 1 && remoteVersionInfo.Length > 3)
                     {
-                        VersionFromServer = RemoteVersionInfo[0];
-                        DownloadURLFromServer = RemoteVersionInfo[1];
+                        return;
                     }
+
+                    versionFromServer = remoteVersionInfo[0];
+                    downloadUrlFromServer = remoteVersionInfo[1];
                 }
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://" + DownloadURLFromServer);
+            System.Diagnostics.Process.Start($"http://{downloadUrlFromServer}");
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void OnTimerTick(object sender, EventArgs e)
         {
-            if (VersionFromServer != null)
+            if (versionFromServer == null)
             {
-                timer1.Enabled = false;
-                CheckVerPopup();
+                return;
             }
+
+            timer1.Enabled = false;
+            CheckVerPopup();
         }
     }
 }

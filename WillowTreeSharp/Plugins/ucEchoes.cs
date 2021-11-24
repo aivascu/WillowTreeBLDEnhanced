@@ -30,8 +30,8 @@ namespace WillowTree.Plugins
 {
     public partial class ucEchoes : UserControl, IPlugin
     {
-        WillowSaveGame CurrentWSG;
-        XmlFile EchoesXml;
+        private WillowSaveGame CurrentWSG;
+        private XmlFile EchoesXml;
 
         public ucEchoes()
         {

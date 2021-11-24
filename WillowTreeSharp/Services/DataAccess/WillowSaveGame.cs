@@ -525,7 +525,8 @@ namespace WillowTree
             public byte TypeId;
             public int Value;
         }
-        List<ChallengeDataEntry> _challenges;
+
+        private List<ChallengeDataEntry> _challenges;
 
         public byte[] ChallengeData;
         public int TotalLocations;

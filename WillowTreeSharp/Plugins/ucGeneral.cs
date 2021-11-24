@@ -30,8 +30,8 @@ namespace WillowTree.Plugins
 {
     public partial class ucGeneral : UserControl, IPlugin
     {
-        WillowSaveGame CurrentWSG;
-        XmlFile LocationsXml;
+        private WillowSaveGame CurrentWSG;
+        private XmlFile LocationsXml;
 
         public ucGeneral()
         {

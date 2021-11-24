@@ -25,7 +25,7 @@ namespace WillowTree.Plugins
 {
     public partial class ucDebug : UserControl, IPlugin
     {
-        WillowSaveGame CurrentWSG;
+        private WillowSaveGame CurrentWSG;
 
         public ucDebug()
         {

@@ -28,7 +28,7 @@ namespace WillowTree.Plugins
 {
     public partial class ucAmmo : UserControl, IPlugin
     {
-        WillowSaveGame CurrentWSG;
+        private WillowSaveGame CurrentWSG;
 
         public ucAmmo()
         {

@@ -63,7 +63,7 @@ namespace WillowTree
             CreatePluginAsTab("Bank", new ucGears());
             CreatePluginAsTab("Locker", new ucLocker());
             CreatePluginAsTab("Debug", new ucDebug());
-            CreatePluginAsTab("About", new ucAbout());
+            CreatePluginAsTab("About", new UcAbout());
 
             try
             {

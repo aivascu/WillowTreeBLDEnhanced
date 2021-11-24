@@ -30,8 +30,8 @@ namespace WillowTree.Plugins
 {
     public partial class ucQuests : UserControl, IPlugin
     {
-        WillowSaveGame CurrentWSG;
-        XmlFile QuestsXml;
+        private WillowSaveGame CurrentWSG;
+        private XmlFile QuestsXml;
 
         public bool Clicked = false; //Goes with the quest stuff. Really...ineffective.
 

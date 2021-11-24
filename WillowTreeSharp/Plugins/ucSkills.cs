@@ -30,15 +30,15 @@ namespace WillowTree.Plugins
 {
     public partial class ucSkills : UserControl, IPlugin
     {
-        PluginComponentManager pluginManager;
-        WillowSaveGame CurrentWSG;
-        XmlFile SkillsAllXml;
-        XmlFile SkillsCommonXml;
-        XmlFile SkillsBerserkerXml;
-        XmlFile SkillsSoldierXml;
-        XmlFile SkillsSirenXml;
-        XmlFile SkillsHunterXml;
-        string lastClass;
+        private PluginComponentManager pluginManager;
+        private WillowSaveGame CurrentWSG;
+        private XmlFile SkillsAllXml;
+        private XmlFile SkillsCommonXml;
+        private XmlFile SkillsBerserkerXml;
+        private XmlFile SkillsSoldierXml;
+        private XmlFile SkillsSirenXml;
+        private XmlFile SkillsHunterXml;
+        private string lastClass;
 
         public ucSkills()
         {

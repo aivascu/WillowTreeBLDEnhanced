@@ -20,7 +20,7 @@
  */
 namespace WillowTree.Plugins
 {
-    partial class ucAbout
+    partial class UcAbout
     {
         /// <summary> 
         /// Required designer variable.
@@ -49,7 +49,7 @@ namespace WillowTree.Plugins
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucAbout));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UcAbout));
             this.MainTab = new WillowTree.CustomControls.CCPanel();
             this.groupPanel7 = new WillowTree.CustomControls.WTGroupBox();
             this.textBoxX1 = new WillowTree.CustomControls.WTTextBox();
@@ -128,12 +128,12 @@ namespace WillowTree.Plugins
             // 
             // timer1
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.OnTimerTick);
             // 
             // ucAbout
             // 
             this.Controls.Add(this.MainTab);
-            this.Name = "ucAbout";
+            this.Name = "UcAbout";
             this.Size = new System.Drawing.Size(956, 591);
             this.MainTab.ResumeLayout(false);
             this.groupPanel7.ResumeLayout(false);
