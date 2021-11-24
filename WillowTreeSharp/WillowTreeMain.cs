@@ -22,7 +22,13 @@ namespace WillowTree
         private readonly IGlobalSettings settings;
         private readonly AppThemes themes;
 
-        public WillowTreeMain(IFile file, IDirectory directory, IGameData gameData, IGlobalSettings settings, PluginComponentManager pluginManager, AppThemes themes)
+        public WillowTreeMain(
+            IFile file,
+            IDirectory directory,
+            IGameData gameData,
+            IGlobalSettings settings,
+            PluginComponentManager pluginManager,
+            AppThemes themes)
         {
             this.file = file;
             this.directory = directory;
