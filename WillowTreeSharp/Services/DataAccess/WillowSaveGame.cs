@@ -595,7 +595,7 @@ namespace WillowTree.Services.DataAccess
                             BankValuesCount = ExportValuesCount;
                             for (var i = 0x0; i < bankEntriesCount; i++)
                             {
-                                Dlc.BankInventory.Add(CreateBankEntry(dlcDataReader, i == bankEntriesCount - 0x1));
+                                Dlc.BankInventory.Add(CreateBankEntry(dlcDataReader));
                             }
 
                             Console.WriteLine(@"====== EXIT BANK ======");
@@ -1422,7 +1422,7 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        private BankEntry CreateBankEntry(BinaryReader reader, bool last)
+        private BankEntry CreateBankEntry(BinaryReader reader)
         {
             //Create new entry
             var entry = new BankEntry();
