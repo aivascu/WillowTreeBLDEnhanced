@@ -89,6 +89,7 @@ namespace WillowTree.Services.DataAccess
                 var value = ReadInt32(reader, endian);
                 list.Add(value);
             }
+
             return list;
         }
 
@@ -215,11 +216,13 @@ namespace WillowTree.Services.DataAccess
                     tempLengthValue = -tempLengthValue * 2;
                     isLess = true;
                 }
+
                 if (tempLengthValue < 5 || tempLengthValue > 4096)
                 {
                     bytes.AddRange(GetBytesFromInt(tempLengthValue, endian));
                     continue;
                 }
+
                 var data = reader.ReadBytes(tempLengthValue);
                 if (data.Length != tempLengthValue)
                 {
@@ -306,6 +309,7 @@ namespace WillowTree.Services.DataAccess
                 bytes.Add(0);
                 bytes.Add(0);
             }
+
             return bytes.ToArray();
         }
 
@@ -375,13 +379,18 @@ namespace WillowTree.Services.DataAccess
 
         public delegate List<int> ReadValuesFunction(BinaryReader reader, ByteOrder bo, int revisionNumber);
 
-        public class WillowObject
+        public abstract class WillowObject
         {
-            public List<string> Strings = new List<string>();
             protected int[] values = new int[6];
 
-            public ReadStringsFunction ReadStrings;
-            public ReadValuesFunction ReadValues = ReadObjectValues;
+            public ReadStringsFunction ReadStrings { get; set; }
+            public ReadValuesFunction ReadValues { get; set; } = ReadObjectValues;
+
+            protected WillowObject()
+            {
+            }
+
+            public List<string> Strings { get; set; } = new List<string>();
 
             public void SetValues(List<int> values)
             {
@@ -541,7 +550,7 @@ namespace WillowTree.Services.DataAccess
                 if (byte4 == ' ')
                 {
                     // This is a really lame way to check for the WSG data...
-                    saveReader.BaseStream.Seek(53244, SeekOrigin.Current);
+                    saveReader.BaseStream.Seek(0xCFFC, SeekOrigin.Current);
 
                     byte1 = saveReader.ReadByte();
                     byte2 = saveReader.ReadByte();
@@ -549,14 +558,12 @@ namespace WillowTree.Services.DataAccess
                     if (byte1 == 'W' && byte2 == 'S' && byte3 == 'G')
                     {
                         saveReader.BaseStream.Seek(0x360, SeekOrigin.Begin);
-                        uint titleId = ((uint)saveReader.ReadByte() << 24) + ((uint)saveReader.ReadByte() << 16) +
-                            ((uint)saveReader.ReadByte() << 8) + saveReader.ReadByte();
-
-                        //                        uint titleID = GetXboxTitleID(inputWSG);
+                        uint titleId = ((uint)saveReader.ReadByte() << 0x18) + ((uint)saveReader.ReadByte() << 0x10) +
+                                       ((uint)saveReader.ReadByte() << 0x8) + saveReader.ReadByte();
                         switch (titleId)
                         {
-                            case 1414793191: return "X360";
-                            case 1414793318: return "X360JP";
+                            case 0x545407E7: return "X360";
+                            case 0x54540866: return "X360JP";
                             default: return "unknown";
                         }
                     }
@@ -601,15 +608,9 @@ namespace WillowTree.Services.DataAccess
             try
             {
                 STFSPackage con = new STFSPackage(new DJsIO(fileInMemory, true), new X360.Other.LogRecord());
-                //DJsIO Extract = new DJsIO(true);
-                //CON.FileDirectory[0].Extract(Extract);
                 ProfileId = con.Header.ProfileID;
                 DeviceId = con.Header.DeviceID;
 
-                //DJsIO Save = new DJsIO("C:\\temp.sav", DJFileMode.Create, true);
-                //Save.Write(Extract.ReadStream());
-                //Save.Close();
-                //byte[] nom = CON.GetFile("SaveGame.sav").GetEntryData();
                 return new MemoryStream(con.GetFile("SaveGame.sav").GetTempIO(true).ReadStream(), false);
             }
             catch
@@ -626,7 +627,10 @@ namespace WillowTree.Services.DataAccess
                     manual.ReadBytes(4040);
                     return new MemoryStream(manual.ReadBytes(size), false);
                 }
-                catch { return null; }
+                catch
+                {
+                    return null;
+                }
             }
         }
 
@@ -647,7 +651,7 @@ namespace WillowTree.Services.DataAccess
                     }
                 }
                 else if (string.Equals(Platform, "PS3", StringComparison.Ordinal) ||
-                    string.Equals(Platform, "PC", StringComparison.Ordinal))
+                         string.Equals(Platform, "PC", StringComparison.Ordinal))
                 {
                     ReadWsg(fileStream);
                 }
@@ -675,7 +679,8 @@ namespace WillowTree.Services.DataAccess
             Assembly newAssembly = Assembly.GetExecutingAssembly();
             // WARNING: GetManifestResourceStream is case-sensitive.
             Stream wtIcon = newAssembly.GetManifestResourceStream("WillowTree.Resources.WT_CON.png");
-            package.HeaderData.ContentImage = System.Drawing.Image.FromStream(wtIcon ?? throw new NoNullAllowedException("wtIcon don't found."));
+            package.HeaderData.ContentImage =
+                System.Drawing.Image.FromStream(wtIcon ?? throw new NoNullAllowedException("wtIcon don't found."));
             package.HeaderData.PackageImage = package.HeaderData.ContentImage;
             package.HeaderData.Title_Display = CharacterName + " - Level " + Level + " - " + CurrentLocation;
             package.HeaderData.Title_Package = "Borderlands";
@@ -691,42 +696,41 @@ namespace WillowTree.Services.DataAccess
                     package.HeaderData.TitleID = 1414793318;
                     break;
             }
+
             package.AddFile(saveFileName, "SaveGame.sav");
 
-            STFSPackage con = new STFSPackage(package, new RSAParams(Constants.DataPath + "KV.bin"), packageFileName, new X360.Other.LogRecord());
+            STFSPackage con = new STFSPackage(package, new RSAParams(Constants.DataPath + "KV.bin"), packageFileName,
+                new X360.Other.LogRecord());
 
             con.FlushPackage(new RSAParams(Constants.DataPath + "KV.bin"));
             con.CloseIO();
             wtIcon.Close();
         }
 
-        private static List<string> ReadItemStrings(BinaryReader reader, ByteOrder bo)
+        private static List<string> ReadItemStrings(BinaryReader reader, ByteOrder byteOrder)
         {
             List<string> strings = new List<string>();
-            for (int totalStrings = 0; totalStrings < 9; totalStrings++)
+            for (int index = 0; index < 9; index++)
             {
-                strings.Add(ReadString(reader, bo));
+                strings.Add(ReadString(reader, byteOrder));
             }
 
             foreach (var item in strings)
             {
                 Console.WriteLine(item);
             }
+
             return strings;
         }
 
         private static List<string> ReadWeaponStrings(BinaryReader reader, ByteOrder bo)
         {
             List<string> strings = new List<string>();
-            for (int totalStrings = 0; totalStrings < 14; totalStrings++)
+            for (int index = 0; index < 14; index++)
             {
                 strings.Add(ReadString(reader, bo));
             }
 
-            foreach (var item in strings)
-            {
-                Console.WriteLine(item);
-            }
             return strings;
         }
 
@@ -738,7 +742,8 @@ namespace WillowTree.Services.DataAccess
             short level = (short)(tempLevelQuality / 65536);
             int equippedSlot = ReadInt32(reader, bo);
 
-            var values = new List<int>() {
+            var values = new List<int>()
+            {
                 ammoQuantityCount,
                 quality,
                 equippedSlot,
@@ -784,7 +789,8 @@ namespace WillowTree.Services.DataAccess
             return item;
         }
 
-        private void ReadObjects<T>(BinaryReader reader, ref List<T> objects, int groupSize) where T : WillowObject, new()
+        private void ReadObjects<T>(BinaryReader reader, ref List<T> objects, int groupSize)
+            where T : WillowObject, new()
         {
             for (int progress = 0; progress < groupSize; progress++)
             {
@@ -854,7 +860,8 @@ namespace WillowTree.Services.DataAccess
             }
             else
             {
-                throw new FileFormatException("WSG version number does match any known version (" + VersionNumber + ").");
+                throw new FileFormatException(
+                    "WSG version number does match any known version (" + VersionNumber + ").");
             }
 
             Plyr = new string(testReader.ReadChars(4));
@@ -894,7 +901,8 @@ namespace WillowTree.Services.DataAccess
                 throw new EndOfStreamException();
             }
 
-            using (BinaryReader challengeReader = new BinaryReader(new MemoryStream(challengeDataBlock, false), Encoding.ASCII))
+            using (BinaryReader challengeReader =
+                new BinaryReader(new MemoryStream(challengeDataBlock, false), Encoding.ASCII))
             {
                 ChallengeDataBlockId = ReadInt32(challengeReader, EndianWsg);
                 ChallengeDataLength = ReadInt32(challengeReader, EndianWsg);
@@ -934,6 +942,7 @@ namespace WillowTree.Services.DataAccess
             {
                 Unknown2 = ReadBytes(testReader, 85, EndianWsg);
             }
+
             PromoCodesUsed = ReadListInt32(testReader, EndianWsg);
             PromoCodesRequiringNotification = ReadListInt32(testReader, EndianWsg);
             NumberOfEchoLists = ReadEchoes(testReader, EndianWsg);
@@ -972,6 +981,7 @@ namespace WillowTree.Services.DataAccess
                                 Console.WriteLine(i + "/" + bankEntriesCount);
                                 Dlc.BankInventory.Add(CreateBankEntry(dlcDataReader, i == bankEntriesCount - 1));
                             }
+
                             Console.WriteLine(@"====== EXIT BANK ======");
                             break;
 
@@ -1060,6 +1070,7 @@ namespace WillowTree.Services.DataAccess
                                 // Skip to the end of the section to discard any raw data that is left over
                                 dlcDataReader.BaseStream.Position = sectionStartPos + sectionLength;
                             }
+
                             //NumberOfWeapons += DLC.NumberOfWeapons;
                             break;
                     }
@@ -1084,12 +1095,14 @@ namespace WillowTree.Services.DataAccess
                 {
                     return;
                 }
+
                 //Padding at the end of file, don't know exactly why
                 var temp = new List<byte>();
                 while (!Eof(testReader))
                 {
                     temp.Add(ReadBytes(testReader, 1, EndianWsg)[0]);
                 }
+
                 Unknown3 = temp.ToArray();
             }
         }
@@ -1118,8 +1131,10 @@ namespace WillowTree.Services.DataAccess
                     };
                     et.Echoes.Add(ee);
                 }
+
                 EchoLists.Add(et);
             }
+
             return echoListCount;
         }
 
@@ -1158,6 +1173,7 @@ namespace WillowTree.Services.DataAccess
                         qe.Objectives[objectiveIndex].Description = ReadString(reader, endianWsg);
                         qe.Objectives[objectiveIndex].Progress = ReadInt32(reader, endianWsg);
                     }
+
                     qt.Quests.Add(qe);
                 }
 
@@ -1168,6 +1184,7 @@ namespace WillowTree.Services.DataAccess
 
                 QuestLists.Add(qt);
             }
+
             return numberOfQuestList;
         }
 
@@ -1238,7 +1255,8 @@ namespace WillowTree.Services.DataAccess
         public void DiscardRawData()
         {
             // Make a list of all the known data sections to compare against.
-            List<int> knownSectionIds = new List<int>() {
+            List<int> knownSectionIds = new List<int>()
+            {
                 DlcData.Section1Id,
                 DlcData.Section2Id,
                 DlcData.Section3Id,
@@ -1400,7 +1418,7 @@ namespace WillowTree.Services.DataAccess
                 Write(Out, qt.TotalQuests, EndianWsg);
 
                 int questCount = qt.TotalQuests;
-                for (int questIndex = 0; questIndex < questCount; questIndex++)  //Write Playthrough 1 Quests
+                for (int questIndex = 0; questIndex < questCount; questIndex++) //Write Playthrough 1 Quests
                 {
                     QuestEntry qe = qt.Quests[questIndex];
                     Write(Out, qe.Name, EndianWsg);
@@ -1431,6 +1449,7 @@ namespace WillowTree.Services.DataAccess
             {
                 Write(Out, Unknown2);
             }
+
             int numberOfPromoCodesUsed = PromoCodesUsed.Count;
             Write(Out, numberOfPromoCodesUsed, EndianWsg);
             for (int i = 0; i < numberOfPromoCodesUsed; i++)
@@ -1503,8 +1522,10 @@ namespace WillowTree.Services.DataAccess
                         WriteObjects(memwriter, Weapons2);
                         break;
                 }
+
                 section.BaseData = tempStream.ToArray();
-                Dlc.DlcSize += section.BaseData.Length + section.RawData.Length + 8; // 8 = 4 bytes for id, 4 bytes for length
+                Dlc.DlcSize +=
+                    section.BaseData.Length + section.RawData.Length + 8; // 8 = 4 bytes for id, 4 bytes for length
             }
 
             // Now its time to actually write all the data sections to the output stream
@@ -1518,11 +1539,13 @@ namespace WillowTree.Services.DataAccess
                 Out.Write(section.RawData);
                 section.BaseData = null; // BaseData isn't needed anymore.  Free it.
             }
+
             if (RevisionNumber >= EnhancedVersion)
             {
                 //Past end padding
                 Write(Out, Unknown3);
             }
+
             // Clear the temporary lists used to split primary and DLC pack data
             Items1 = null;
             Items2 = null;
@@ -1557,6 +1580,7 @@ namespace WillowTree.Services.DataAccess
 
                 return;
             }
+
             foreach (var item in Items)
             {
                 if ((item.Level == 0) && (item.Strings[0].Substring(0, 3) != "dlc"))
@@ -1568,6 +1592,7 @@ namespace WillowTree.Services.DataAccess
                     Items2.Add(item);
                 }
             }
+
             foreach (var weapon in Weapons)
             {
                 if ((weapon.Level == 0) && (weapon.Strings[0].Substring(0, 3) != "dlc"))
@@ -1610,6 +1635,7 @@ namespace WillowTree.Services.DataAccess
                         bytes.AddRange(new byte[25]);
                         continue;
                     }
+
                     bytes.Add(32);
                     Console.WriteLine("Component " + component);
                     var subComponentArray = component.Split('.');
@@ -1623,8 +1649,10 @@ namespace WillowTree.Services.DataAccess
                     {
                         bytes.AddRange(GetBytesFromInt((ushort)Quality + (ushort)Level * (uint)65536, endian));
                     }
+
                     count++;
                 }
+
                 bytes.AddRange(new byte[8]);
                 bytes.Add((byte)EquipedSlot);
                 bytes.Add(1);
@@ -1633,6 +1661,7 @@ namespace WillowTree.Services.DataAccess
                     bytes.Add((byte)Junk);
                     bytes.Add((byte)Locked);
                 }
+
                 if (TypeId == 1)
                 {
                     bytes.AddRange(GetBytesFromInt(Quantity, endian));
@@ -1648,6 +1677,7 @@ namespace WillowTree.Services.DataAccess
                         bytes.Add((byte)Quantity);
                     }
                 }
+
                 return bytes.ToArray();
             }
 
@@ -1675,6 +1705,7 @@ namespace WillowTree.Services.DataAccess
                             partName += tmp;
                         }
                     }
+
                     part = partName;
                     if (index == 2)
                     {
@@ -1698,13 +1729,13 @@ namespace WillowTree.Services.DataAccess
                 entry.EquipedSlot = footer[8];
                 if (entry.TypeId == 1)
                 {
-                    entry.Quantity = ReadInt32(reader, endian);//Ammo
+                    entry.Quantity = ReadInt32(reader, endian); //Ammo
                     entry.Junk = footer[10];
                     entry.Locked = footer[11];
                 }
                 else
                 {
-                    entry.Quantity = footer[10];//Ammo
+                    entry.Quantity = footer[10]; //Ammo
                     entry.Junk = footer[11];
                     entry.Locked = reader.ReadByte();
                 }
@@ -1771,6 +1802,7 @@ namespace WillowTree.Services.DataAccess
                     reader.BaseStream.Position -= 2;
                     return bytes.ToArray();
                 }
+
                 bytes.AddRange(b);
                 //Looking for next byte != 0
                 while (val != SubPart)
@@ -1787,6 +1819,7 @@ namespace WillowTree.Services.DataAccess
                         reader.BaseStream.Position -= 2;
                     }
                 }
+
                 return bytes.ToArray();
             }
         }
@@ -1795,7 +1828,8 @@ namespace WillowTree.Services.DataAccess
         {
             //Create new entry
             BankEntry entry = new BankEntry();
-            entry.Deserialize(reader, EndianWsg, Dlc.BankInventory.Count == 0 ? null : Dlc.BankInventory[Dlc.BankInventory.Count - 1]);
+            entry.Deserialize(reader, EndianWsg,
+                Dlc.BankInventory.Count == 0 ? null : Dlc.BankInventory[Dlc.BankInventory.Count - 1]);
             return entry;
         }
     }
@@ -1862,7 +1896,7 @@ namespace WillowTree.Services.DataAccess
         public int DlcSize;
 
         // DLC Section 1 Data (bank data)
-        public byte DlcUnknown1;  // Read only flag. Always resets to 1 in ver 1.41.  Probably CanAccessBank.
+        public byte DlcUnknown1; // Read only flag. Always resets to 1 in ver 1.41.  Probably CanAccessBank.
 
         public int BankSize;
         public List<WillowSaveGame.BankEntry> BankInventory = new List<WillowSaveGame.BankEntry>();
@@ -1875,10 +1909,10 @@ namespace WillowTree.Services.DataAccess
         public int SkipDlc2Intro; //
 
         // DLC Section 3 Data (related to the level cap.  removing this section will delevel your character to 50)
-        public byte DlcUnknown5;  // Read only flag. Always resets to 1 in ver 1.41.  Probably CanExceedLevel50
+        public byte DlcUnknown5; // Read only flag. Always resets to 1 in ver 1.41.  Probably CanExceedLevel50
 
         // DLC Section 4 Data (DLC backpack)
-        public byte SecondaryPackEnabled;  // Read only flag. Always resets to 1 in ver 1.41.
+        public byte SecondaryPackEnabled; // Read only flag. Always resets to 1 in ver 1.41.
 
         public int NumberOfWeapons;
     }
