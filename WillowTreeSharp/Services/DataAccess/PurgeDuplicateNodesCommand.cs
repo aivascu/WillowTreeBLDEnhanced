@@ -1,19 +1,26 @@
 ﻿using Aga.Controls.Tree;
-using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
 namespace WillowTree.Services.DataAccess
 {
-    public static class XmlFileCache
+    /// <summary>
+    /// Clear duplicate items from an xml item/weapon file
+    /// TODO: This is an ugly method that probably could be done in an easier
+    /// to understand, more correct, or faster way.  It does seem to work
+    /// though, so I'm not going to try to rewrite it right now.
+    /// </summary>
+    public class PurgeDuplicateNodesCommand
     {
-        private static readonly Dictionary<string, XmlFile> XmlCache = new Dictionary<string, XmlFile>();
+        public PurgeDuplicateNodesCommand(string filePath)
+        {
+            FilePath = filePath;
+        }
 
-        // Clear duplicate items from an xml item/weapon file
-        // TODO: This is an ugly method that probably could be done in an easier
-        // to understand, more correct, or faster way.  It does seem to work
-        // though, so I'm not going to try to rewrite it right now.
-        public static void PurgeDuplicates(string inputFile)
+        public string FilePath { get; }
+
+        
+        public void Execute()
         {
             // A tree model to store the nodes in
             TreeModel model = new TreeModel();
@@ -24,7 +31,7 @@ namespace WillowTree.Services.DataAccess
 
             XmlDocument xmlrdrdoc = new XmlDocument();
 
-            xmlrdrdoc.Load(inputFile);
+            xmlrdrdoc.Load(FilePath);
 
             // get a list of all items
             foreach (XmlNode xn in xmlrdrdoc.SelectNodes("/INI/Section"))
@@ -85,7 +92,7 @@ namespace WillowTree.Services.DataAccess
                 }
             }
 
-            XmlTextWriter writer = new XmlTextWriter(inputFile, new ASCIIEncoding())
+            XmlTextWriter writer = new XmlTextWriter(FilePath, new ASCIIEncoding())
             {
                 Formatting = Formatting.Indented,
                 Indentation = 2
@@ -323,28 +330,6 @@ namespace WillowTree.Services.DataAccess
             writer.WriteEndDocument();
             writer.Flush();
             writer.Close();
-        }
-
-        public static XmlFile XmlFileFromCache(string filename)
-        {
-            if (string.IsNullOrEmpty(filename))
-            {
-                return null;
-            }
-
-            // Cache all XML files opened with XmlFileFromCache in a
-            // dictionary then reuse them.  This prevents having to re-read
-            // the file data constantly by creating a new XmlFile then
-            // releasing it.
-            if (XmlCache.TryGetValue(filename, out XmlFile xml))
-            {
-                return xml;
-            }
-
-            // If its not in the cache then open from disk and add to cache
-            xml = new XmlFile(filename);
-            XmlCache.Add(filename, xml);
-            return xml;
         }
     }
 }

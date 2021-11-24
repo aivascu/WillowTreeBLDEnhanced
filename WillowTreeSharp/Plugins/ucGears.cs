@@ -547,7 +547,7 @@ namespace WillowTree.Plugins
             try
             {
                 // Read ALL subsections of a given XML section
-                XmlFile Category = XmlFileCache.XmlFileFromCache(GameData.DataPath + PartSelectorGear.SelectedNode.Parent.GetKey() + ".txt");
+                XmlFile Category = XmlCache.XmlFileFromCache(GameData.DataPath + PartSelectorGear.SelectedNode.Parent.GetKey() + ".txt");
 
                 // XML Section: PartCategories.SelectedNode.Text
                 List<string> xmlSection = Category.XmlReadSection(PartSelectorGear.SelectedNode.GetText());
@@ -703,7 +703,7 @@ namespace WillowTree.Plugins
 
         private static void DoPartsCategory(string Category, TreeViewAdv Tree)
         {
-            XmlFile PartList = XmlFileCache.XmlFileFromCache(GameData.DataPath + Category + ".txt");
+            XmlFile PartList = XmlCache.XmlFileFromCache(GameData.DataPath + Category + ".txt");
             TreeModel model = Tree.Model as TreeModel;
 
             Tree.BeginUpdate();

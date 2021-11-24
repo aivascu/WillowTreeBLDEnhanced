@@ -166,7 +166,7 @@ namespace WillowTree.Services.DataAccess
                 return "";
             }
 
-            XmlFile dataFile = XmlFileCache.XmlFileFromCache(dbFileName);
+            XmlFile dataFile = XmlCache.XmlFileFromCache(dbFileName);
 
             return dataFile.XmlReadValue(partName, attributeName);
         }
@@ -187,7 +187,7 @@ namespace WillowTree.Services.DataAccess
                 return null;
             }
 
-            XmlFile dataFile = XmlFileCache.XmlFileFromCache(dbFileName);
+            XmlFile dataFile = XmlCache.XmlFileFromCache(dbFileName);
 
             return dataFile.XmlReadSection(partName);
         }
