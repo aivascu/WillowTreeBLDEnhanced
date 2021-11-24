@@ -11,7 +11,7 @@ namespace WillowTree.Services.DataAccess
         private static string openedLocker; //Keep tracking of last open locker file
         private static Dictionary<string, string> nameLookup;
 
-        public static string DataPath { get; } = WillowSaveGame.DataPath;
+        public static string DataPath { get; } = Constants.DataPath;
 
         private static readonly List<string> skillFiles = new List<string>
         {

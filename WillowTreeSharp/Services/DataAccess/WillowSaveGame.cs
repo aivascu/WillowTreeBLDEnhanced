@@ -13,38 +13,23 @@ namespace WillowTree.Services.DataAccess
 {
     public class WillowSaveGame
     {
-        // Multiple users using Parallels on Mac reported that WT# was crashing at startup.
-        // I narrowed it down to this line.  Application.get_ExecutablePath() is giving them
-        // a UriFormatException for some reason.  I'm rewriting this line to try to resolve it.
-        // This also removes the dependence of WillowSaveGame on Windows Forms since
-        // Application is a part of the System.Windows.Forms namespace.
-
-        public static readonly string AppPath = (Assembly.GetEntryAssembly() != null ? Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) : "") +
-                                       Path.DirectorySeparatorChar;
-
-        public static readonly string DataPath = AppPath + "Data" + Path.DirectorySeparatorChar;
-
         // Used for all single-byte string encodings.
-        private static Encoding _singleByteEncoding; // DO NOT REFERENCE THIS DIRECTLY!
+        private static Encoding singleByteEncoding; // DO NOT REFERENCE THIS DIRECTLY!
 
         private static Encoding SingleByteEncoding
         {
             get
             {
-                // Not really thread safe, but it doesn't matter (Encoding
-                // should be effectively sealed).
-                if (_singleByteEncoding == null)
-                {
-                    // Use ISO 8859-1 (Windows 1252) encoding for all single-
-                    // byte strings.
-                    _singleByteEncoding = Encoding.GetEncoding(1252);
-                    System.Diagnostics.Debug.Assert(_singleByteEncoding != null,
-                        "singleByteEncoding != null");
-                    System.Diagnostics.Debug.Assert(_singleByteEncoding.IsSingleByte,
-                        "Given string encoding is not a single-byte encoding.");
-                }
+                // Not really thread safe, but it doesn't matter (Encoding should be effectively sealed).
+                if (!(singleByteEncoding is null))
+                    return singleByteEncoding;
 
-                return _singleByteEncoding;
+                // Use ISO 8859-1 (Windows 1252) encoding for all single-byte strings.
+                singleByteEncoding = Encoding.GetEncoding(1252);
+                Debug.Assert(singleByteEncoding != null, "singleByteEncoding != null");
+                Debug.Assert(singleByteEncoding.IsSingleByte, "Given string encoding is not a single-byte encoding.");
+
+                return singleByteEncoding;
             }
         }
 
@@ -239,15 +224,12 @@ namespace WillowTree.Services.DataAccess
         private static byte[] SearchForString(BinaryReader reader, ByteOrder endian)
         {
             var bytes = new List<byte>();
-            long position;
-            byte[] data;
 
             while (true)
             {
-                position = reader.BaseStream.Position;
+                var position = reader.BaseStream.Position;
                 int tempLengthValue = ReadInt32(reader, endian);
                 bool isLess = false;
-                string value;
                 if (tempLengthValue < 0)
                 {
                     tempLengthValue = -tempLengthValue * 2;
@@ -258,20 +240,13 @@ namespace WillowTree.Services.DataAccess
                     bytes.AddRange(GetBytesFromInt(tempLengthValue, endian));
                     continue;
                 }
-                data = reader.ReadBytes(tempLengthValue);
+                var data = reader.ReadBytes(tempLengthValue);
                 if (data.Length != tempLengthValue)
                 {
                     throw new EndOfStreamException();
                 }
 
-                if (isLess)
-                {
-                    value = Encoding.Unicode.GetString(data);
-                }
-                else
-                {
-                    value = SingleByteEncoding.GetString(data);
-                }
+                var value = isLess ? Encoding.Unicode.GetString(data) : SingleByteEncoding.GetString(data);
                 int nullTerminatorIndex = value.IndexOf('\0');
                 if (nullTerminatorIndex != value.Length - 1)
                 {
@@ -340,30 +315,14 @@ namespace WillowTree.Services.DataAccess
             // Generate the bytes (either single-byte or Unicode, depending on input).
             if (!requiresUnicode)
             {
-                var lenght = GetBytesFromInt(value.Length + 1, endian);
-                foreach (var b in lenght)
-                {
-                    bytes.Add(b);
-                }
-                var str = SingleByteEncoding.GetBytes(value);
-                foreach (var b in str)
-                {
-                    bytes.Add(b);
-                }
+                bytes.AddRange(GetBytesFromInt(value.Length + 1, endian));
+                bytes.AddRange(SingleByteEncoding.GetBytes(value));
                 bytes.Add(0);
             }
             else
             {
-                var lenght = GetBytesFromInt(-1 - value.Length, endian);
-                foreach (var b in lenght)
-                {
-                    bytes.Add(b);
-                }
-                var str = Encoding.Unicode.GetBytes(value);
-                foreach (var b in str)
-                {
-                    bytes.Add(b);
-                }
+                bytes.AddRange(GetBytesFromInt(-1 - value.Length, endian));
+                bytes.AddRange(Encoding.Unicode.GetBytes(value));
                 bytes.Add(0);
                 bytes.Add(0);
             }
@@ -373,15 +332,7 @@ namespace WillowTree.Services.DataAccess
         /// <summary> Look for any non-ASCII characters in the input.</summary>
         private static bool IsUnicode(string value)
         {
-            foreach (var t in value)
-            {
-                if (t > 256)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return value.Any(t => t > 256);
         }
 
         #region Members
@@ -447,7 +398,7 @@ namespace WillowTree.Services.DataAccess
         public class Object
         {
             public List<string> Strings = new List<string>();
-            protected int[] _values = new int[6];
+            protected int[] values = new int[6];
 
             public ReadStringsFunction ReadStrings;
             public ReadValuesFunction ReadValues = ReadObjectValues;
@@ -462,42 +413,42 @@ namespace WillowTree.Services.DataAccess
 
             public void SetValues(List<int> values)
             {
-                _values = values.ToArray();
+                this.values = values.ToArray();
             }
 
             public List<int> GetValues()
             {
-                return _values.ToList();
+                return values.ToList();
             }
 
             public int Quality
             {
-                get { return _values[1]; }
-                set { _values[1] = value; }
+                get { return values[1]; }
+                set { values[1] = value; }
             }
 
             public int EquipedSlot
             {
-                get { return _values[2]; }
-                set { _values[2] = value; }
+                get { return values[2]; }
+                set { values[2] = value; }
             }
 
             public int Level
             {
-                get { return _values[3]; }
-                set { _values[3] = value; }
+                get { return values[3]; }
+                set { values[3] = value; }
             }
 
             public int Junk
             {
-                get { return _values[4]; }
-                set { _values[4] = value; }
+                get { return values[4]; }
+                set { values[4] = value; }
             }
 
             public int Locked
             {
-                get { return _values[5]; }
-                set { _values[5] = value; }
+                get { return values[5]; }
+                set { values[5] = value; }
             }
         }
 
@@ -510,8 +461,8 @@ namespace WillowTree.Services.DataAccess
 
             public int Quantity
             {
-                get { return _values[0]; }
-                set { _values[0] = value; }
+                get { return values[0]; }
+                set { values[0] = value; }
             }
         }
 
@@ -524,8 +475,8 @@ namespace WillowTree.Services.DataAccess
 
             public int Ammo
             {
-                get { return _values[0]; }
-                set { _values[0] = value; }
+                get { return values[0]; }
+                set { values[0] = value; }
             }
         }
 
@@ -860,9 +811,9 @@ namespace WillowTree.Services.DataAccess
             }
             package.AddFile(saveFileName, "SaveGame.sav");
 
-            STFSPackage con = new STFSPackage(package, new RSAParams(DataPath + "KV.bin"), packageFileName, new X360.Other.LogRecord());
+            STFSPackage con = new STFSPackage(package, new RSAParams(Constants.DataPath + "KV.bin"), packageFileName, new X360.Other.LogRecord());
 
-            con.FlushPackage(new RSAParams(DataPath + "KV.bin"));
+            con.FlushPackage(new RSAParams(Constants.DataPath + "KV.bin"));
             con.CloseIO();
             wtIcon.Close();
         }
@@ -1756,8 +1707,8 @@ namespace WillowTree.Services.DataAccess
 
             public int Quantity
             {
-                get { return _values[0]; }
-                set { _values[0] = value; }
+                get { return values[0]; }
+                set { values[0] = value; }
             }
 
             public byte[] Serialize(ByteOrder endian)
