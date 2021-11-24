@@ -6,7 +6,10 @@
         {
             int index = strInput.IndexOf(Terminator);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index);
         }
 
@@ -14,7 +17,10 @@
         {
             int index = strInput.IndexOf(Terminator);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index);
         }
 
@@ -22,7 +28,10 @@
         {
             int index = strInput.LastIndexOf(Terminator);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index);
         }
 
@@ -30,7 +39,10 @@
         {
             int index = strInput.LastIndexOf(Terminator);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index);
         }
 
@@ -38,7 +50,10 @@
         {
             int index = strInput.IndexOf(Prefix);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index + Prefix.Length);
         }
 
@@ -46,7 +61,10 @@
         {
             int index = strInput.IndexOf(Prefix);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index + 1);
         }
 
@@ -54,7 +72,10 @@
         {
             int index = strInput.LastIndexOf(Prefix);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index + Prefix.Length);
         }
 
@@ -62,7 +83,10 @@
         {
             int index = strInput.IndexOf(Prefix);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index + 1);
         }
 
@@ -70,7 +94,10 @@
         {
             int index = strInput.IndexOf(Beginning);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index);
         }
 
@@ -78,7 +105,10 @@
         {
             int index = strInput.IndexOf(Beginning);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index);
         }
 
@@ -86,7 +116,10 @@
         {
             int index = strInput.IndexOf(Ending);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index + Ending.Length);
         }
 
@@ -94,7 +127,10 @@
         {
             int index = strInput.IndexOf(Ending);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index + 1);
         }
 
@@ -102,7 +138,10 @@
         {
             int index = strInput.LastIndexOf(Beginning);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index);
         }
 
@@ -110,7 +149,10 @@
         {
             int index = strInput.LastIndexOf(Beginning);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(index);
         }
 
@@ -118,7 +160,10 @@
         {
             int index = strInput.LastIndexOf(Ending);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index + Ending.Length);
         }
 
@@ -126,7 +171,10 @@
         {
             int index = strInput.LastIndexOf(Ending);
             if (index < 0)
+            {
                 return string.Empty;
+            }
+
             return strInput.Substring(0, index + 1);
         }
     }

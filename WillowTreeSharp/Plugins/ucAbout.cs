@@ -79,7 +79,9 @@ namespace WillowTree.Plugins
         private void OnPluginSelected(object sender, PluginEventArgs e)
         {
             if (versionFromServer == null)
+            {
                 timer1.Enabled = true;
+            }
         }
 
         private void OnPluginUnselected(object sender, PluginEventArgs e)

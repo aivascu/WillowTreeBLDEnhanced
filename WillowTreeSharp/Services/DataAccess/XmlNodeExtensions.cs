@@ -37,7 +37,9 @@ namespace WillowTree.Services.DataAccess
         public static int GetElementAsInt(this XmlNode source, string elementname)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException(nameof(source), "xml node was null");
+            }
 
             string elementtext = source.GetElement(elementname);
             return int.TryParse(elementtext, out int outvalue)

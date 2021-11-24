@@ -23,7 +23,7 @@ using WillowTree.Controls;
 
 namespace WillowTree.Plugins
 {
-    partial class ucAmmo
+    partial class UcAmmo
     {
         /// <summary> 
         /// Required designer variable.
@@ -225,7 +225,7 @@ namespace WillowTree.Plugins
             // ucAmmo
             // 
             this.Controls.Add(this.AmmoTab);
-            this.Name = "ucAmmo";
+            this.Name = "UcAmmo";
             this.Size = new System.Drawing.Size(956, 591);
             this.AmmoTab.ResumeLayout(false);
             this.groupPanel9.ResumeLayout(false);

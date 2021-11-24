@@ -9,7 +9,9 @@ namespace WillowTree.Controls
         public WTOpenFileDialog(string fileExt, string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
+            {
                 fileName = "";
+            }
 
             dialog = new OpenFileDialog
             {

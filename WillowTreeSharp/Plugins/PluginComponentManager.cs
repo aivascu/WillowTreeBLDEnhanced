@@ -107,25 +107,47 @@ namespace WillowTree.Plugins
             pluginEventTable.Add(plugin, eventHandlers);
 
             if (eventHandlers.GameLoading != null)
+            {
                 GameLoading += eventHandlers.GameLoading;
+            }
+
             if (eventHandlers.GameLoaded != null)
+            {
                 GameLoaded += eventHandlers.GameLoaded;
+            }
+
             if (eventHandlers.GameSaving != null)
+            {
                 GameSaving += eventHandlers.GameSaving;
+            }
+
             if (eventHandlers.GameSaved != null)
+            {
                 GameSaved += eventHandlers.GameSaved;
+            }
         }
 
         private void DetachEvents(PluginEvents eventHandlers)
         {
             if (eventHandlers.GameLoading != null)
+            {
                 GameLoading -= eventHandlers.GameLoading;
+            }
+
             if (eventHandlers.GameLoaded != null)
+            {
                 GameLoaded -= eventHandlers.GameLoaded;
+            }
+
             if (eventHandlers.GameSaving != null)
+            {
                 GameSaving -= eventHandlers.GameSaving;
+            }
+
             if (eventHandlers.GameSaved != null)
+            {
                 GameSaved -= eventHandlers.GameSaved;
+            }
         }
 
         public IPlugin GetPlugin(Type pluginType)
@@ -136,7 +158,7 @@ namespace WillowTree.Plugins
         public void UnregisterPlugin(IPlugin plugin)
         {
             // Retrieve the list of event handlers to detach
-            if (pluginEventTable.TryGetValue(plugin, out var eventHandlers) != true)
+            if (!pluginEventTable.TryGetValue(plugin, out var eventHandlers))
             {
                 return;
             }

@@ -394,7 +394,7 @@ namespace WillowTree.Inventory
                 int partrarity = GameData.GetPartRarity(this.Parts[i]);
                 // There are several parts that dont use the part rarity that I found
                 // in the data.  This attempts to detect them and deal with them.
-                if ((partrarity == 50) && (i < 10) && (Parts[i].StartsWith("dlc3") == false))
+                if ((partrarity == 50) && (i < 10) && (!Parts[i].StartsWith("dlc3")))
                 {
                     partrarity = 5;
                 }
@@ -468,8 +468,8 @@ namespace WillowTree.Inventory
             if (usesBigLevel)
             {
                 qualityIndex = 0;
-                uint val = (uint)(ushort)(short)values[1];
-                levelIndex = (int)((uint)(ushort)(short)values[3] * (uint)65536 + (uint)(ushort)(short)values[1]);
+                uint val = (ushort)(short)values[1];
+                levelIndex = (int)((ushort)(short)values[3] * (uint)65536 + (ushort)(short)values[1]);
             }
             else
             {
@@ -504,9 +504,9 @@ namespace WillowTree.Inventory
             {
                 return new List<int>() {
                     quantity,
-                    (short)((uint)levelIndex % (uint)65536),
+                    (short)((uint)levelIndex % 65536),
                     equippedSlot,
-                    (short)((uint)levelIndex / (uint)65536),
+                    (short)((uint)levelIndex / 65536),
                     isJunk,
                     isLocked
                 };

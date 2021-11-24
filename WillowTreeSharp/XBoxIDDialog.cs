@@ -65,7 +65,9 @@ namespace WillowTree
                 this.DialogResult = DialogResult.OK;
             }
             else
+            {
                 MessageBox.Show("Please select a valid Xbox 360 save to use first.");
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)

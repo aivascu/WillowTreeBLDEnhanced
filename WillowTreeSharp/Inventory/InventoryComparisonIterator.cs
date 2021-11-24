@@ -14,14 +14,18 @@
         {
             ComparerIndex++;
             if (ComparerIndex >= Comparers.Length)
+            {
                 ComparerIndex = 0;
+            }
         }
 
         public void PreviousComparer()
         {
             ComparerIndex++;
             if (ComparerIndex >= Comparers.Length)
+            {
                 ComparerIndex = 0;
+            }
         }
 
         public InventoryComparer CurrentComparer()

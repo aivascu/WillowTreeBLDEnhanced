@@ -65,8 +65,10 @@ namespace WillowTree.Inventory
 
         public void Duplicate(InventoryEntry entry)
         {
-            InventoryEntry copy = new InventoryEntry(entry);
-            copy.Key = GameData.CreateUniqueKey();
+            InventoryEntry copy = new InventoryEntry(entry)
+            {
+                Key = GameData.CreateUniqueKey()
+            };
             Items.Add(copy.Key, copy);
             OnEntryAdd(copy);
         }
@@ -74,31 +76,41 @@ namespace WillowTree.Inventory
         public void OnEntryAdd(InventoryEntry entry)
         {
             if (EntryAdd != null)
+            {
                 EntryAdd(this, entry);
+            }
         }
 
         public void OnEntryRemoveNode(TreeNodeAdv node)
         {
             if (EntryRemoveNode != null)
+            {
                 EntryRemoveNode(this, node);
+            }
         }
 
         public void OnListReload()
         {
             if (ListReload != null)
+            {
                 ListReload(this);
+            }
         }
 
         public void OnNameFormatChanged()
         {
             if (NameFormatChanged != null)
+            {
                 NameFormatChanged(this);
+            }
         }
 
         public void OnTreeThemeChanged(TreeViewTheme theme)
         {
             if (TreeThemeChanged != null)
+            {
                 TreeThemeChanged(this, theme);
+            }
         }
 
         public void Remove(TreeNodeAdv node)

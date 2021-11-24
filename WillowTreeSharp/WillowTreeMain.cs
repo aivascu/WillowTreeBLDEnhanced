@@ -63,12 +63,12 @@ namespace WillowTree
             SaveAs.Enabled = false;
             SelectFormat.Enabled = false;
 
-            CreatePluginAsTab("General", new ucGeneral());
+            CreatePluginAsTab("General", new ucGeneral(this.gameData, this.settings));
             CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.settings, xmlCache, this.file));
             CreatePluginAsTab("Items", new ucGears(this.gameData, this.settings, xmlCache, this.file));
-            CreatePluginAsTab("Skills", new ucSkills());
-            CreatePluginAsTab("Quest", new ucQuests());
-            CreatePluginAsTab("Ammo Pools", new ucAmmo());
+            CreatePluginAsTab("Skills", new UcSkills(this.gameData));
+            CreatePluginAsTab("Quest", new UcQuests());
+            CreatePluginAsTab("Ammo Pools", new UcAmmo());
             CreatePluginAsTab("Echo Logs", new ucEchoes());
             CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings, xmlCache, this.file));
             CreatePluginAsTab("Locker", new ucLocker());
@@ -232,7 +232,10 @@ namespace WillowTree
             string fileName = (currentWsg != null) ? currentWsg.OpenedWsg : "";
 
             WTOpenFileDialog openDlg = new WTOpenFileDialog("sav", fileName);
-            if (openDlg.ShowDialog() != DialogResult.OK) return;
+            if (openDlg.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
 
             fileName = openDlg.FileName();
 
@@ -426,7 +429,10 @@ namespace WillowTree
         {
             WTSaveFileDialog tempSave = new WTSaveFileDialog("sav", currentWsg.OpenedWsg);
 
-            if (tempSave.ShowDialog() != DialogResult.OK) return;
+            if (tempSave.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
 
             SaveToFile(tempSave.FileName());
             MessageBox.Show($"Saved WSG to: {currentWsg.OpenedWsg}");
@@ -574,7 +580,7 @@ namespace WillowTree
                 }
 
                 currentWsg.ProfileId = dlgXBoxId.ID.ProfileID;
-                int deviceIdLength = dlgXBoxId.ID.DeviceID.Count();
+                int deviceIdLength = dlgXBoxId.ID.DeviceID.Length;
                 currentWsg.DeviceId = new byte[deviceIdLength];
                 Array.Copy(dlgXBoxId.ID.DeviceID, currentWsg.DeviceId, deviceIdLength);
             }
@@ -610,7 +616,7 @@ namespace WillowTree
                 }
 
                 currentWsg.ProfileId = dlgXBoxId.ID.ProfileID;
-                int deviceIdLength = dlgXBoxId.ID.DeviceID.Count();
+                int deviceIdLength = dlgXBoxId.ID.DeviceID.Length;
                 currentWsg.DeviceId = new byte[deviceIdLength];
                 Array.Copy(dlgXBoxId.ID.DeviceID, currentWsg.DeviceId, deviceIdLength);
             }

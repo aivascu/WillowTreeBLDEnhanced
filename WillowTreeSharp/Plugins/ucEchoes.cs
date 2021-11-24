@@ -41,13 +41,15 @@ namespace WillowTree.Plugins
 
         public void InitializePlugin(PluginComponentManager pm)
         {
-            PluginEvents events = new PluginEvents();
-            events.GameLoaded = OnGameLoaded;
+            PluginEvents events = new PluginEvents
+            {
+                GameLoaded = OnGameLoaded
+            };
             pm.RegisterPlugin(this, events);
 
             EchoesXml = GameData.EchoesXml;
             DoEchoList();
-            this.Enabled = false;
+            Enabled = false;
         }
 
         public void ReleasePlugin()
@@ -60,7 +62,7 @@ namespace WillowTree.Plugins
         {
             CurrentWSG = e.WillowTreeMain.SaveData;
             DoEchoTree();
-            this.Enabled = true;
+            Enabled = true;
         }
 
         public void DoEchoList()
@@ -69,9 +71,13 @@ namespace WillowTree.Plugins
             {
                 string name = EchoesXml.XmlReadValue(section, "Subject");
                 if (name != "")
+                {
                     EchoList.Items.Add(name);
+                }
                 else
+                {
                     EchoList.Items.Add(section);
+                }
             }
         }
 
@@ -86,9 +92,11 @@ namespace WillowTree.Plugins
                 // Category nodes
                 //      Text = human readable category heading
                 //      Tag = echo list index stored as a string (0 based)
-                ColoredTextNode parent = new ColoredTextNode();
-                parent.Tag = i.ToString();
-                parent.Text = "Playthrough " + (CurrentWSG.EchoLists[i].Index + 1) + " Echo Logs";
+                ColoredTextNode parent = new ColoredTextNode
+                {
+                    Tag = i.ToString(),
+                    Text = $"Playthrough {(CurrentWSG.EchoLists[i].Index + 1)} Echo Logs"
+                };
                 model.Nodes.Add(parent);
 
                 for (int build = 0; build < CurrentWSG.EchoLists[i].TotalEchoes; build++)
@@ -98,11 +106,16 @@ namespace WillowTree.Plugins
                     // Echo nodes
                     //      Text = human readable echo name
                     //      Tag = internal echo name
-                    ColoredTextNode node = new ColoredTextNode();
-                    node.Tag = name;
-                    node.Text = EchoesXml.XmlReadValue(name, "Subject");
+                    ColoredTextNode node = new ColoredTextNode
+                    {
+                        Tag = name,
+                        Text = EchoesXml.XmlReadValue(name, "Subject")
+                    };
                     if (node.Text == "")
-                        node.Text = "(" + name + ")";
+                    {
+                        node.Text = $"({name})";
+                    }
+
                     parent.Nodes.Add(node);
                 }
             }
@@ -123,7 +136,9 @@ namespace WillowTree.Plugins
 
             TreeNodeAdv[] children = EchoTree.Root.Children[index].Children.ToArray();
             foreach (TreeNodeAdv child in children)
+            {
                 child.Remove();
+            }
         }
         private int GetSelectedEchoList()
         {
@@ -134,14 +149,18 @@ namespace WillowTree.Plugins
                 // Do nothing, fall through to the feedback message below
             }
             else if (EchoTree.SelectedNode.Parent != EchoTree.Root)
+            {
                 index = Parse.AsInt(EchoTree.SelectedNode.Parent.GetKey(), -1);
+            }
             else
             {
                 // This is a category node not an echo.  If there is exactly one
                 // selected then choose it as the location for import, otherwise 
                 // do nothing and let the feedback message below take effect.
                 if (EchoTree.SelectedNodes.Count == 1)
+                {
                     index = Parse.AsInt(EchoTree.SelectedNode.GetKey());
+                }
             }
             return index;
         }
@@ -151,7 +170,9 @@ namespace WillowTree.Plugins
             doc.Load(filename);
 
             if (doc.SelectSingleNode("WT/Echoes") == null)
+            {
                 throw new ApplicationException("NoEchoes");
+            }
 
             XmlNodeList echonodes = doc.SelectNodes("WT/Echoes/Echo");
 
@@ -178,11 +199,16 @@ namespace WillowTree.Plugins
                 et.TotalEchoes++;
 
                 // Add the echo to the tree view
-                ColoredTextNode treeNode = new ColoredTextNode();
-                treeNode.Tag = name;
-                treeNode.Text = EchoesXml.XmlReadValue(name, "Subject");
+                ColoredTextNode treeNode = new ColoredTextNode
+                {
+                    Tag = name,
+                    Text = EchoesXml.XmlReadValue(name, "Subject")
+                };
                 if (treeNode.Text == "")
-                    treeNode.Text = "(" + name + ")";
+                {
+                    treeNode.Text = $"({name})";
+                }
+
                 EchoTree.Root.Children[index].AddNode(treeNode);
             }
 
@@ -194,7 +220,9 @@ namespace WillowTree.Plugins
             OtherSave.LoadWsg(filename);
 
             if (OtherSave.NumberOfEchoLists - 1 < index)
+            {
                 return;
+            }
 
             WillowSaveGame.EchoTable etOther = OtherSave.EchoLists[index];
             WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
@@ -209,18 +237,25 @@ namespace WillowTree.Plugins
                 // Make sure the echo is not already in the list
                 EchoSearchKey = name;
                 if (et.Echoes.FindIndex(EchoSearchByName) != -1)
+                {
                     continue;
+                }
 
                 // Add the echo entry to the echo list
                 et.Echoes.Add(ee);
                 et.TotalEchoes++;
 
                 // Add the echo to the tree view
-                ColoredTextNode treeNode = new ColoredTextNode();
-                treeNode.Tag = name;
-                treeNode.Text = EchoesXml.XmlReadValue(name, "Subject");
+                ColoredTextNode treeNode = new ColoredTextNode
+                {
+                    Tag = name,
+                    Text = EchoesXml.XmlReadValue(name, "Subject")
+                };
                 if (treeNode.Text == "")
-                    treeNode.Text = "(" + name + ")";
+                {
+                    treeNode.Text = $"({name})";
+                }
+
                 EchoTree.Root.Children[index].AddNode(treeNode);
             }
             EchoTree.EndUpdate();
@@ -231,11 +266,15 @@ namespace WillowTree.Plugins
             doc.Load(filename);
 
             if (doc.SelectSingleNode("WT/Echoes") == null)
+            {
                 throw new ApplicationException("NoEchoes");
+            }
 
             XmlNodeList echonodes = doc.SelectNodes("WT/Echoes/Echo");
             if (echonodes == null)
+            {
                 return;
+            }
 
             WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
 
@@ -249,24 +288,33 @@ namespace WillowTree.Plugins
                 // Make sure the echo is not already in the list
                 EchoSearchKey = name;
                 if (et.Echoes.FindIndex(EchoSearchByName) != -1)
+                {
                     continue;
+                }
 
                 // Create a new echo entry an populate it from the node
-                WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry();
-                ee.Name = name;
-                ee.DlcValue1 = node.GetElementAsInt("DLCValue1", 0);
-                ee.DlcValue2 = node.GetElementAsInt("DLCValue2", 0);
+                WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry
+                {
+                    Name = name,
+                    DlcValue1 = node.GetElementAsInt("DLCValue1", 0),
+                    DlcValue2 = node.GetElementAsInt("DLCValue2", 0)
+                };
 
                 // Add the echo entry to the echo list
                 et.Echoes.Add(ee);
                 et.TotalEchoes++;
 
                 // Add the echo to the tree view
-                ColoredTextNode treeNode = new ColoredTextNode();
-                treeNode.Tag = name;
-                treeNode.Text = EchoesXml.XmlReadValue(name, "Subject");
+                ColoredTextNode treeNode = new ColoredTextNode
+                {
+                    Tag = name,
+                    Text = EchoesXml.XmlReadValue(name, "Subject")
+                };
                 if (treeNode.Text == "")
-                    treeNode.Text = "(" + name + ")";
+                {
+                    treeNode.Text = $"({name})";
+                }
+
                 EchoTree.Root.Children[index].AddNode(treeNode);
             }
             EchoTree.EndUpdate();
@@ -306,10 +354,14 @@ namespace WillowTree.Plugins
             // He can choose exactly one category node or he can choose multiple
             // echo nodes.  Figure out which and create an array of the nodes.
             if (EchoTree.SelectedNode.Parent == EchoTree.Root && EchoTree.SelectedNodes.Count == 1)
+            {
                 selected = EchoTree.Root.Children[index].Children.ToArray();
+            }
             else
+            {
                 selected = EchoTree.SelectedNodes.ToArray();
-            
+            }
+
             XmlTextWriter writer = new XmlTextWriter(filename, System.Text.Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             writer.Indentation = 2;
@@ -328,7 +380,9 @@ namespace WillowTree.Plugins
 
                 int i = et.Echoes.FindIndex(EchoSearchByName);
                 if (i == -1)
+                {
                     continue;
+                }
 
                 WillowSaveGame.EchoEntry ee = et.Echoes[i];
                 writer.WriteStartElement("Echo");
@@ -347,10 +401,12 @@ namespace WillowTree.Plugins
             int index = CurrentWSG.NumberOfEchoLists;
 
             // Create an empty echo table
-            WillowSaveGame.EchoTable et = new WillowSaveGame.EchoTable();
-            et.Index = CurrentWSG.NumberOfEchoLists;
-            et.Echoes = new List<WillowSaveGame.EchoEntry>();
-            et.TotalEchoes = 0;
+            WillowSaveGame.EchoTable et = new WillowSaveGame.EchoTable
+            {
+                Index = CurrentWSG.NumberOfEchoLists,
+                Echoes = new List<WillowSaveGame.EchoEntry>(),
+                TotalEchoes = 0
+            };
 
             // Add the new table to the list
             CurrentWSG.EchoLists.Add(et);
@@ -359,9 +415,11 @@ namespace WillowTree.Plugins
             EchoTree.BeginUpdate();
 
             //Add the new table to the tree view
-            ColoredTextNode categoryNode = new ColoredTextNode();
-            categoryNode.Tag = index.ToString();
-            categoryNode.Text = "Playthrough " + (CurrentWSG.EchoLists[index].Index + 1) + " Echo Logs";
+            ColoredTextNode categoryNode = new ColoredTextNode
+            {
+                Tag = index.ToString(),
+                Text = $"Playthrough {(CurrentWSG.EchoLists[index].Index + 1)} Echo Logs"
+            };
             (EchoTree.Model as TreeModel).Nodes.Add(categoryNode);
 
             EchoTree.EndUpdate();
@@ -417,18 +475,25 @@ namespace WillowTree.Plugins
                 // Remove the old entries from the tree view
                 TreeNodeAdv[] children = parent.Children.ToArray();
                 foreach (TreeNodeAdv child in children)
+                {
                     child.Remove();
+                }
 
                 // Add the new entries to the tree view
                 foreach (WillowSaveGame.EchoEntry ee in et.Echoes)
                 {
                     string name = ee.Name;
 
-                    ColoredTextNode node = new ColoredTextNode();
-                    node.Tag = name;
-                    node.Text = EchoesXml.XmlReadValue(name, "Subject");
+                    ColoredTextNode node = new ColoredTextNode
+                    {
+                        Tag = name,
+                        Text = EchoesXml.XmlReadValue(name, "Subject")
+                    };
                     if (node.Text == "")
-                        node.Text = "(" + name + ")";
+                    {
+                        node.Text = $"({name})";
+                    }
+
                     parent.AddNode(node);
                 }
                 EchoTree.EndUpdate();                
@@ -440,7 +505,9 @@ namespace WillowTree.Plugins
             // Get out if no node is selected
             int index = GetSelectedEchoList();
             if (index == -1 || EchoTree.SelectedNode.Parent == EchoTree.Root)
+            {
                 return;
+            }
 
             TreeNodeAdv NextSelection = null;
 
@@ -469,7 +536,9 @@ namespace WillowTree.Plugins
 
             // Select a new selected node if the selected node was removed
             if (EchoTree.SelectedNode == null)
+            {
                 EchoTree.SelectedNode = NextSelection;
+            }
         }
 
         private void EchoList_Click(object sender, EventArgs e)
@@ -477,7 +546,9 @@ namespace WillowTree.Plugins
             newToolStripMenuItem1.HideDropDown();
 
             if (EchoList.SelectedIndex == -1)
+            {
                 return;
+            }
 
             int index = GetSelectedEchoList();
             if (index == -1)
@@ -489,13 +560,15 @@ namespace WillowTree.Plugins
             string name = EchoesXml.StListSectionNames()[EchoList.SelectedIndex];
 
             // Create a new echo entry and populate it
-            WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry();
-            ee.Name = name;
-            // TODO: These values shouldn't always be zero, but the data doesn't
-            // exist in the data files yet.  When the proper data is in the data
-            // file then it needs to be looked up here.
-            ee.DlcValue1 = 0;
-            ee.DlcValue2 = 0;
+            WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry
+            {
+                Name = name,
+                // file then it needs to be looked up here.
+                // exist in the data files yet.  When the proper data is in the data
+                // TODO: These values shouldn't always be zero, but the data doesn't
+                DlcValue1 = 0,
+                DlcValue2 = 0
+            };
 
             // Add the new echo to the echo list
             WillowSaveGame.EchoTable et = CurrentWSG.EchoLists[index];
@@ -503,11 +576,16 @@ namespace WillowTree.Plugins
             et.TotalEchoes++;
 
             // Add the new echo to the echo tree view
-            ColoredTextNode treeNode = new ColoredTextNode();
-            treeNode.Tag = name;
-            treeNode.Text = EchoesXml.XmlReadValue(name, "Subject");
+            ColoredTextNode treeNode = new ColoredTextNode
+            {
+                Tag = name,
+                Text = EchoesXml.XmlReadValue(name, "Subject")
+            };
             if (treeNode.Text == "")
-                treeNode.Text = "(" + treeNode.Tag as string + ")";
+            {
+                treeNode.Text = $"{$"({treeNode.Tag}"})";
+            }
+
             TreeNodeAdv parent = EchoTree.Root.Children[index];
             parent.AddNode(treeNode);
 
@@ -527,7 +605,8 @@ namespace WillowTree.Plugins
 
             try
             {
-                WTSaveFileDialog tempExport = new WTSaveFileDialog("echologs", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".echologs");
+                WTSaveFileDialog tempExport = new WTSaveFileDialog("echologs",
+                    $"{CurrentWSG.CharacterName}.PT{(index + 1)}.echologs");
 
                 if (tempExport.ShowDialog() == DialogResult.OK)
                 {
@@ -536,7 +615,7 @@ namespace WillowTree.Plugins
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Export failed:\r\n" + ex.ToString());
+                MessageBox.Show($"Export failed:\r\n{ex}");
             }
         }
 
@@ -549,20 +628,23 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WTSaveFileDialog tempSave = new WTSaveFileDialog("echologs", CurrentWSG.CharacterName + ".PT" + (index + 1) + ".echologs");
+            WTSaveFileDialog tempSave = new WTSaveFileDialog("echologs",
+                $"{CurrentWSG.CharacterName}.PT{(index + 1)}.echologs");
 
             try
             {
                 if (tempSave.ShowDialog() == DialogResult.OK)
+                {
                     SaveSelectedToXmlEchoes(tempSave.FileName(), index);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error occurred while trying to save locations: " + ex.ToString());
+                MessageBox.Show($"Error occurred while trying to save locations: {ex}");
                 return;
             }
 
-            MessageBox.Show("Echoes saved to " + tempSave.FileName());
+            MessageBox.Show($"Echoes saved to {tempSave.FileName()}");
         }
 
         private void ImportEchoes_Click(object sender, EventArgs e)
@@ -585,11 +667,13 @@ namespace WillowTree.Plugins
                 catch (ApplicationException ex)
                 {
                     if (ex.Message == "NoEchoes")
+                    {
                         MessageBox.Show("Couldn't find an echoes section in the file.  Action aborted.");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error occurred while trying to load: " + ex.ToString());
+                    MessageBox.Show($"Error occurred while trying to load: {ex}");
                 }
             }
         }
@@ -598,7 +682,9 @@ namespace WillowTree.Plugins
         {
             int index = GetSelectedEchoList();
             if (index == -1 || EchoTree.SelectedNode.Parent == EchoTree.Root)
+            {
                 return;
+            }
 
             CurrentWSG.EchoLists[index].Echoes[EchoTree.SelectedNode.Index].DlcValue1 = (int)EchoDLCValue1.Value;
         }
@@ -607,7 +693,9 @@ namespace WillowTree.Plugins
         {
             int index = GetSelectedEchoList();
             if (index == -1 || EchoTree.SelectedNode.Parent == EchoTree.Root)
+            {
                 return;
+            }
 
             CurrentWSG.EchoLists[index].Echoes[EchoTree.SelectedNode.Index].DlcValue2 = (int)EchoDLCValue2.Value;
         }
@@ -640,7 +728,9 @@ namespace WillowTree.Plugins
         private void EchoTree_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
+            {
                 DeleteEcho_Click(this, EventArgs.Empty);
+            }
         }
 
         private void MergeAllFromFileEchoes_Click(object sender, EventArgs e)
@@ -663,7 +753,9 @@ namespace WillowTree.Plugins
                 catch (ApplicationException ex)
                 {
                     if (ex.Message == "NoEchoes")
+                    {
                         MessageBox.Show("Couldn't find a location section in the file.  Action aborted.");
+                    }
                 }
                 catch { MessageBox.Show("Couldn't load the file.  Action aborted."); }
             }
@@ -713,7 +805,7 @@ namespace WillowTree.Plugins
 
                 // Adjust the category node's text and tag to reflect its new position
                 ColoredTextNode parent = nodeAdv.Data();
-                parent.Text = "Playthrough " + (index + 1) + " Echo Logs";
+                parent.Text = $"Playthrough {(index + 1)} Echo Logs";
                 parent.Tag = index.ToString();
 
                 // Adjust the echo list index to reflect its new position 
@@ -726,14 +818,18 @@ namespace WillowTree.Plugins
         {
             int index = GetSelectedEchoList();
             if (index == -1 || EchoTree.SelectedNode.Parent == EchoTree.Root)
+            {
                 return;
+            }
 
             string name = EchoString.Text;
             CurrentWSG.EchoLists[index].Echoes[EchoTree.SelectedNode.Index].Name = name;
 
             string text = EchoesXml.XmlReadValue(name, "Subject");
             if (text == "")
-                text = "(" + name + ")";
+            {
+                text = $"({name})";
+            }
 
             EchoTree.SelectedNode.SetKey(name);
             EchoTree.SelectedNode.SetText(text);

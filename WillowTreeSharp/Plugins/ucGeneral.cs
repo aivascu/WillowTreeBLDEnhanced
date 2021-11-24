@@ -1,27 +1,7 @@
-﻿/*  This file is part of WillowTree#
- * 
- *  Copyright (C) 2011 Matthew Carter <matt911@users.sf.net>
- *  Copyright (C) 2010, 2011 XanderChaos
- *  Copyright (C) 2011 Thomas Kaiser
- *  Copyright (C) 2010 JackSchitt
- * 
- *  WillowTree# is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  WillowTree# is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
- */
-using Aga.Controls.Tree;
+﻿using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using WillowTree.Controls;
@@ -31,23 +11,36 @@ namespace WillowTree.Plugins
 {
     public partial class ucGeneral : UserControl, IPlugin
     {
-        private WillowSaveGame CurrentWSG;
-        private XmlFile LocationsXml;
+        private WillowSaveGame currentWsg;
+        private XmlFile locationsXml;
 
-        public ucGeneral()
+        public ucGeneral(IGameData gameData, IGlobalSettings globalSettings)
         {
             InitializeComponent();
+            GameData = gameData;
+            GlobalSettings = globalSettings;
         }
 
-        public void InitializePlugin(PluginComponentManager pm)
-        {
-            PluginEvents events = new PluginEvents();
-            events.GameLoaded = OnGameLoaded;
-            events.GameSaving = OnGameSaving;
-            pm.RegisterPlugin(this, events);
+        public IGameData GameData { get; }
+        public IGlobalSettings GlobalSettings { get; }
 
-            this.Enabled = false;
-            LocationsXml = GameData.LocationsXml;
+        public void DoWindowTitle()
+        {
+            ParentForm.Text =
+                $"WillowTree# - {CharacterName.Text}  Level {Level.Value} {Class.Text} ({currentWsg.Platform})";
+        }
+
+        public void InitializePlugin(PluginComponentManager pluginManager)
+        {
+            PluginEvents events = new PluginEvents
+            {
+                GameLoaded = OnGameLoaded,
+                GameSaving = OnGameSaving
+            };
+            pluginManager.RegisterPlugin(this, events);
+
+            Enabled = false;
+            locationsXml = GameData.LocationsXml;
             GameData.SetXPchart();
             DoLocationsList();
             Cash.Maximum = GlobalSettings.MaxCash;
@@ -60,326 +53,8 @@ namespace WillowTree.Plugins
 
         public void ReleasePlugin()
         {
-            CurrentWSG = null;
-            LocationsXml = null;
-        }
-
-        public void OnGameLoaded(object sender, PluginEventArgs e)
-        {
-            // Warning: Setting numeric up/down controls to values that are outside their min/max
-            // range will cause an exception and crash the program.  It is safest to use
-            // Util.SetNumericUpDown() to set them since it will adjust the value to a valid value
-            // if it is too high or low.
-            CurrentWSG = e.WillowTreeMain.SaveData;
-
-            CharacterName.Text = CurrentWSG.CharacterName;
-            Level.Value = CurrentWSG.Level;
-            if (Level.Value != CurrentWSG.Level)
-                MessageBox.Show("The character's level was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.Level + "\nNew: " + (int)Level.Value);
-
-            Experience.Value = CurrentWSG.Experience;
-            if (Experience.Value != CurrentWSG.Experience)
-                MessageBox.Show("The character's experience was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.Experience + "\nNew: " + (int)Experience.Value);
-
-            SkillPoints.Value = CurrentWSG.SkillPoints;
-            if (SkillPoints.Value != CurrentWSG.SkillPoints)
-                MessageBox.Show("The character's skill point count was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.SkillPoints + "\nNew: " + (int)SkillPoints.Value);
-
-            if (CurrentWSG.FinishedPlaythrough1 == 0)
-                PT2Unlocked.SelectedIndex = 0;
-            else
-                PT2Unlocked.SelectedIndex = 1;
-
-            // No message when cash is adjusted because it will likely have to be changed on
-            // every load for people who exceed the limit.  The spam would be annoying.
-            if (CurrentWSG.Cash < 0)
-                Cash.Value = int.MaxValue;
-            else
-                Cash.Value = CurrentWSG.Cash;
-          
-            BackpackSpace.Value = CurrentWSG.BackpackSize;
-            if (BackpackSpace.Value != CurrentWSG.BackpackSize)
-                MessageBox.Show("The character's backpack capacity was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.BackpackSize + "\nNew: " + (int)BackpackSpace.Value);
-
-            EquipSlots.Value = CurrentWSG.EquipSlots;
-            SaveNumber.Value = CurrentWSG.SaveNumber;
-
-            UI_UpdateCurrentLocationComboBox(CurrentWSG.CurrentLocation);
-
-            if (CurrentWSG.Class == "gd_Roland.Character.CharacterClass_Roland") Class.SelectedIndex = 0;
-            else if (CurrentWSG.Class == "gd_lilith.Character.CharacterClass_Lilith") Class.SelectedIndex = 1;
-            else if (CurrentWSG.Class == "gd_mordecai.Character.CharacterClass_Mordecai") Class.SelectedIndex = 2;
-            else if (CurrentWSG.Class == "gd_Brick.Character.CharacterClass_Brick") Class.SelectedIndex = 3;
-
-            // If DLC section 1 is not present then the bank does not exist, so disable the
-            // control to prevent the user from editing its size.
-            labelGeneralBankSpace.Enabled = CurrentWSG.Dlc.HasSection1;
-            BankSpace.Enabled = CurrentWSG.Dlc.HasSection1;
-            if (CurrentWSG.Dlc.HasSection1)
-            {
-                BankSpace.Value = CurrentWSG.Dlc.BankSize;
-                if (BankSpace.Value != CurrentWSG.Dlc.BankSize)
-                    MessageBox.Show("The character's bank capacity was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.BackpackSize + "\nNew: " + (int)BackpackSpace.Value);
-            }
-            else
-                BankSpace.Value = 0;
-
-            DoWindowTitle();
-            Application.DoEvents();
-            DoLocationTree();
-            this.Enabled = true;
-        }
-
-        public void OnGameSaving(object sender, PluginEventArgs e)
-        {
-            if (BankSpace.Enabled)
-                CurrentWSG.Dlc.BankSize = (int)BankSpace.Value;
-
-            // TODO: Most of these values that are being set in GameSaving should
-            // be set right away with events when the values change in order to
-            // play nicely with other plugins.  There is the potential for this
-            // plugin to change a value and another plugin may not be aware of the
-            // change because it only gets applied at save time the way it works now.
-            CurrentWSG.CharacterName = CharacterName.Text;
-            CurrentWSG.Level = (int)Level.Value;
-            CurrentWSG.Experience = (int)Experience.Value;
-            CurrentWSG.SkillPoints = (int)SkillPoints.Value;
-            CurrentWSG.FinishedPlaythrough1 = PT2Unlocked.SelectedIndex;
-            CurrentWSG.Cash = (int)Cash.Value;
-            CurrentWSG.BackpackSize = (int)BackpackSpace.Value;
-            CurrentWSG.EquipSlots = (int)EquipSlots.Value;
-            CurrentWSG.SaveNumber = (int)SaveNumber.Value;
-
-            // Try to look up the outpost name from the text that is displayed in the combo box.
-            string loc = LocationsXml.XmlReadAssociatedValue("OutpostName", "OutpostDisplayName", (string)CurrentLocation.SelectedItem);
-    
-            // If the outpost name is not found then this location is not in the data file
-            // so the string stored in CurrentLocation is already the outpost name.
-            if (loc == "")
-                loc = (string)CurrentLocation.SelectedItem;
-
-            CurrentWSG.CurrentLocation = loc;
-        }
-
-        private void UpdateClass()
-        {
-            if (Class.SelectedIndex == 0) CurrentWSG.Class = "gd_Roland.Character.CharacterClass_Roland";
-            else if (Class.SelectedIndex == 1) CurrentWSG.Class = "gd_lilith.Character.CharacterClass_Lilith";
-            else if (Class.SelectedIndex == 2) CurrentWSG.Class = "gd_mordecai.Character.CharacterClass_Mordecai";
-            else if (Class.SelectedIndex == 3) CurrentWSG.Class = "gd_Brick.Character.CharacterClass_Brick";
-        }
-
-        public void UI_UpdateCurrentLocationComboBox(string locationToSelect)
-        {
-            CurrentLocation.Items.Clear();
-            CurrentLocation.Items.Add("None");
-
-            // See if the selected location can be found in the WT# data file.
-            string loc = LocationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", locationToSelect);
-            if (loc == "")
-            {
-                // Not in the data file, so an entry must be added or the combo
-                // box won't even be able to display the selected location.
-                if (locationToSelect != "None")
-                    CurrentLocation.Items.Add(locationToSelect);
-                loc = locationToSelect;
-            }
-     
-            // Add all the location entries that were in the WT# location file
-            foreach (string location in LocationsList.Items)
-                CurrentLocation.Items.Add(location);
-
-            CurrentLocation.SelectedItem = loc;
-        }
-
-        public void DoLocationsList()
-        {
-            LocationsList.Items.Clear();
-
-            foreach (string section in LocationsXml.StListSectionNames())
-            {
-                string outpostname = LocationsXml.XmlReadValue(section, "OutpostDisplayName");
-                if (outpostname == "")
-                    outpostname = LocationsXml.XmlReadValue(section, "OutpostName");
-                LocationsList.Items.Add(outpostname);
-            }
-        }
-
-        public void DoLocationTree()
-        {
-            // Clear the tree
-            TreeModel model = new TreeModel();
-            LocationTree.Model = model;
-
-            LocationTree.BeginUpdate();
-            for (int build = 0; build < CurrentWSG.TotalLocations; build++)
-            {
-                string key = CurrentWSG.LocationStrings[build];
-                string name = LocationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", key);
-                if (name == "")
-                    name = key;
-
-                ColoredTextNode node = new ColoredTextNode(name);
-                node.Tag = key;
-
-                model.Nodes.Add(node);
-            }
-            //LocationTree.Update();
-            LocationTree.EndUpdate();
-        }
-
-        public void DoWindowTitle()
-        {
-            this.ParentForm.Text = "WillowTree# - " + CharacterName.Text + "  Level " + Level.Value + " " + Class.Text + " (" + CurrentWSG.Platform + ")";
-        }
-
-        public List<string> ReadFromXmlLocations(string filename)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(filename);
-
-            XmlNodeList locationnodes = doc.SelectNodes("WT/Locations/Location");
-
-            if (locationnodes == null)
-            {
-                // Give an exception if there is no location section
-                if (doc.SelectSingleNode("WT/Locations") == null)
-                    throw new ApplicationException("NoLocations");
-                // or an empty list if there was a location section but it has no location entries
-                return new List<string>();
-            }
-
-            List<string> locations = new List<string>();
-            foreach (string location in locationnodes)
-                locations.Add(location);
-
-            return locations;
-        }
-        public List<string> ReadFromSaveLocations(string filename)
-        {
-            WillowSaveGame OtherSave = new WillowSaveGame();
-
-            try
-            {
-                OtherSave.LoadWsg(filename);
-            }
-            catch { throw new ApplicationException("LoadFailed"); }
-
-            List<string> locations = new List<string>(OtherSave.LocationStrings);
-            return locations;
-        }
-
-        private void DeleteAllLocations()
-        {
-            CurrentWSG.TotalLocations = 0;
-            CurrentWSG.LocationStrings = new string[0];
-            DoLocationTree();
-        }
-        public void MergeFromSaveLocations(string filename)
-        {
-            WillowSaveGame OtherSave = new WillowSaveGame();
-            OtherSave.LoadWsg(filename);
-
-            if (OtherSave.LocationStrings.Count() == 0)
-                return;
-
-            // Construct a list structure with the current locations
-            List<string> locations = new List<string>(CurrentWSG.LocationStrings);
-
-            // Copy only the locations that are not duplicates from the other save
-            foreach (string location in OtherSave.LocationStrings)
-            {
-                if (locations.Contains(location) == false)
-                    locations.Add(location);
-            }
-
-            // Update WSG data from the newly constructed list
-            CurrentWSG.LocationStrings = locations.ToArray();
-            CurrentWSG.TotalLocations = locations.Count();
-            DoLocationTree();
-        }
-        public void MergeAllFromXmlLocations(string filename)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(filename);
-
-            if (doc.SelectSingleNode("WT/Locations") == null)
-                throw new ApplicationException("NoLocations");
-
-            XmlNodeList locationnodes = doc.SelectNodes("WT/Locations/Location");
-            if (locationnodes == null)
-                return;
-
-            // Construct a list structure with the current locations
-            List<string> locations = new List<string>(CurrentWSG.LocationStrings);
-
-            // Copy only the locations that are not duplicates from the XML file
-            foreach (XmlNode node in locationnodes)
-            {
-                string location = node.InnerText;
-                if (locations.Contains(location) == false)
-                    locations.Add(node.InnerText);
-            }
-
-            // Update WSG data from the newly constructed list
-            CurrentWSG.LocationStrings = locations.ToArray();
-            CurrentWSG.TotalLocations = locations.Count();
-            DoLocationTree();
-        }
-        public void LoadLocations(string filename)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(filename);
-
-            if (doc.SelectSingleNode("WT/Locations") == null)
-                throw new ApplicationException("NoLocations");
-
-            XmlNodeList locationnodes = doc.SelectNodes("WT/Locations/Location");
-
-            int locationcount = locationnodes.Count;
-            string[] location = new string[locationcount];
-            for (int i = 0; i < locationcount; i++)
-                location[i] = locationnodes[i].InnerText;
-
-            CurrentWSG.LocationStrings = location;
-            CurrentWSG.TotalLocations = locationcount;
-            DoLocationTree();
-        }
-        private void SaveToXmlLocations(string filename)
-        {
-            XmlTextWriter writer = new XmlTextWriter(filename, System.Text.Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            writer.Indentation = 2;
-            writer.WriteStartDocument();
-            writer.WriteComment("WillowTree Location File");
-            writer.WriteComment("Note: the XML tags are case sensitive");
-            writer.WriteStartElement("WT");
-            writer.WriteStartElement("Locations");
-            for (int i = 0; i < CurrentWSG.TotalLocations; i++)
-                writer.WriteElementString("Location", CurrentWSG.LocationStrings[i]);
-            writer.WriteEndDocument();
-            writer.Close();
-        }
-        private void SaveSelectedToXmlLocations(string filename)
-        {
-            XmlTextWriter writer = new XmlTextWriter(filename, System.Text.Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            writer.Indentation = 2;
-            writer.WriteStartDocument();
-            writer.WriteComment("WillowTree Location File");
-            writer.WriteComment("Note: the XML tags are case sensitive");
-            writer.WriteStartElement("WT");
-            writer.WriteStartElement("Locations");
-
-            foreach (TreeNodeAdv nodeAdv in LocationTree.SelectedNodes)
-            {
-                string name = nodeAdv.GetKey();
-                if (!string.IsNullOrEmpty(name))
-                    writer.WriteElementString("Location", name);
-            }
-   
-            writer.WriteEndDocument();
-            writer.Close();
+            currentWsg = null;
+            locationsXml = null;
         }
 
         private void CharacterName_TextChanged(object sender, EventArgs e)
@@ -393,6 +68,13 @@ namespace WillowTree.Plugins
             DoWindowTitle();
         }
 
+        private void DeleteAllLocations()
+        {
+            currentWsg.TotalLocations = 0;
+            currentWsg.LocationStrings = Array.Empty<string>();
+            DoLocationTree();
+        }
+
         private void DeleteAllLocations_Click(object sender, EventArgs e)
         {
             DeleteAllLocations();
@@ -400,25 +82,67 @@ namespace WillowTree.Plugins
 
         private void DeleteLocation_Click(object sender, EventArgs e)
         {
-            TreeNodeAdv NextSelection = null;
+            TreeNodeAdv nextSelection = null;
             while (LocationTree.SelectedNode != null)
             {
-                int Selected = LocationTree.SelectedNode.Index;
+                int selected = LocationTree.SelectedNode.Index;
 
-                CurrentWSG.TotalLocations = CurrentWSG.TotalLocations - 1;
-                for (int Position = Selected; Position < CurrentWSG.TotalLocations; Position++)
+                currentWsg.TotalLocations--;
+                for (int position = selected; position < currentWsg.TotalLocations; position++)
                 {
-                    CurrentWSG.LocationStrings[Position] = CurrentWSG.LocationStrings[Position + 1];
+                    currentWsg.LocationStrings[position] = currentWsg.LocationStrings[position + 1];
                 }
-                ArrayHelper.ResizeArraySmaller(ref CurrentWSG.LocationStrings, CurrentWSG.TotalLocations);
 
-                NextSelection = LocationTree.SelectedNode.NextVisibleNode;
+                ArrayHelper.ResizeArraySmaller(ref currentWsg.LocationStrings, currentWsg.TotalLocations);
+
+                nextSelection = LocationTree.SelectedNode.NextVisibleNode;
                 LocationTree.SelectedNode.Remove();
             }
-            if (NextSelection != null)
-                LocationTree.SelectedNode = NextSelection;
+
+            if (nextSelection != null)
+            {
+                LocationTree.SelectedNode = nextSelection;
+            }
 
             DoLocationTree();
+        }
+
+        private void DoLocationsList()
+        {
+            LocationsList.Items.Clear();
+
+            foreach (string section in locationsXml.StListSectionNames())
+            {
+                string outpostName = locationsXml.XmlReadValue(section, "OutpostDisplayName");
+                if (outpostName == "")
+                {
+                    outpostName = locationsXml.XmlReadValue(section, "OutpostName");
+                }
+
+                LocationsList.Items.Add(outpostName);
+            }
+        }
+
+        private void DoLocationTree()
+        {
+            // Clear the tree
+            TreeModel model = new TreeModel();
+            LocationTree.Model = model;
+
+            LocationTree.BeginUpdate();
+            for (int build = 0; build < currentWsg.TotalLocations; build++)
+            {
+                string key = currentWsg.LocationStrings[build];
+                string name = locationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", key);
+                if (name?.Length == 0)
+                {
+                    name = key;
+                }
+
+                model.Nodes.Add(new ColoredTextNode(name) { Tag = key });
+            }
+
+            LocationTree.EndUpdate();
         }
 
         private void ExportAllToFileLocations_Click(object sender, EventArgs e)
@@ -429,12 +153,12 @@ namespace WillowTree.Plugins
                 if (tempSave.ShowDialog() == DialogResult.OK)
                 {
                     SaveToXmlLocations(tempSave.FileName());
-                    MessageBox.Show("Locations saved to " + tempSave.FileName());
+                    MessageBox.Show($"Locations saved to {tempSave.FileName()}");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error occurred while trying to save locations: " + ex.ToString());
+                MessageBox.Show($"Error occurred while trying to save locations: {ex.ToString()}");
             }
         }
 
@@ -447,12 +171,12 @@ namespace WillowTree.Plugins
                 if (tempSave.ShowDialog() == DialogResult.OK)
                 {
                     SaveSelectedToXmlLocations(tempSave.FileName());
-                    MessageBox.Show("Locations saved to " + tempSave.FileName());
+                    MessageBox.Show($"Locations saved to {tempSave.FileName()}");
                 }
             }
             catch (Exception ex)
-            { 
-                MessageBox.Show("Error occurred while trying to save locations: " + ex.ToString()); 
+            {
+                MessageBox.Show($"Error occurred while trying to save locations: {ex.ToString()}");
             }
         }
 
@@ -469,12 +193,103 @@ namespace WillowTree.Plugins
                 catch (ApplicationException ex)
                 {
                     if (ex.Message == "NoLocations")
+                    {
                         MessageBox.Show("Couldn't find a location section in the file.  Action aborted.");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error occurred while trying to load: " + ex.ToString());
+                    MessageBox.Show($"Error occurred while trying to load: {ex.ToString()}");
                 }
+            }
+        }
+
+        private void ImportAllFromSaveLocations_Click(object sender, EventArgs e)
+        {
+            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
+
+            if (tempOpen.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            WillowSaveGame otherSave = new WillowSaveGame();
+
+            try
+            {
+                otherSave.LoadWsg(tempOpen.FileName());
+            }
+            catch
+            {
+                MessageBox.Show("Couldn't open the other save file.");
+                return;
+            }
+
+            currentWsg.TotalLocations = otherSave.TotalLocations;
+            currentWsg.LocationStrings = otherSave.LocationStrings;
+            DoLocationTree();
+        }
+
+        private void Level_ValueChanged(object sender, EventArgs e)
+        {
+            if (Level.Value > 0 && Level.Value < 70)
+            {
+                Experience.Minimum = GameData.XPChart[(int)Level.Value];
+            }
+            else
+            {
+                Experience.Minimum = 0;
+            }
+
+            DoWindowTitle();
+        }
+
+        private void LoadLocations(string filename)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(filename);
+
+            if (doc.SelectSingleNode("WT/Locations") == null)
+            {
+                throw new ApplicationException("NoLocations");
+            }
+
+            XmlNodeList locationnodes = doc.SelectNodes("WT/Locations/Location");
+
+            int locationcount = locationnodes.Count;
+            string[] location = new string[locationcount];
+            for (int i = 0; i < locationcount; i++)
+            {
+                location[i] = locationnodes[i].InnerText;
+            }
+
+            currentWsg.LocationStrings = location;
+            currentWsg.TotalLocations = locationcount;
+            DoLocationTree();
+        }
+
+        private void LocationsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int selectedItem = LocationsList.SelectedIndex;
+                currentWsg.TotalLocations++;
+                ArrayHelper.ResizeArrayLarger(ref currentWsg.LocationStrings, currentWsg.TotalLocations);
+                currentWsg.LocationStrings[currentWsg.TotalLocations - 1] =
+                    locationsXml.StListSectionNames()[selectedItem];
+                DoLocationTree();
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+
+        private void LocationTree_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                DeleteLocation_Click(this, EventArgs.Empty);
             }
         }
 
@@ -491,10 +306,78 @@ namespace WillowTree.Plugins
                 catch (ApplicationException ex)
                 {
                     if (ex.Message == "NoLocations")
+                    {
                         MessageBox.Show("Couldn't find a location section in the file.  Action aborted.");
+                    }
                 }
-                catch { MessageBox.Show("Couldn't load the file.  Action aborted."); }
+                catch
+                {
+                    MessageBox.Show("Couldn't load the file.  Action aborted.");
+                }
             }
+        }
+
+        private void MergeAllFromXmlLocations(string filename)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(filename);
+
+            if (doc.SelectSingleNode("WT/Locations") == null)
+            {
+                throw new ApplicationException("NoLocations");
+            }
+
+            XmlNodeList locationNodes = doc.SelectNodes("WT/Locations/Location");
+            if (locationNodes == null)
+            {
+                return;
+            }
+
+            // Construct a list structure with the current locations
+            List<string> locations = new List<string>(currentWsg.LocationStrings);
+
+            // Copy only the locations that are not duplicates from the XML file
+            foreach (XmlNode node in locationNodes)
+            {
+                string location = node.InnerText;
+                if (!locations.Contains(location))
+                {
+                    locations.Add(location);
+                }
+            }
+
+            // Update WSG data from the newly constructed list
+            currentWsg.LocationStrings = locations.ToArray();
+            currentWsg.TotalLocations = locations.Count;
+            DoLocationTree();
+        }
+
+        private void MergeFromSaveLocations(string filename)
+        {
+            WillowSaveGame otherSave = new WillowSaveGame();
+            otherSave.LoadWsg(filename);
+
+            if (otherSave.LocationStrings.Length == 0)
+            {
+                return;
+            }
+
+            // Construct a list structure with the current locations
+            List<string> locations = new List<string>(currentWsg.LocationStrings);
+
+            // Copy only the locations that are not duplicates from the other save
+            foreach (string location in otherSave.LocationStrings)
+            {
+                if (!locations.Contains(location))
+                {
+                    locations.Add(location);
+                }
+            }
+
+            // Update WSG data from the newly constructed list
+            currentWsg.LocationStrings = locations.ToArray();
+            currentWsg.TotalLocations = locations.Count;
+            DoLocationTree();
         }
 
         private void MergeFromSaveLocations_Click(object sender, EventArgs e)
@@ -507,63 +390,240 @@ namespace WillowTree.Plugins
                 {
                     MergeFromSaveLocations(tempOpen.FileName());
                 }
-                catch { MessageBox.Show("Couldn't open the other save file."); return; }
+                catch
+                {
+                    MessageBox.Show("Couldn't open the other save file.");
+                    return;
+                }
 
                 DoLocationTree();
             }
         }
 
-        private void Level_ValueChanged(object sender, EventArgs e)
+        private void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            if (Level.Value > 0 && Level.Value < 70)
-            {
-                Experience.Minimum = GameData.XPChart[(int)Level.Value];
+            // Warning: Setting numeric up/down controls to values that are outside their min/max
+            // range will cause an exception and crash the program.  It is safest to use
+            // Util.SetNumericUpDown() to set them since it will adjust the value to a valid value
+            // if it is too high or low.
+            currentWsg = e.WillowTreeMain.SaveData;
 
+            CharacterName.Text = currentWsg.CharacterName;
+            Level.Value = currentWsg.Level;
+            if (Level.Value != currentWsg.Level)
+            {
+                MessageBox.Show(
+                    $"The character's level was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.Level}\nNew: {(int)Level.Value}");
+            }
+
+            Experience.Value = currentWsg.Experience;
+            if (Experience.Value != currentWsg.Experience)
+            {
+                MessageBox.Show(
+                    $"The character's experience was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.Experience}\nNew: {(int)Experience.Value}");
+            }
+
+            SkillPoints.Value = currentWsg.SkillPoints;
+            if (SkillPoints.Value != currentWsg.SkillPoints)
+            {
+                MessageBox.Show(
+                    $"The character's skill point count was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.SkillPoints}\nNew: {(int)SkillPoints.Value}");
+            }
+
+            PT2Unlocked.SelectedIndex = currentWsg.FinishedPlaythrough1 == 0 ? 0 : 1;
+
+            // No message when cash is adjusted because it will likely have to be changed on
+            // every load for people who exceed the limit.  The spam would be annoying.
+            Cash.Value = currentWsg.Cash < 0 ? int.MaxValue : currentWsg.Cash;
+
+            BackpackSpace.Value = currentWsg.BackpackSize;
+            if (BackpackSpace.Value != currentWsg.BackpackSize)
+            {
+                MessageBox.Show(
+                    $"The character's backpack capacity was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.BackpackSize}\nNew: {(int)BackpackSpace.Value}");
+            }
+
+            EquipSlots.Value = currentWsg.EquipSlots;
+            SaveNumber.Value = currentWsg.SaveNumber;
+
+            UI_UpdateCurrentLocationComboBox(currentWsg.CurrentLocation);
+
+            switch (currentWsg.Class)
+            {
+                case "gd_Roland.Character.CharacterClass_Roland":
+                    Class.SelectedIndex = 0;
+                    break;
+
+                case "gd_lilith.Character.CharacterClass_Lilith":
+                    Class.SelectedIndex = 1;
+                    break;
+
+                case "gd_mordecai.Character.CharacterClass_Mordecai":
+                    Class.SelectedIndex = 2;
+                    break;
+
+                case "gd_Brick.Character.CharacterClass_Brick":
+                    Class.SelectedIndex = 3;
+                    break;
+            }
+
+            // If DLC section 1 is not present then the bank does not exist, so disable the
+            // control to prevent the user from editing its size.
+            labelGeneralBankSpace.Enabled = currentWsg.Dlc.HasSection1;
+            BankSpace.Enabled = currentWsg.Dlc.HasSection1;
+            if (currentWsg.Dlc.HasSection1)
+            {
+                BankSpace.Value = currentWsg.Dlc.BankSize;
+                if (BankSpace.Value != currentWsg.Dlc.BankSize)
+                {
+                    MessageBox.Show(
+                        $"The character's bank capacity was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.BackpackSize}\nNew: {(int)BackpackSpace.Value}");
+                }
             }
             else
             {
-                Experience.Minimum = 0;
+                BankSpace.Value = 0;
             }
+
             DoWindowTitle();
+            Application.DoEvents();
+            DoLocationTree();
+            Enabled = true;
         }
 
-        private void ImportAllFromSaveLocations_Click(object sender, EventArgs e)
+        private void OnGameSaving(object sender, PluginEventArgs e)
         {
-            WTOpenFileDialog tempOpen = new WTOpenFileDialog("sav", "");
-
-            if (tempOpen.ShowDialog() == DialogResult.OK)
+            if (BankSpace.Enabled)
             {
-                WillowSaveGame OtherSave = new WillowSaveGame();
+                currentWsg.Dlc.BankSize = (int)BankSpace.Value;
+            }
 
-                try
+            // TODO: Most of these values that are being set in GameSaving should
+            // be set right away with events when the values change in order to
+            // play nicely with other plugins.  There is the potential for this
+            // plugin to change a value and another plugin may not be aware of the
+            // change because it only gets applied at save time the way it works now.
+            currentWsg.CharacterName = CharacterName.Text;
+            currentWsg.Level = (int)Level.Value;
+            currentWsg.Experience = (int)Experience.Value;
+            currentWsg.SkillPoints = (int)SkillPoints.Value;
+            currentWsg.FinishedPlaythrough1 = PT2Unlocked.SelectedIndex;
+            currentWsg.Cash = (int)Cash.Value;
+            currentWsg.BackpackSize = (int)BackpackSpace.Value;
+            currentWsg.EquipSlots = (int)EquipSlots.Value;
+            currentWsg.SaveNumber = (int)SaveNumber.Value;
+
+            // Try to look up the outpost name from the text that is displayed in the combo box.
+            string currentLocation = locationsXml.XmlReadAssociatedValue(
+                "OutpostName",
+                "OutpostDisplayName",
+                (string)CurrentLocation.SelectedItem);
+
+            // If the outpost name is not found then this location is not in the data file
+            // so the string stored in CurrentLocation is already the outpost name.
+            if (currentLocation == "")
+            {
+                currentLocation = (string)CurrentLocation.SelectedItem;
+            }
+
+            currentWsg.CurrentLocation = currentLocation;
+        }
+
+        private void SaveSelectedToXmlLocations(string filename)
+        {
+            XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8)
+            {
+                Formatting = Formatting.Indented,
+                Indentation = 2
+            };
+            writer.WriteStartDocument();
+            writer.WriteComment("WillowTree Location File");
+            writer.WriteComment("Note: the XML tags are case sensitive");
+            writer.WriteStartElement("WT");
+            writer.WriteStartElement("Locations");
+
+            foreach (TreeNodeAdv nodeAdv in LocationTree.SelectedNodes)
+            {
+                string name = nodeAdv.GetKey();
+                if (!string.IsNullOrEmpty(name))
                 {
-                    OtherSave.LoadWsg(tempOpen.FileName());
+                    writer.WriteElementString("Location", name);
                 }
-                catch { MessageBox.Show("Couldn't open the other save file."); return; }
-
-                CurrentWSG.TotalLocations = OtherSave.TotalLocations;
-                CurrentWSG.LocationStrings = OtherSave.LocationStrings;
-                DoLocationTree();
             }
+
+            writer.WriteEndDocument();
+            writer.Close();
         }
 
-        private void LocationsList_SelectedIndexChanged(object sender, EventArgs e)
+        private void SaveToXmlLocations(string filename)
         {
-            try
+            XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8)
             {
-                int SelectedItem = LocationsList.SelectedIndex;
-                CurrentWSG.TotalLocations = CurrentWSG.TotalLocations + 1;
-                ArrayHelper.ResizeArrayLarger(ref CurrentWSG.LocationStrings, CurrentWSG.TotalLocations);
-                CurrentWSG.LocationStrings[CurrentWSG.TotalLocations - 1] = LocationsXml.StListSectionNames()[SelectedItem];
-                DoLocationTree();
+                Formatting = Formatting.Indented,
+                Indentation = 2
+            };
+            writer.WriteStartDocument();
+            writer.WriteComment("WillowTree Location File");
+            writer.WriteComment("Note: the XML tags are case sensitive");
+            writer.WriteStartElement("WT");
+            writer.WriteStartElement("Locations");
+            for (int i = 0; i < currentWsg.TotalLocations; i++)
+            {
+                writer.WriteElementString("Location", currentWsg.LocationStrings[i]);
             }
-            catch { }
+
+            writer.WriteEndDocument();
+            writer.Close();
         }
 
-        private void LocationTree_KeyDown(object sender, KeyEventArgs e)
+        private void UI_UpdateCurrentLocationComboBox(string locationToSelect)
         {
-            if (e.KeyCode == Keys.Delete)
-                DeleteLocation_Click(this, EventArgs.Empty);
+            CurrentLocation.Items.Clear();
+            CurrentLocation.Items.Add("None");
+
+            // See if the selected location can be found in the WT# data file.
+            string loc = locationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", locationToSelect);
+            if (loc == "")
+            {
+                // Not in the data file, so an entry must be added or the combo
+                // box won't even be able to display the selected location.
+                if (locationToSelect != "None")
+                {
+                    CurrentLocation.Items.Add(locationToSelect);
+                }
+
+                loc = locationToSelect;
+            }
+
+            // Add all the location entries that were in the WT# location file
+            foreach (string location in LocationsList.Items)
+            {
+                CurrentLocation.Items.Add(location);
+            }
+
+            CurrentLocation.SelectedItem = loc;
+        }
+
+        private void UpdateClass()
+        {
+            switch (Class.SelectedIndex)
+            {
+                case 0:
+                    currentWsg.Class = "gd_Roland.Character.CharacterClass_Roland";
+                    break;
+
+                case 1:
+                    currentWsg.Class = "gd_lilith.Character.CharacterClass_Lilith";
+                    break;
+
+                case 2:
+                    currentWsg.Class = "gd_mordecai.Character.CharacterClass_Mordecai";
+                    break;
+
+                case 3:
+                    currentWsg.Class = "gd_Brick.Character.CharacterClass_Brick";
+                    break;
+            }
         }
     }
 }

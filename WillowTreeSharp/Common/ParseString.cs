@@ -30,23 +30,35 @@ namespace WillowTree
         {
             short outvalue;
             if (short.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             throw new FormatException();
         }
         public static short AsShort(string str, short defaultvalue)
         {
             short outvalue;
             if (short.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             return defaultvalue;
         }
         public static short AsShort(string str, ParseShort_ErrorHandler errhandler)
         {
             short outvalue;
             if (short.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             if (errhandler != null)
+            {
                 return errhandler(str);
+            }
+
             return outvalue;
         }
 
@@ -54,23 +66,35 @@ namespace WillowTree
         {
             int outvalue;
             if (int.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             throw new FormatException();
         }
         public static int AsInt(string str, int defaultvalue)
         {
             int outvalue;
             if (int.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             return defaultvalue;
         }
         public static int AsInt(string str, ParseInt_ErrorHandler errhandler)
         {
             int outvalue;
             if (int.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             if (errhandler != null)
+            {
                 return errhandler(str);
+            }
+
             return outvalue;
         }
 
@@ -78,30 +102,44 @@ namespace WillowTree
         {
             double outvalue;
             if (double.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             throw new FormatException();
         }
         public static double AsDouble(string str, double defaultvalue)
         {
             double outvalue;
             if (double.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             return defaultvalue;
         }
         public static double AsDouble(string str, ParseDouble_ErrorHandler errhandler)
         {
             double outvalue;
             if (double.TryParse(str, out outvalue))
+            {
                 return outvalue;
+            }
+
             if (errhandler != null)
+            {
                 return errhandler(str);
+            }
+
             return outvalue;
         }
         public static void ThrowExceptionIfIntString(string StringVal)
         {
             int tempValue;
             if (int.TryParse(StringVal, out tempValue))
+            {
                 throw new System.FormatException();
+            }
         }
 
     }

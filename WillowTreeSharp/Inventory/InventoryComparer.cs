@@ -30,11 +30,18 @@ namespace WillowTree.Inventory
                     case 0: result = string.Compare(x.Name, y.Name); break;
                     case 1:
                         if (x.Rarity > y.Rarity)
+                        {
                             result = -1;
+                        }
                         else if (x.Rarity < y.Rarity)
+                        {
                             result = 1;
+                        }
                         else
+                        {
                             result = 0;
+                        }
+
                         break;
 
                     case 2: result = string.Compare(x.Category, y.Category); break;
@@ -44,26 +51,42 @@ namespace WillowTree.Inventory
                     case 6: result = string.Compare(x.NameParts[0], y.NameParts[0]); break;
                     case 7:
                         if (x.EffectiveLevel > y.EffectiveLevel)
+                        {
                             result = -1;
+                        }
                         else if (x.EffectiveLevel < y.EffectiveLevel)
+                        {
                             result = 1;
+                        }
                         else
+                        {
                             result = 0;
+                        }
+
                         break;
 
                     case 8:
                         int xkeyval = int.Parse(x.Key);
                         int ykeyval = int.Parse(y.Key);
                         if (xkeyval < ykeyval)
+                        {
                             result = -1;
+                        }
                         else if (xkeyval > ykeyval)
+                        {
                             result = 1;
+                        }
                         else
+                        {
                             result = 0;
+                        }
+
                         break;
                 }
                 if (result != 0)
+                {
                     return result;
+                }
             }
             return result;
         }

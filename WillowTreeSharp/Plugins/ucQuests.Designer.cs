@@ -23,7 +23,7 @@ using WillowTree.Controls;
 
 namespace WillowTree.Plugins
 {
-    partial class ucQuests
+    partial class UcQuests
     {
         /// <summary> 
         /// Required designer variable.
@@ -588,7 +588,7 @@ namespace WillowTree.Plugins
             // ucQuests
             // 
             this.Controls.Add(this.QuestsTab);
-            this.Name = "ucQuests";
+            this.Name = "UcQuests";
             this.Size = new System.Drawing.Size(956, 591);
             this.QuestsTab.ResumeLayout(false);
             this.groupPanel3.ResumeLayout(false);

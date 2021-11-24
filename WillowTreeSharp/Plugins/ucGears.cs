@@ -51,24 +51,24 @@ namespace WillowTree.Plugins
             };
             pluginManager.RegisterPlugin(this, events);
 
-            switch (this.Text)
+            switch (Text)
             {
                 case "Weapons":
                     GearTL = new InventoryTreeList(GearTree, GameData.WeaponList);
-                    this.gbGear.Text = "Weapon Backpack";
-                    this.copyToBackpackToolStripMenuItem.Visible = false;
+                    gbGear.Text = "Weapon Backpack";
+                    copyToBackpackToolStripMenuItem.Visible = false;
                     break;
 
                 case "Items":
                     GearTL = new InventoryTreeList(GearTree, GameData.ItemList);
-                    this.gbGear.Text = "Item Backpack";
-                    this.copyToBackpackToolStripMenuItem.Visible = false;
+                    gbGear.Text = "Item Backpack";
+                    copyToBackpackToolStripMenuItem.Visible = false;
                     break;
 
                 case "Bank":
                     GearTL = new InventoryTreeList(GearTree, GameData.BankList);
-                    this.gbGear.Text = "Bank";
-                    this.copyToBankToolStripMenuItem.Visible = false;
+                    gbGear.Text = "Bank";
+                    copyToBankToolStripMenuItem.Visible = false;
                     break;
             }
 
@@ -77,19 +77,19 @@ namespace WillowTree.Plugins
             // The index translators control the caption that goes over the top of each
             // level or quality SlideSelector.  Attach each translator then signal the
             // value changed event to cause the translator to update the caption.
-            this.LevelIndexGear.IndexTranslator += LevelTranslator;
-            this.QualityGear.IndexTranslator += QualityTranslator;
-            this.LevelIndexGear.OnValueChanged(EventArgs.Empty);
-            this.QualityGear.OnValueChanged(EventArgs.Empty);
+            LevelIndexGear.IndexTranslator += LevelTranslator;
+            QualityGear.IndexTranslator += QualityTranslator;
+            LevelIndexGear.OnValueChanged(EventArgs.Empty);
+            QualityGear.OnValueChanged(EventArgs.Empty);
 
             HighlightFont = new Font(GearTree.Font, FontStyle.Italic | FontStyle.Bold);
 
-            this.Enabled = false;
+            Enabled = false;
         }
 
         private void Init()
         {
-            string tabName = this.Text;
+            string tabName = Text;
 
             //Section for Bank to change interface
             if (GearTree.SelectedNode?.GetEntry() is InventoryEntry entry)
@@ -105,7 +105,7 @@ namespace WillowTree.Plugins
             }
 
             //Config interface for Weapon, Item, Bank
-            this.EquippedSlotGear.Items.Clear();
+            EquippedSlotGear.Items.Clear();
             switch (tabName)
             {
                 case "Weapons":
@@ -114,12 +114,12 @@ namespace WillowTree.Plugins
                     gearVisibleLine = 15;
 
                     //Change control label and text
-                    this.exportGearToolStripMenuItem.Text = "Export Weapon";
-                    this.GearPartsGroup.Text = "Weapon Parts";
-                    this.labelGearEquipped.Text = "Equipped Slot";
-                    this.labelGearQuantity.Text = "Remaining Ammo";
+                    exportGearToolStripMenuItem.Text = "Export Weapon";
+                    GearPartsGroup.Text = "Weapon Parts";
+                    labelGearEquipped.Text = "Equipped Slot";
+                    labelGearQuantity.Text = "Remaining Ammo";
 
-                    this.EquippedSlotGear.Items.AddRange(new object[] { "Unequipped", "Slot 1 (Up)", "Slot 2 (Down)", "Slot 3 (Left)", "Slot 4 (Right)" });
+                    EquippedSlotGear.Items.AddRange(new object[] { "Unequipped", "Slot 1 (Up)", "Slot 2 (Down)", "Slot 3 (Left)", "Slot 4 (Right)" });
                     break;
 
                 case "Items":
@@ -128,20 +128,20 @@ namespace WillowTree.Plugins
                     gearVisibleLine = 17;
 
                     //Change control label and text
-                    this.exportGearToolStripMenuItem.Text = "Export Item";
-                    this.GearPartsGroup.Text = "Item Parts";
-                    this.labelGearEquipped.Text = "Equipped";
-                    this.labelGearQuantity.Text = "Quantity";
+                    exportGearToolStripMenuItem.Text = "Export Item";
+                    GearPartsGroup.Text = "Item Parts";
+                    labelGearEquipped.Text = "Equipped";
+                    labelGearQuantity.Text = "Quantity";
 
-                    this.EquippedSlotGear.Items.AddRange(new object[] { "No", "Yes" });
+                    EquippedSlotGear.Items.AddRange(new object[] { "No", "Yes" });
                     break;
             }
         }
 
         public void ReleasePlugin()
         {
-            this.LevelIndexGear.IndexTranslator -= LevelTranslator;
-            this.QualityGear.IndexTranslator -= QualityTranslator;
+            LevelIndexGear.IndexTranslator -= LevelTranslator;
+            QualityGear.IndexTranslator -= QualityTranslator;
 
             pluginManager = null;
             HighlightFont = null;
@@ -152,11 +152,11 @@ namespace WillowTree.Plugins
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            this.CurrentWSG = e.WillowTreeMain.SaveData;
+            CurrentWSG = e.WillowTreeMain.SaveData;
             GearTL.UpdateTree();
 
             //Config interface with WTM for Weapon, Item
-            switch (this.Text)
+            switch (Text)
             {
                 case "Weapons":
                 case "Weapons Bank":
@@ -166,7 +166,7 @@ namespace WillowTree.Plugins
                     break;
             }
 
-            this.Enabled = true;
+            Enabled = true;
         }
 
         public void OnPluginCommand(object sender, PluginCommandEventArgs e)
@@ -276,9 +276,9 @@ namespace WillowTree.Plugins
 
             List<int> values = InventoryEntry.CalculateValues(
                 (int)QuantityGear.Value,
-                (int)QualityGear.Value,
-                (int)EquippedSlotGear.SelectedIndex,
-                (int)LevelIndexGear.Value,
+                QualityGear.Value,
+                EquippedSlotGear.SelectedIndex,
+                LevelIndexGear.Value,
                 (int)JunkGear.Value,
                 (int)LockedGear.Value,
                 (string)PartsGear.Items[0]);
@@ -289,7 +289,7 @@ namespace WillowTree.Plugins
                 InOutParts.Add(values[i].ToString());
             }
 
-            return string.Join("\r\n", InOutParts.ToArray()) + "\r\n";
+            return $"{string.Join("\r\n", InOutParts.ToArray())}\r\n";
         }
 
         private void ExportToClipboardGear_Click(object sender, EventArgs e)
@@ -349,7 +349,7 @@ namespace WillowTree.Plugins
             }
             catch
             {
-                MessageBox.Show("Invalid clipboard data, " + gearTextName + " not inserted.");
+                MessageBox.Show($"Invalid clipboard data, {gearTextName} not inserted.");
             }
         }
 
@@ -508,7 +508,7 @@ namespace WillowTree.Plugins
                 }
             }
 
-            this.Refresh(); //LockerTree_SelectionChanged is not needed for visual update
+            Refresh(); //LockerTree_SelectionChanged is not needed for visual update
         }
 
         private void GearSearch_KeyDown(object sender, KeyEventArgs e)
@@ -575,7 +575,8 @@ namespace WillowTree.Plugins
             try
             {
                 // Read ALL subsections of a given XML section
-                XmlFile Category = XmlCache.XmlFileFromCache(GameData.DataPath + PartSelectorGear.SelectedNode.Parent.GetKey() + ".txt");
+                XmlFile Category = XmlCache.XmlFileFromCache(
+                    $"{GameData.DataPath}{PartSelectorGear.SelectedNode.Parent.GetKey()}.txt");
 
                 // XML Section: PartCategories.SelectedNode.Text
                 List<string> xmlSection = Category.XmlReadSection(PartSelectorGear.SelectedNode.GetText());
@@ -593,7 +594,8 @@ namespace WillowTree.Plugins
                 // when the selected item is changed, so temporarily disable it.
                 bool tracking = GlobalSettings.PartSelectorTracking;
                 GlobalSettings.PartSelectorTracking = false;
-                PartsGear.Items[PartsGear.SelectedIndex] = PartSelectorGear.SelectedNode.Parent.GetKey() + "." + PartSelectorGear.SelectedNode.GetText();
+                PartsGear.Items[PartsGear.SelectedIndex] =
+                    $"{PartSelectorGear.SelectedNode.Parent.GetKey()}.{PartSelectorGear.SelectedNode.GetText()}";
                 GlobalSettings.PartSelectorTracking = true;
             }
         }
@@ -770,7 +772,7 @@ namespace WillowTree.Plugins
 
         private void DoPartsCategory(string Category, TreeViewAdv Tree)
         {
-            XmlFile PartList = XmlCache.XmlFileFromCache(GameData.DataPath + Category + ".txt");
+            XmlFile PartList = XmlCache.XmlFileFromCache($"{GameData.DataPath}{Category}.txt");
             TreeModel model = Tree.Model as TreeModel;
 
             Tree.BeginUpdate();

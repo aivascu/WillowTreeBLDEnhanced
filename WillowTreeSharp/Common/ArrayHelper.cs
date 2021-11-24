@@ -79,9 +79,13 @@ namespace WillowTree
             try
             {
                 if (Array.Length > 0)
+                {
                     return false;
+                }
                 else
+                {
                     return true;
+                }
             }
             catch { return true; }
         }
@@ -92,7 +96,9 @@ namespace WillowTree
             for (int i = 0; i < count; i++)
             {
                 if (Array[i] == value)
+                {
                     return i;
+                }
             }
 
             return -1;

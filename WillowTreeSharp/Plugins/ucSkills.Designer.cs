@@ -23,7 +23,7 @@ using WillowTree.Controls;
 
 namespace WillowTree.Plugins
 {
-    partial class ucSkills
+    partial class UcSkills
     {
         /// <summary> 
         /// Required designer variable.
@@ -304,7 +304,7 @@ namespace WillowTree.Plugins
             // ucSkills
             // 
             this.Controls.Add(this.SkillsTab);
-            this.Name = "ucSkills";
+            this.Name = "UcSkills";
             this.Size = new System.Drawing.Size(956, 591);
             this.SkillsTab.ResumeLayout(false);
             this.groupPanel11.ResumeLayout(false);
