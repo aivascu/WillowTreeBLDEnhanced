@@ -32,6 +32,7 @@ namespace WillowTree
                     new DirectoryWrapper(fileSystem),
                     new GameDataWrapper(),
                     new GlobalSettingsWrapper(),
+                    new XmlCacheWrapper(),
                     new PluginComponentManager(),
                     new AppThemes());
                 Application.Run(mainForm);

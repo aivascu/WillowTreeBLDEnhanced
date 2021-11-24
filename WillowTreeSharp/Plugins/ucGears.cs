@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
 using WillowTree.Controls;
@@ -25,17 +26,19 @@ namespace WillowTree.Plugins
         private string gearFileName;
         private int gearVisibleLine;
 
-        public ucGears(IGameData gameData, IGlobalSettings settings, IXmlCache xmlCache)
+        public ucGears(IGameData gameData, IGlobalSettings settings, IXmlCache xmlCache, IFile file)
         {
             GameData = gameData;
             GlobalSettings = settings;
             XmlCache = xmlCache;
+            File = file;
             InitializeComponent();
         }
 
         public IGameData GameData { get; }
         public IGlobalSettings GlobalSettings { get; }
         public IXmlCache XmlCache { get; }
+        public IFile File { get; }
 
         public void InitializePlugin(PluginComponentManager pluginManager)
         {
@@ -185,7 +188,7 @@ namespace WillowTree.Plugins
             PartSelectorGear.Clear();
 
             string TabsLine = File.ReadAllText(GameData.DataPath + textFile);
-            string[] TabsList = TabsLine.Split(new char[] { (char)';' });
+            string[] TabsList = TabsLine.Split(';');
             for (int Progress = 0; Progress < TabsList.Length; Progress++)
             {
                 DoPartsCategory(TabsList[Progress], PartSelectorGear);
@@ -229,9 +232,13 @@ namespace WillowTree.Plugins
 
         private void CopyBackpack_Click(object sender, EventArgs e)
         {
-            foreach (var node in GearTree.SelectedNodes.Where(node => node.Children.Count == 0))
+            var entries = GearTree.SelectedNodes
+                .Where(node => node.Children.Count == 0)
+                .Select(x => x.GetEntry())
+                .OfType<InventoryEntry>();
+
+            foreach (var entry in entries)
             {
-                InventoryEntry entry = node.GetEntry() as InventoryEntry;
                 if (entry.Type == InventoryType.Weapon)
                 {
                     GameData.WeaponList.Duplicate(entry);
@@ -267,8 +274,14 @@ namespace WillowTree.Plugins
                 InOutParts.Add((string)PartsGear.Items[Progress]);
             }
 
-            List<int> values = InventoryEntry.CalculateValues((int)QuantityGear.Value,
-                (int)QualityGear.Value, (int)EquippedSlotGear.SelectedIndex, (int)LevelIndexGear.Value, (int)JunkGear.Value, (int)LockedGear.Value, ((string)PartsGear.Items[0]));
+            List<int> values = InventoryEntry.CalculateValues(
+                (int)QuantityGear.Value,
+                (int)QualityGear.Value,
+                (int)EquippedSlotGear.SelectedIndex,
+                (int)LevelIndexGear.Value,
+                (int)JunkGear.Value,
+                (int)LockedGear.Value,
+                (string)PartsGear.Items[0]);
 
             int valueCount = WillowSaveGame.ExportValuesCount;
             for (int i = 0; i < valueCount; i++)
@@ -285,7 +298,10 @@ namespace WillowTree.Plugins
             {
                 Clipboard.SetText(ExportToTextGear());
             }
-            catch { MessageBox.Show("Export to clipboard failed."); }
+            catch
+            {
+                MessageBox.Show("Export to clipboard failed.");
+            }
         }
 
         private void ExportToFileGear_Click(object sender, EventArgs e)
@@ -380,7 +396,7 @@ namespace WillowTree.Plugins
             // If the node has children it not an item. It is a category label.
             if (GearTree.SelectedNode == null || GearTree.SelectedNode.Children.Count > 0)
             {
-                GearPartsGroup.Text = "No " + gearTextName + " Selected";
+                GearPartsGroup.Text = $"No {gearTextName} Selected";
                 return;
             }
 
@@ -474,24 +490,19 @@ namespace WillowTree.Plugins
         private void btnGearSearch_Click(object sender, EventArgs e)
         {
             string searchText = GearSearch.Text.ToUpper();
-            string text = "";
-
-            foreach (TreeNodeAdv node in GearTL.Tree.AllNodes)
+            IEnumerable<TreeNodeAdv> nodes = GearTL.Tree.AllNodes
+                .Where(node => node.Children.Count == 0);
+            foreach (var node in nodes)
             {
-                if (node.Children.Count == 0)
+                if (node.Tag is ColoredTextNode coloredNode && node.GetEntry() is InventoryEntry entry)
                 {
-                    text = (node.GetEntry() as InventoryEntry).ToXmlText().ToUpper();
-
-                    if (searchText != "" && text.Contains(searchText))
-                    {
-                        (node.Tag as ColoredTextNode).Font = HighlightFont;
-                    }
-                    else
-                    {
-                        (node.Tag as ColoredTextNode).Font = GearTree.Font;
-                    }
+                    var text = entry.ToXmlText().ToUpper();
+                    coloredNode.Font = searchText != "" && text.Contains(searchText)
+                        ? HighlightFont
+                        : GearTree.Font;
                 }
             }
+
             this.Refresh(); //LockerTree_SelectionChanged is not needed for visual update
         }
 
@@ -512,7 +523,10 @@ namespace WillowTree.Plugins
             {
                 quality = Parse.AsInt(qualityText);
             }
-            catch (FormatException) { return; }
+            catch (FormatException)
+            {
+                return;
+            }
 
             foreach (InventoryEntry gear in GearTL.Sorted)
             {

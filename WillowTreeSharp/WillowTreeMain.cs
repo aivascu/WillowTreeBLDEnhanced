@@ -28,6 +28,7 @@ namespace WillowTree
             IDirectory directory,
             IGameData gameData,
             IGlobalSettings settings,
+            IXmlCache xmlCache,
             PluginComponentManager pluginManager,
             AppThemes themes)
         {
@@ -63,13 +64,13 @@ namespace WillowTree
             SelectFormat.Enabled = false;
 
             CreatePluginAsTab("General", new ucGeneral());
-            CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.settings));
-            CreatePluginAsTab("Items", new ucGears(this.gameData, this.settings));
+            CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.settings, xmlCache, this.file));
+            CreatePluginAsTab("Items", new ucGears(this.gameData, this.settings, xmlCache, this.file));
             CreatePluginAsTab("Skills", new ucSkills());
             CreatePluginAsTab("Quest", new ucQuests());
             CreatePluginAsTab("Ammo Pools", new ucAmmo());
             CreatePluginAsTab("Echo Logs", new ucEchoes());
-            CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings));
+            CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings, xmlCache, this.file));
             CreatePluginAsTab("Locker", new ucLocker());
             CreatePluginAsTab("Debug", new ucDebug());
             CreatePluginAsTab("About", new UcAbout());
