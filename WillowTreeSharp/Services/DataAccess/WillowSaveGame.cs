@@ -1,27 +1,7 @@
-﻿/*  This file is part of WillowTree#
- * 
- *  Copyright (C) 2011 Matthew Carter <matt911@users.sf.net>
- *  Copyright (C) 2010, 2011 XanderChaos
- *  Copyright (C) 2011 Thomas Kaiser
- *  Copyright (C) 2010 JackSchitt
- * 
- *  WillowTree# is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  WillowTree# is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,26 +11,22 @@ using X360.STFS;
 
 namespace WillowTree.Services.DataAccess
 {
-    public enum ByteOrder
-    {
-        LittleEndian,
-        BigEndian
-    }
-
     public class WillowSaveGame
     {
         // Multiple users using Parallels on Mac reported that WT# was crashing at startup.
-        // I narrowed it down to this line.  Application.get_ExecutablePath() is giving them 
+        // I narrowed it down to this line.  Application.get_ExecutablePath() is giving them
         // a UriFormatException for some reason.  I'm rewriting this line to try to resolve it.
         // This also removes the dependence of WillowSaveGame on Windows Forms since
         // Application is a part of the System.Windows.Forms namespace.
 
         public static readonly string AppPath = (Assembly.GetEntryAssembly() != null ? Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) : "") +
                                        Path.DirectorySeparatorChar;
+
         public static readonly string DataPath = AppPath + "Data" + Path.DirectorySeparatorChar;
 
         // Used for all single-byte string encodings.
         private static Encoding _singleByteEncoding; // DO NOT REFERENCE THIS DIRECTLY!
+
         private static Encoding SingleByteEncoding
         {
             get
@@ -97,10 +73,11 @@ namespace WillowTree.Services.DataAccess
 
             return bytes;
         }
+
         private static byte[] ReadBytes(byte[] inBytes, int fieldSize, ByteOrder byteOrder)
         {
-            System.Diagnostics.Debug.Assert(inBytes != null, "inBytes != null");
-            System.Diagnostics.Debug.Assert(inBytes.Length >= fieldSize, "inBytes.Length >= fieldSize");
+            Debug.Assert(inBytes != null, "inBytes != null");
+            Debug.Assert(inBytes.Length >= fieldSize, "inBytes.Length >= fieldSize");
 
             var outBytes = new byte[fieldSize];
             Buffer.BlockCopy(inBytes, 0, outBytes, 0, fieldSize);
@@ -127,14 +104,17 @@ namespace WillowTree.Services.DataAccess
         {
             return BitConverter.ToSingle(ReadBytes(reader, sizeof(float), endian), 0);
         }
+
         private static int ReadInt32(BinaryReader reader, ByteOrder endian)
         {
             return BitConverter.ToInt32(ReadBytes(reader, sizeof(int), endian), 0);
         }
+
         private static short ReadInt16(BinaryReader reader, ByteOrder endian)
         {
             return BitConverter.ToInt16(ReadBytes(reader, sizeof(short), endian), 0);
         }
+
         private static List<int> ReadListInt32(BinaryReader reader, ByteOrder endian)
         {
             var count = ReadInt32(reader, endian);
@@ -151,10 +131,12 @@ namespace WillowTree.Services.DataAccess
         {
             writer.Write(BitConverter.ToSingle(ReadBytes(BitConverter.GetBytes(value), sizeof(float), endian), 0));
         }
+
         private static void Write(BinaryWriter writer, int value, ByteOrder endian)
         {
             writer.Write(BitConverter.ToInt32(ReadBytes(BitConverter.GetBytes(value), sizeof(int), endian), 0));
         }
+
         private static void Write(BinaryWriter writer, short value, ByteOrder endian)
         {
             writer.Write(ReadBytes(BitConverter.GetBytes(value), sizeof(short), endian));
@@ -185,15 +167,15 @@ namespace WillowTree.Services.DataAccess
             // as I can tell.  All text seems to be single-byte encoded with a code
             // page for the current culture so tempLengthValue is always positive.
             //
-            // da_fileserver implemented the unicode string reading to agree with the 
-            // way that unreal engine 3 uses it I think, but I can't test this code 
+            // da_fileserver implemented the unicode string reading to agree with the
+            // way that unreal engine 3 uses it I think, but I can't test this code
             // because I know of no place where Borderlands itself actually uses it.
             //
             // It appears to me that ReadString and WriteString are filled with a lot of
-            // unnecessary code to deal with unicode, but since the code is already 
+            // unnecessary code to deal with unicode, but since the code is already
             // implemented and I haven't had any problems I'd rather leave in code that
             // is not necessary than break something that works already
-            
+
             // Read string data (either single-byte or Unicode).
             if (tempLengthValue < 0)
             {
@@ -241,8 +223,8 @@ namespace WillowTree.Services.DataAccess
                 value = SingleByteEncoding.GetString(data);
             }
 
-            // Look for the null terminator character. If not found then then string is 
-            // probably corrupt.  
+            // Look for the null terminator character. If not found then then string is
+            // probably corrupt.
             int nullTerminatorIndex = value.IndexOf('\0');
             if (nullTerminatorIndex != value.Length - 1)
             {
@@ -252,6 +234,7 @@ namespace WillowTree.Services.DataAccess
             // Return the string, excluding the null terminator
             return value.Substring(0, nullTerminatorIndex);
         }
+
         ///<summary>Reads a string in the format used by the WSGs</summary>
         private static byte[] SearchForString(BinaryReader reader, ByteOrder endian)
         {
@@ -297,7 +280,7 @@ namespace WillowTree.Services.DataAccess
                 else
                 {
                     Console.WriteLine("Value :" + value);
-                    //Found String put the file cursor just before 
+                    //Found String put the file cursor just before
                     reader.BaseStream.Position = position;
                     break;
                 }
@@ -306,6 +289,7 @@ namespace WillowTree.Services.DataAccess
             // Return the string, excluding the null terminator
             return bytes.ToArray();
         }
+
         private static void Write(BinaryWriter writer, string value, ByteOrder endian)
         {
             // Null and empty strings are treated the same (with an output
@@ -385,6 +369,7 @@ namespace WillowTree.Services.DataAccess
             }
             return bytes.ToArray();
         }
+
         /// <summary> Look for any non-ASCII characters in the input.</summary>
         private static bool IsUnicode(string value)
         {
@@ -399,7 +384,7 @@ namespace WillowTree.Services.DataAccess
             return false;
         }
 
-#region Members
+        #region Members
 
         private static readonly int EnhancedVersion = 0x27;
         public ByteOrder EndianWsg;
@@ -407,14 +392,17 @@ namespace WillowTree.Services.DataAccess
         public string Platform;
         public string OpenedWsg;
         public bool ContainsRawData;
+
         // Whether WSG should try to automatically repair or discard any invalid data
-        // to recover from an invalid state.  This will allow partial data loss but 
+        // to recover from an invalid state.  This will allow partial data loss but
         // may allow partial data recovery as well.
         public bool AutoRepair = false;
+
         public bool RequiredRepair;
 
         //General Info
         public string MagicHeader;
+
         public int VersionNumber;
         public string Plyr;
         public int RevisionNumber;
@@ -430,6 +418,7 @@ namespace WillowTree.Services.DataAccess
 
         //Skill Arrays
         public int NumberOfSkills;
+
         public string[] SkillNames;
         public int[] LevelOfSkills;
         public int[] ExpOfSkills;
@@ -437,12 +426,14 @@ namespace WillowTree.Services.DataAccess
 
         //Vehicle Info
         public int Vehi1Color;
+
         public int Vehi2Color;
         public int Vehi1Type; // 0 = rocket, 1 = machine gun
         public int Vehi2Type;
 
         //Ammo Pool Arrays
         public int NumberOfPools;
+
         public string[] ResourcePools;
         public string[] AmmoPools;
         public float[] RemainingPools;
@@ -450,6 +441,7 @@ namespace WillowTree.Services.DataAccess
 
         //Delegate for read String and Value
         public delegate List<string> ReadStringsFunction(BinaryReader reader, ByteOrder bo);
+
         public delegate List<int> ReadValuesFunction(BinaryReader reader, ByteOrder bo, int revisionNumber);
 
         public class Object
@@ -483,11 +475,13 @@ namespace WillowTree.Services.DataAccess
                 get { return _values[1]; }
                 set { _values[1] = value; }
             }
+
             public int EquipedSlot
             {
                 get { return _values[2]; }
                 set { _values[2] = value; }
             }
+
             public int Level
             {
                 get { return _values[3]; }
@@ -506,9 +500,9 @@ namespace WillowTree.Services.DataAccess
                 set { _values[5] = value; }
             }
         }
+
         public class Item : Object
         {
-
             public Item()
             {
                 ReadStrings = ReadItemStrings;
@@ -520,9 +514,9 @@ namespace WillowTree.Services.DataAccess
                 set { _values[0] = value; }
             }
         }
+
         public class Weapon : Object
         {
-
             public Weapon()
             {
                 ReadStrings = ReadWeaponStrings;
@@ -537,17 +531,21 @@ namespace WillowTree.Services.DataAccess
 
         //Item Arrays
         public List<Item> Items = new List<Item>();
+
         public List<Weapon> Weapons = new List<Weapon>();
 
         //Backpack Info
         public int BackpackSize;
+
         public int EquipSlots;
 
         //Challenge related data
         public int ChallengeDataBlockLength;
+
         public int ChallengeDataBlockId;
         public int ChallengeDataLength;
         public short ChallengeDataEntries;
+
         public struct ChallengeDataEntry
         {
             public short Id;
@@ -582,29 +580,19 @@ namespace WillowTree.Services.DataAccess
         }
 
         public class QuestTable
-        { 
+        {
             public List<QuestEntry> Quests;
             public int Index;
             public string CurrentQuest;
             public int TotalQuests;
         }
 
-        //Quest Arrays/Info
-        //public class QuestTable
-        //{
-        //    public int Index;
-        //    public string CurrentQuest;
-        //    public int TotalQuests;
-        //    public string[] QuestStrings;
-        //    public int[,] QuestValues;
-        //    public string[,] QuestSubfolders;
-        //};
-
         public int NumberOfQuestLists;
         public List<QuestTable> QuestLists = new List<QuestTable>();
 
         //More unknowns and color info.
         public int TotalPlayTime;
+
         public string LastPlayedDate;
         public string CharacterName;
         public int Color1;
@@ -619,28 +607,34 @@ namespace WillowTree.Services.DataAccess
 
         //Echo Info
         public int NumberOfEchoLists;
+
         public class EchoEntry
         {
             public string Name;
             public int DlcValue1;
             public int DlcValue2;
         }
+
         public class EchoTable
         {
             public int Index;
             public int TotalEchoes;
             public List<EchoEntry> Echoes;
         };
+
         public List<EchoTable> EchoLists = new List<EchoTable>();
 
         // Temporary lists used for primary pack data when the inventory is split
         public List<Item> Items1 = new List<Item>();
+
         public List<Weapon> Weapons1 = new List<Weapon>();
+
         // Temporary lists used for primary pack data when the inventory is split
         public List<Item> Items2 = new List<Item>();
+
         public List<Weapon> Weapons2 = new List<Weapon>();
 
-        public byte[] Unknown3; //80 bytes of 00 at the end 
+        public byte[] Unknown3; //80 bytes of 00 at the end
 
         public class DlcData
         {
@@ -660,17 +654,23 @@ namespace WillowTree.Services.DataAccess
 
             // DLC Section 1 Data (bank data)
             public byte DlcUnknown1;  // Read only flag. Always resets to 1 in ver 1.41.  Probably CanAccessBank.
+
             public int BankSize;
             public List<BankEntry> BankInventory = new List<BankEntry>();
+
             // DLC Section 2 Data (don't know)
             public int DlcUnknown2; // All four of these are boolean flags.
+
             public int DlcUnknown3; // If you set them to any value except 0
             public int DlcUnknown4; // the game will rewrite them as 1.
             public int SkipDlc2Intro; //
+
             // DLC Section 3 Data (related to the level cap.  removing this section will delevel your character to 50)
             public byte DlcUnknown5;  // Read only flag. Always resets to 1 in ver 1.41.  Probably CanExceedLevel50
+
             // DLC Section 4 Data (DLC backpack)
             public byte SecondaryPackEnabled;  // Read only flag. Always resets to 1 in ver 1.41.
+
             public int NumberOfWeapons;
         }
 
@@ -685,30 +685,14 @@ namespace WillowTree.Services.DataAccess
 
         //Xbox 360 only
         public long ProfileId;
+
         public byte[] DeviceId;
         public byte[] ConImage;
         public string TitleDisplay;
         public string TitlePackage;
         public uint TitleId = 1414793191;
-#endregion
 
-
-        public static uint GetXboxTitleId(Stream inputWsg)
-        {
-            BinaryReader br = new BinaryReader(inputWsg);
-            byte[] fileInMemory = br.ReadBytes((int)inputWsg.Length);
-            if (fileInMemory.Length != inputWsg.Length)
-            {
-                throw new EndOfStreamException();
-            }
-
-            try
-            {
-                STFSPackage con = new STFSPackage(new DJsIO(fileInMemory, true), new X360.Other.LogRecord());
-                return con.Header.TitleID;
-            }
-            catch { return 0; }
-        }
+        #endregion Members
 
         ///<summary>Reports back the expected platform this WSG was created on.</summary>
         public static string WsgType(Stream inputWsg)
@@ -735,9 +719,8 @@ namespace WillowTree.Services.DataAccess
                         uint titleId = ((uint)saveReader.ReadByte() << 24) + ((uint)saveReader.ReadByte() << 16) +
                             ((uint)saveReader.ReadByte() << 8) + saveReader.ReadByte();
 
-
-//                        uint titleID = GetXboxTitleID(inputWSG);
-                        switch (titleId) 
+                        //                        uint titleID = GetXboxTitleID(inputWSG);
+                        switch (titleId)
                         {
                             case 1414793191: return "X360";
                             case 1414793318: return "X360JP";
@@ -757,9 +740,11 @@ namespace WillowTree.Services.DataAccess
                     case 0x02000000: // 33554432 decimal
                         littleEndian = false;
                         break;
+
                     case 0x00000002:
                         littleEndian = true;
                         break;
+
                     default:
                         return "unknown";
                 }
@@ -787,11 +772,11 @@ namespace WillowTree.Services.DataAccess
                 //CON.FileDirectory[0].Extract(Extract);
                 ProfileId = con.Header.ProfileID;
                 DeviceId = con.Header.DeviceID;
-                
+
                 //DJsIO Save = new DJsIO("C:\\temp.sav", DJFileMode.Create, true);
                 //Save.Write(Extract.ReadStream());
                 //Save.Close();
-                //byte[] nom = CON.GetFile("SaveGame.sav").GetEntryData(); 
+                //byte[] nom = CON.GetFile("SaveGame.sav").GetEntryData();
                 return new MemoryStream(con.GetFile("SaveGame.sav").GetTempIO(true).ReadStream(), false);
             }
             catch
@@ -841,7 +826,7 @@ namespace WillowTree.Services.DataAccess
                 OpenedWsg = inputFile;
             }
         }
-        
+
         private void BuildXboxPackage(string packageFileName, string saveFileName, int locale)
         {
             CreateSTFS package = new CreateSTFS
@@ -866,14 +851,14 @@ namespace WillowTree.Services.DataAccess
                 case 1: // US or International version
                     package.HeaderData.Title_Package = "Borderlands";
                     package.HeaderData.TitleID = 1414793191;
-                    break;                   
+                    break;
+
                 case 2: // JP version
                     package.HeaderData.Title_Package = "Borderlands (JP)";
                     package.HeaderData.TitleID = 1414793318;
                     break;
             }
             package.AddFile(saveFileName, "SaveGame.sav");
-
 
             STFSPackage con = new STFSPackage(package, new RSAParams(DataPath + "KV.bin"), packageFileName, new X360.Other.LogRecord());
 
@@ -985,7 +970,6 @@ namespace WillowTree.Services.DataAccess
                     save.Write(WriteWsg());
                 }
             }
-
             else if (Platform == "X360")
             {
                 string tempSaveName = filename + ".temp";
@@ -997,7 +981,6 @@ namespace WillowTree.Services.DataAccess
                 BuildXboxPackage(filename, tempSaveName, 1);
                 File.Delete(tempSaveName);
             }
-
             else if (Platform == "X360JP")
             {
                 string tempSaveName = filename + ".temp";
@@ -1009,7 +992,6 @@ namespace WillowTree.Services.DataAccess
                 BuildXboxPackage(filename, tempSaveName, 2);
                 File.Delete(tempSaveName);
             }
-
         }
 
         private static bool Eof(BinaryReader binaryReader)
@@ -1159,6 +1141,7 @@ namespace WillowTree.Services.DataAccess
                             }
                             Console.WriteLine(@"====== EXIT BANK ======");
                             break;
+
                         case DlcData.Section2Id: // 0x02151984
                             Dlc.HasSection2 = true;
                             Dlc.DlcUnknown2 = ReadInt32(dlcDataReader, EndianWsg);
@@ -1166,14 +1149,16 @@ namespace WillowTree.Services.DataAccess
                             Dlc.DlcUnknown4 = ReadInt32(dlcDataReader, EndianWsg);
                             Dlc.SkipDlc2Intro = ReadInt32(dlcDataReader, EndianWsg);
                             break;
+
                         case DlcData.Section3Id: // 0x32235947
                             Dlc.HasSection3 = true;
                             Dlc.DlcUnknown5 = dlcDataReader.ReadByte();
                             break;
+
                         case DlcData.Section4Id: // 0x234ba901
                             Dlc.HasSection4 = true;
                             Dlc.SecondaryPackEnabled = dlcDataReader.ReadByte();
- 
+
                             try
                             {
                                 Console.WriteLine(@"====== ENTER DLC ITEM ======");
@@ -1248,7 +1233,7 @@ namespace WillowTree.Services.DataAccess
 
                     // I don't pretend to know if any of the DLC sections will ever expand
                     // and store more data.  RawData stores any extra data at the end of
-                    // the known data in any section and stores the entirety of sections 
+                    // the known data in any section and stores the entirety of sections
                     // with unknown ids in a buffer in its raw byte order dependent form.
                     int rawDataCount = sectionLength - (int)(dlcDataReader.BaseStream.Position - sectionStartPos);
 
@@ -1304,7 +1289,7 @@ namespace WillowTree.Services.DataAccess
             }
             return echoListCount;
         }
-        
+
         private int ReadQuests(BinaryReader reader, ByteOrder endianWsg)
         {
             int numberOfQuestList = ReadInt32(reader, endianWsg);
@@ -1381,7 +1366,7 @@ namespace WillowTree.Services.DataAccess
         private int ReadAmmo(BinaryReader reader, ByteOrder endianWsg)
         {
             int poolsCount = ReadInt32(reader, endianWsg);
- 
+
             string[] tempResourcePools = new string[poolsCount];
             string[] tempAmmoPools = new string[poolsCount];
             float[] tempRemainingPools = new float[poolsCount];
@@ -1479,11 +1464,6 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        private void WritePaddings(BinaryWriter Out, byte[] data)
-        {
-            Write(Out, data);
-        }
-
         private void WriteObject<T>(BinaryWriter Out, T obj) where T : Object
         {
             WriteStrings(Out, obj.Strings);
@@ -1541,7 +1521,6 @@ namespace WillowTree.Services.DataAccess
                 Write(Out, RemainingPools[progress], EndianWsg);
                 Write(Out, PoolLevels[progress], EndianWsg);
             }
-
 
             WriteObjects(Out, Items1); //Write Items
 
@@ -1671,15 +1650,18 @@ namespace WillowTree.Services.DataAccess
                         }
 
                         break;
+
                     case DlcData.Section2Id:
                         Write(memwriter, Dlc.DlcUnknown2, EndianWsg);
                         Write(memwriter, Dlc.DlcUnknown3, EndianWsg);
                         Write(memwriter, Dlc.DlcUnknown4, EndianWsg);
                         Write(memwriter, Dlc.SkipDlc2Intro, EndianWsg);
                         break;
+
                     case DlcData.Section3Id:
                         memwriter.Write(Dlc.DlcUnknown5);
                         break;
+
                     case DlcData.Section4Id:
                         memwriter.Write(Dlc.SecondaryPackEnabled);
                         // The DLC backpack items
@@ -1715,6 +1697,7 @@ namespace WillowTree.Services.DataAccess
             Weapons2 = null;
             return outStream.ToArray();
         }
+
         ///<summary>Split the weapon and item lists into two parts: one for the primary pack and one for DLC backpack</summary>
         public void SplitInventoryIntoPacks()
         {
@@ -1722,9 +1705,9 @@ namespace WillowTree.Services.DataAccess
             Items2 = new List<Item>();
             Weapons1 = new List<Weapon>();
             Weapons2 = new List<Weapon>();
-            // Split items and weapons into two lists each so they can be put into the 
-            // DLC backpack or regular backpack area as needed.  Any item with a level 
-            // override and special dlc items go in the DLC backpack.  All others go 
+            // Split items and weapons into two lists each so they can be put into the
+            // DLC backpack or regular backpack area as needed.  Any item with a level
+            // override and special dlc items go in the DLC backpack.  All others go
             // in the regular inventory.
             if ((!Dlc.HasSection4) || (Dlc.SecondaryPackEnabled == 0))
             {
@@ -1743,7 +1726,6 @@ namespace WillowTree.Services.DataAccess
             }
             foreach (var item in Items)
             {
-
                 if ((item.Level == 0) && (item.Strings[0].Substring(0, 3) != "dlc"))
                 {
                     Items1.Add(item);
@@ -1755,7 +1737,6 @@ namespace WillowTree.Services.DataAccess
             }
             foreach (var weapon in Weapons)
             {
-
                 if ((weapon.Level == 0) && (weapon.Strings[0].Substring(0, 3) != "dlc"))
                 {
                     Weapons1.Add(weapon);
@@ -1908,7 +1889,7 @@ namespace WillowTree.Services.DataAccess
                 TypeId = reader.ReadByte();
                 if (TypeId != 1 && TypeId != 2)
                 {
-                //Try to repair broken item
+                    //Try to repair broken item
                     if (previous != null)
                     {
                         RepaireItem(reader, endian, previous, 1);
@@ -1927,7 +1908,7 @@ namespace WillowTree.Services.DataAccess
                         }
                     }
                 }
-                
+
                 Strings = new List<string>();
                 Strings.AddRange(new string[TypeId == 1 ? 14 : 9]);
                 for (var i = 0; i < Strings.Count; i++)

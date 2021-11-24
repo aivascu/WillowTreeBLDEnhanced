@@ -121,6 +121,7 @@
     <Compile Include="Plugins\PluginCommandEventArgs.cs" />
     <Compile Include="Plugins\PluginEventArgs.cs" />
     <Compile Include="Plugins\PluginEvents.cs" />
+    <Compile Include="Services\DataAccess\ByteOrder.cs" />
     <Compile Include="Services\DataAccess\GameData.cs" />
     <Compile Include="Services\DataAccess\GameDataWrapper.cs" />
     <Compile Include="Services\Configuration\GlobalSettingsWrapper.cs" />
