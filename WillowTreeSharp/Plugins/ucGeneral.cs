@@ -69,7 +69,7 @@ namespace WillowTree.Plugins
             // range will cause an exception and crash the program.  It is safest to use
             // Util.SetNumericUpDown() to set them since it will adjust the value to a valid value
             // if it is too high or low.
-            CurrentWSG = e.WTM.SaveData;
+            CurrentWSG = e.WillowTreeMain.SaveData;
 
             CharacterName.Text = CurrentWSG.CharacterName;
             Level.Value = CurrentWSG.Level;

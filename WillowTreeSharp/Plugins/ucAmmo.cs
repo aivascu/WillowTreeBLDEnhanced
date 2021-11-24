@@ -51,7 +51,7 @@ namespace WillowTree.Plugins
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            CurrentWSG = e.WTM.SaveData;
+            CurrentWSG = e.WillowTreeMain.SaveData;
             DoAmmoTree();
             this.Enabled = true;
         }

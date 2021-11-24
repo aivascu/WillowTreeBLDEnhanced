@@ -60,7 +60,7 @@ namespace WillowTree.Plugins
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            CurrentWSG = e.WTM.SaveData;
+            CurrentWSG = e.WillowTreeMain.SaveData;
             DoQuestTree();
 
             int index = GetSelectedQuestList();

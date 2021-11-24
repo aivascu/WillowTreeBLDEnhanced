@@ -184,7 +184,7 @@ namespace WillowTree.Plugins
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            this.CurrentWSG = e.WTM.SaveData;
+            this.CurrentWSG = e.WillowTreeMain.SaveData;
             GearTL.UpdateTree();
 
             //Config interface with WTM for Weapon, Item
