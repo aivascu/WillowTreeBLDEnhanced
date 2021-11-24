@@ -42,14 +42,14 @@ namespace WillowTree.Plugins
 
         public void InitializePlugin(PluginComponentManager pluginManager)
         {
+            this.pluginManager = pluginManager;
+
             PluginEvents events = new PluginEvents
             {
                 GameLoaded = OnGameLoaded,
                 PluginCommand = OnPluginCommand
             };
             pluginManager.RegisterPlugin(this, events);
-
-            this.pluginManager = pluginManager;
 
             switch (this.Text)
             {
@@ -162,7 +162,7 @@ namespace WillowTree.Plugins
                 case "Weapons Bank":
                 case "Items":
                 case "Items Bank":
-                    gearFileName = CurrentWSG.CharacterName + "'s " + gearTextName + "s";
+                    gearFileName = $"{CurrentWSG.CharacterName}'s {gearTextName}s";
                     break;
             }
 
@@ -400,7 +400,11 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            InventoryEntry gear = GearTree.SelectedNode.GetEntry() as InventoryEntry;
+            if (!(GearTree.SelectedNode.GetEntry() is InventoryEntry gear))
+            {
+                return;
+            }
+
             GearPartsGroup.Text = gear.Name;
 
             Init();
@@ -439,9 +443,10 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            InventoryEntry gear = GearTree.SelectedNode.GetEntry() as InventoryEntry;
-
-            RefreshGearTree(gear);
+            if (GearTree.SelectedNode.GetEntry() is InventoryEntry gear)
+            {
+                RefreshGearTree(gear);
+            }
         }
 
         private void RefreshGearTree(InventoryEntry gear)
@@ -547,7 +552,10 @@ namespace WillowTree.Plugins
                 level = Parse.AsInt(levelText);
                 levelindex = level + 2;
             }
-            catch (FormatException) { return; }
+            catch (FormatException)
+            {
+                return;
+            }
 
             foreach (InventoryEntry gear in GearTL.Sorted)
             {
@@ -744,7 +752,7 @@ namespace WillowTree.Plugins
                 {
                     viewbottom = viewbottom.NextNode;
                 }
-                else if ((viewbottom.Parent != null) && (viewbottom.Parent.NextNode != null))
+                else if (viewbottom.Parent?.NextNode != null)
                 {
                     viewbottom = viewbottom.Parent.NextNode;
                 }
