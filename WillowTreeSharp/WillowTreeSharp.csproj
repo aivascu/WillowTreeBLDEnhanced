@@ -195,6 +195,7 @@
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Services\DataAccess\IXmlCache.cs" />
     <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
+    <Compile Include="Services\DataAccess\SaveEncoding.cs" />
     <Compile Include="Services\DataAccess\WillowSaveGame.cs" />
     <Compile Include="Services\DataAccess\XmlCache.cs" />
     <Compile Include="Services\DataAccess\XmlCacheWrapper.cs" />

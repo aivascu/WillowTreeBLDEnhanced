@@ -14,24 +14,6 @@ namespace WillowTree.Services.DataAccess
     public class WillowSaveGame
     {
         // Used for all single-byte string encodings.
-        private static Encoding singleByteEncoding; // DO NOT REFERENCE THIS DIRECTLY!
-
-        private static Encoding SingleByteEncoding
-        {
-            get
-            {
-                // Not really thread safe, but it doesn't matter (Encoding should be effectively sealed).
-                if (!(singleByteEncoding is null))
-                    return singleByteEncoding;
-
-                // Use ISO 8859-1 (Windows 1252) encoding for all single-byte strings.
-                singleByteEncoding = Encoding.GetEncoding(1252);
-                Debug.Assert(singleByteEncoding != null, "singleByteEncoding != null");
-                Debug.Assert(singleByteEncoding.IsSingleByte, "Given string encoding is not a single-byte encoding.");
-
-                return singleByteEncoding;
-            }
-        }
 
         private static byte[] ReadBytes(BinaryReader br, int fieldSize, ByteOrder byteOrder)
         {
@@ -205,7 +187,7 @@ namespace WillowTree.Services.DataAccess
                 }
 
                 // Convert the byte data into a string.
-                value = SingleByteEncoding.GetString(data);
+                value = SaveEncoding.SingleByteEncoding.GetString(data);
             }
 
             // Look for the null terminator character. If not found then then string is
@@ -246,7 +228,7 @@ namespace WillowTree.Services.DataAccess
                     throw new EndOfStreamException();
                 }
 
-                var value = isLess ? Encoding.Unicode.GetString(data) : SingleByteEncoding.GetString(data);
+                var value = isLess ? Encoding.Unicode.GetString(data) : SaveEncoding.SingleByteEncoding.GetString(data);
                 int nullTerminatorIndex = value.IndexOf('\0');
                 if (nullTerminatorIndex != value.Length - 1)
                 {
@@ -283,7 +265,7 @@ namespace WillowTree.Services.DataAccess
                 Write(writer, value.Length + 1, endian);
 
                 // Write single-byte encoded string.
-                writer.Write(SingleByteEncoding.GetBytes(value));
+                writer.Write(SaveEncoding.SingleByteEncoding.GetBytes(value));
 
                 // Write null terminator.
                 writer.Write((byte)0);
@@ -316,7 +298,7 @@ namespace WillowTree.Services.DataAccess
             if (!requiresUnicode)
             {
                 bytes.AddRange(GetBytesFromInt(value.Length + 1, endian));
-                bytes.AddRange(SingleByteEncoding.GetBytes(value));
+                bytes.AddRange(SaveEncoding.SingleByteEncoding.GetBytes(value));
                 bytes.Add(0);
             }
             else
@@ -401,7 +383,7 @@ namespace WillowTree.Services.DataAccess
             protected int[] values = new int[6];
 
             public ReadStringsFunction ReadStrings;
-            public ReadValuesFunction ReadValues = ReadObjectValues;
+            public ReadValuesFunction ReadValues = WillowSaveGame.ReadObjectValues;
 
             public void PrintParts()
             {
@@ -452,11 +434,11 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        public class Item : Object
+        public class Item : WillowSaveGame.Object
         {
             public Item()
             {
-                ReadStrings = ReadItemStrings;
+                ReadStrings = WillowSaveGame.ReadItemStrings;
             }
 
             public int Quantity
@@ -466,11 +448,11 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        public class Weapon : Object
+        public class Weapon : WillowSaveGame.Object
         {
             public Weapon()
             {
-                ReadStrings = ReadWeaponStrings;
+                ReadStrings = WillowSaveGame.ReadWeaponStrings;
             }
 
             public int Ammo
@@ -481,9 +463,9 @@ namespace WillowTree.Services.DataAccess
         }
 
         //Item Arrays
-        public List<Item> Items = new List<Item>();
+        public List<WillowSaveGame.Item> Items = new List<WillowSaveGame.Item>();
 
-        public List<Weapon> Weapons = new List<Weapon>();
+        public List<WillowSaveGame.Weapon> Weapons = new List<WillowSaveGame.Weapon>();
 
         //Backpack Info
         public int BackpackSize;
@@ -504,7 +486,7 @@ namespace WillowTree.Services.DataAccess
             public int Value;
         }
 
-        private List<ChallengeDataEntry> _challenges;
+        private List<WillowSaveGame.ChallengeDataEntry> _challenges;
 
         public byte[] ChallengeData;
         public int TotalLocations;
@@ -527,19 +509,19 @@ namespace WillowTree.Services.DataAccess
             public int DlcValue1;
             public int DlcValue2;
             public int NumberOfObjectives;
-            public QuestObjective[] Objectives;
+            public WillowSaveGame.QuestObjective[] Objectives;
         }
 
         public class QuestTable
         {
-            public List<QuestEntry> Quests;
+            public List<WillowSaveGame.QuestEntry> Quests;
             public int Index;
             public string CurrentQuest;
             public int TotalQuests;
         }
 
         public int NumberOfQuestLists;
-        public List<QuestTable> QuestLists = new List<QuestTable>();
+        public List<WillowSaveGame.QuestTable> QuestLists = new List<WillowSaveGame.QuestTable>();
 
         //More unknowns and color info.
         public int TotalPlayTime;
@@ -570,20 +552,20 @@ namespace WillowTree.Services.DataAccess
         {
             public int Index;
             public int TotalEchoes;
-            public List<EchoEntry> Echoes;
+            public List<WillowSaveGame.EchoEntry> Echoes;
         };
 
-        public List<EchoTable> EchoLists = new List<EchoTable>();
+        public List<WillowSaveGame.EchoTable> EchoLists = new List<WillowSaveGame.EchoTable>();
 
         // Temporary lists used for primary pack data when the inventory is split
-        public List<Item> Items1 = new List<Item>();
+        public List<WillowSaveGame.Item> Items1 = new List<WillowSaveGame.Item>();
 
-        public List<Weapon> Weapons1 = new List<Weapon>();
+        public List<WillowSaveGame.Weapon> Weapons1 = new List<WillowSaveGame.Weapon>();
 
         // Temporary lists used for primary pack data when the inventory is split
-        public List<Item> Items2 = new List<Item>();
+        public List<WillowSaveGame.Item> Items2 = new List<WillowSaveGame.Item>();
 
-        public List<Weapon> Weapons2 = new List<Weapon>();
+        public List<WillowSaveGame.Weapon> Weapons2 = new List<WillowSaveGame.Weapon>();
 
         public byte[] Unknown3; //80 bytes of 00 at the end
 
@@ -599,7 +581,7 @@ namespace WillowTree.Services.DataAccess
             public bool HasSection3;
             public bool HasSection4;
 
-            public List<DlcSection> DataSections;
+            public List<WillowSaveGame.DlcSection> DataSections;
 
             public int DlcSize;
 
@@ -607,7 +589,7 @@ namespace WillowTree.Services.DataAccess
             public byte DlcUnknown1;  // Read only flag. Always resets to 1 in ver 1.41.  Probably CanAccessBank.
 
             public int BankSize;
-            public List<BankEntry> BankInventory = new List<BankEntry>();
+            public List<WillowSaveGame.BankEntry> BankInventory = new List<WillowSaveGame.BankEntry>();
 
             // DLC Section 2 Data (don't know)
             public int DlcUnknown2; // All four of these are boolean flags.
@@ -625,7 +607,7 @@ namespace WillowTree.Services.DataAccess
             public int NumberOfWeapons;
         }
 
-        public DlcData Dlc = new DlcData();
+        public WillowSaveGame.DlcData Dlc = new WillowSaveGame.DlcData();
 
         public class DlcSection
         {
@@ -894,7 +876,7 @@ namespace WillowTree.Services.DataAccess
             return values;
         }
 
-        private T ReadObject<T>(BinaryReader reader) where T : Object, new()
+        private T ReadObject<T>(BinaryReader reader) where T : WillowSaveGame.Object, new()
         {
             var item = new T();
             item.Strings = item.ReadStrings(reader, EndianWsg);
@@ -902,7 +884,7 @@ namespace WillowTree.Services.DataAccess
             return item;
         }
 
-        private void ReadObjects<T>(BinaryReader reader, ref List<T> objects, int groupSize) where T : Object, new()
+        private void ReadObjects<T>(BinaryReader reader, ref List<T> objects, int groupSize) where T : WillowSaveGame.Object, new()
         {
             for (int progress = 0; progress < groupSize; progress++)
             {
@@ -1017,10 +999,10 @@ namespace WillowTree.Services.DataAccess
                 ChallengeDataBlockId = ReadInt32(challengeReader, EndianWsg);
                 ChallengeDataLength = ReadInt32(challengeReader, EndianWsg);
                 ChallengeDataEntries = ReadInt16(challengeReader, EndianWsg);
-                _challenges = new List<ChallengeDataEntry>();
+                _challenges = new List<WillowSaveGame.ChallengeDataEntry>();
                 for (int i = 0; i < ChallengeDataEntries; i++)
                 {
-                    ChallengeDataEntry challenge;
+                    WillowSaveGame.ChallengeDataEntry challenge;
                     challenge.Id = ReadInt16(challengeReader, EndianWsg);
                     challenge.TypeId = challengeReader.ReadByte();
                     challenge.Value = ReadInt32(challengeReader, EndianWsg);
@@ -1056,7 +1038,7 @@ namespace WillowTree.Services.DataAccess
             PromoCodesRequiringNotification = ReadListInt32(testReader, EndianWsg);
             NumberOfEchoLists = ReadEchoes(testReader, EndianWsg);
 
-            Dlc.DataSections = new List<DlcSection>();
+            Dlc.DataSections = new List<WillowSaveGame.DlcSection>();
             Dlc.DlcSize = ReadInt32(testReader, EndianWsg);
             byte[] dlcDataBlock = testReader.ReadBytes(Dlc.DlcSize);
             if (dlcDataBlock.Length != Dlc.DlcSize)
@@ -1069,7 +1051,7 @@ namespace WillowTree.Services.DataAccess
                 int remainingBytes = Dlc.DlcSize;
                 while (remainingBytes > 0)
                 {
-                    DlcSection section = new DlcSection
+                    WillowSaveGame.DlcSection section = new WillowSaveGame.DlcSection
                     {
                         Id = ReadInt32(dlcDataReader, EndianWsg)
                     };
@@ -1082,7 +1064,7 @@ namespace WillowTree.Services.DataAccess
                             Dlc.DlcUnknown1 = dlcDataReader.ReadByte();
                             Dlc.BankSize = ReadInt32(dlcDataReader, EndianWsg);
                             int bankEntriesCount = ReadInt32(dlcDataReader, EndianWsg);
-                            Dlc.BankInventory = new List<BankEntry>();
+                            Dlc.BankInventory = new List<WillowSaveGame.BankEntry>();
                             Console.WriteLine(@"====== ENTER BANK ======");
                             BankValuesCount = ExportValuesCount;
                             for (int i = 0; i < bankEntriesCount; i++)
@@ -1219,16 +1201,16 @@ namespace WillowTree.Services.DataAccess
             EchoLists.Clear();
             for (int i = 0; i < echoListCount; i++)
             {
-                EchoTable et = new EchoTable
+                WillowSaveGame.EchoTable et = new WillowSaveGame.EchoTable
                 {
                     Index = ReadInt32(reader, endianWsg),
                     TotalEchoes = ReadInt32(reader, endianWsg),
-                    Echoes = new List<EchoEntry>()
+                    Echoes = new List<WillowSaveGame.EchoEntry>()
                 };
 
                 for (int echoIndex = 0; echoIndex < et.TotalEchoes; echoIndex++)
                 {
-                    EchoEntry ee = new EchoEntry
+                    WillowSaveGame.EchoEntry ee = new WillowSaveGame.EchoEntry
                     {
                         Name = ReadString(reader, endianWsg),
                         DlcValue1 = ReadInt32(reader, endianWsg),
@@ -1248,18 +1230,18 @@ namespace WillowTree.Services.DataAccess
             QuestLists.Clear();
             for (int listIndex = 0; listIndex < numberOfQuestList; listIndex++)
             {
-                QuestTable qt = new QuestTable
+                WillowSaveGame.QuestTable qt = new WillowSaveGame.QuestTable
                 {
                     Index = ReadInt32(reader, endianWsg),
                     CurrentQuest = ReadString(reader, endianWsg),
                     TotalQuests = ReadInt32(reader, endianWsg),
-                    Quests = new List<QuestEntry>()
+                    Quests = new List<WillowSaveGame.QuestEntry>()
                 };
                 int questCount = qt.TotalQuests;
 
                 for (int questIndex = 0; questIndex < questCount; questIndex++)
                 {
-                    QuestEntry qe = new QuestEntry
+                    WillowSaveGame.QuestEntry qe = new WillowSaveGame.QuestEntry
                     {
                         Name = ReadString(reader, endianWsg),
                         Progress = ReadInt32(reader, endianWsg),
@@ -1269,7 +1251,7 @@ namespace WillowTree.Services.DataAccess
 
                     int objectiveCount = ReadInt32(reader, endianWsg);
                     qe.NumberOfObjectives = objectiveCount;
-                    qe.Objectives = new QuestObjective[objectiveCount];
+                    qe.Objectives = new WillowSaveGame.QuestObjective[objectiveCount];
 
                     for (int objectiveIndex = 0; objectiveIndex < objectiveCount; objectiveIndex++)
                     {
@@ -1368,7 +1350,7 @@ namespace WillowTree.Services.DataAccess
             // but it does change the index of the ones after it.
             for (int i = Dlc.DataSections.Count - 1; i >= 0; i--)
             {
-                DlcSection section = Dlc.DataSections[i];
+                WillowSaveGame.DlcSection section = Dlc.DataSections[i];
 
                 if (knownSectionIds.Contains(section.Id))
                 {
@@ -1415,13 +1397,13 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        private void WriteObject<T>(BinaryWriter Out, T obj) where T : Object
+        private void WriteObject<T>(BinaryWriter Out, T obj) where T : WillowSaveGame.Object
         {
             WriteStrings(Out, obj.Strings);
             WriteValues(Out, obj.GetValues());
         }
 
-        private void WriteObjects<T>(BinaryWriter Out, List<T> objs) where T : Object
+        private void WriteObjects<T>(BinaryWriter Out, List<T> objs) where T : WillowSaveGame.Object
         {
             Write(Out, objs.Count, EndianWsg);
             foreach (var obj in objs)
@@ -1485,7 +1467,7 @@ namespace WillowTree.Services.DataAccess
             Write(Out, ChallengeDataBlockId, EndianWsg);
             Write(Out, count * 7 + 2, EndianWsg);
             Write(Out, count, EndianWsg);
-            foreach (ChallengeDataEntry challenge in _challenges)
+            foreach (WillowSaveGame.ChallengeDataEntry challenge in _challenges)
             {
                 Write(Out, challenge.Id, EndianWsg);
                 Out.Write(challenge.TypeId);
@@ -1512,7 +1494,7 @@ namespace WillowTree.Services.DataAccess
 
             for (int listIndex = 0; listIndex < NumberOfQuestLists; listIndex++)
             {
-                QuestTable qt = QuestLists[listIndex];
+                WillowSaveGame.QuestTable qt = QuestLists[listIndex];
                 Write(Out, qt.Index, EndianWsg);
                 Write(Out, qt.CurrentQuest, EndianWsg);
                 Write(Out, qt.TotalQuests, EndianWsg);
@@ -1520,7 +1502,7 @@ namespace WillowTree.Services.DataAccess
                 int questCount = qt.TotalQuests;
                 for (int questIndex = 0; questIndex < questCount; questIndex++)  //Write Playthrough 1 Quests
                 {
-                    QuestEntry qe = qt.Quests[questIndex];
+                    WillowSaveGame.QuestEntry qe = qt.Quests[questIndex];
                     Write(Out, qe.Name, EndianWsg);
                     Write(Out, qe.Progress, EndianWsg);
                     Write(Out, qe.DlcValue1, EndianWsg);
@@ -1566,13 +1548,13 @@ namespace WillowTree.Services.DataAccess
             Write(Out, NumberOfEchoLists, EndianWsg);
             for (int listIndex = 0; listIndex < NumberOfEchoLists; listIndex++)
             {
-                EchoTable et = EchoLists[listIndex];
+                WillowSaveGame.EchoTable et = EchoLists[listIndex];
                 Write(Out, et.Index, EndianWsg);
                 Write(Out, et.TotalEchoes, EndianWsg);
 
                 for (int echoIndex = 0; echoIndex < et.TotalEchoes; echoIndex++) //Write Locations
                 {
-                    EchoEntry ee = et.Echoes[echoIndex];
+                    WillowSaveGame.EchoEntry ee = et.Echoes[echoIndex];
                     Write(Out, ee.Name, EndianWsg);
                     Write(Out, ee.DlcValue1, EndianWsg);
                     Write(Out, ee.DlcValue2, EndianWsg);
@@ -1585,7 +1567,7 @@ namespace WillowTree.Services.DataAccess
             // written to the output stream as a single block.  Calculate
             // DLC.DLC_Size as it goes since that has to be written before
             // the blocks are written to the output stream.
-            foreach (DlcSection section in Dlc.DataSections)
+            foreach (WillowSaveGame.DlcSection section in Dlc.DataSections)
             {
                 MemoryStream tempStream = new MemoryStream();
                 BinaryWriter memwriter = new BinaryWriter(tempStream);
@@ -1627,7 +1609,7 @@ namespace WillowTree.Services.DataAccess
 
             // Now its time to actually write all the data sections to the output stream
             Write(Out, Dlc.DlcSize, EndianWsg);
-            foreach (DlcSection section in Dlc.DataSections)
+            foreach (WillowSaveGame.DlcSection section in Dlc.DataSections)
             {
                 Write(Out, section.Id, EndianWsg);
                 int sectionLength = section.BaseData.Length + section.RawData.Length;
@@ -1652,10 +1634,10 @@ namespace WillowTree.Services.DataAccess
         ///<summary>Split the weapon and item lists into two parts: one for the primary pack and one for DLC backpack</summary>
         public void SplitInventoryIntoPacks()
         {
-            Items1 = new List<Item>();
-            Items2 = new List<Item>();
-            Weapons1 = new List<Weapon>();
-            Weapons2 = new List<Weapon>();
+            Items1 = new List<WillowSaveGame.Item>();
+            Items2 = new List<WillowSaveGame.Item>();
+            Weapons1 = new List<WillowSaveGame.Weapon>();
+            Weapons2 = new List<WillowSaveGame.Weapon>();
             // Split items and weapons into two lists each so they can be put into the
             // DLC backpack or regular backpack area as needed.  Any item with a level
             // override and special dlc items go in the DLC backpack.  All others go
@@ -1701,7 +1683,7 @@ namespace WillowTree.Services.DataAccess
 
         private const byte SubPart = 32;
 
-        public sealed class BankEntry : Object
+        public sealed class BankEntry : WillowSaveGame.Object
         {
             public byte TypeId;
 
@@ -1734,30 +1716,30 @@ namespace WillowTree.Services.DataAccess
                     bytes.AddRange(new byte[(6 - subComponentArray.Length) * 4]);
                     foreach (var subComponent in subComponentArray)
                     {
-                        bytes.AddRange(GetBytesFromString(subComponent, endian));
+                        bytes.AddRange(WillowSaveGame.GetBytesFromString(subComponent, endian));
                     }
 
                     if (count == 2)
                     {
-                        bytes.AddRange(GetBytesFromInt((ushort)Quality + (ushort)Level * (uint)65536, endian));
+                        bytes.AddRange(WillowSaveGame.GetBytesFromInt((ushort)Quality + (ushort)Level * (uint)65536, endian));
                     }
                     count++;
                 }
                 bytes.AddRange(new byte[8]);
                 bytes.Add((byte)EquipedSlot);
                 bytes.Add(1);
-                if (ExportValuesCount > 4)
+                if (WillowSaveGame.ExportValuesCount > 4)
                 {
                     bytes.Add((byte)Junk);
                     bytes.Add((byte)Locked);
                 }
                 if (TypeId == 1)
                 {
-                    bytes.AddRange(GetBytesFromInt(Quantity, endian));
+                    bytes.AddRange(WillowSaveGame.GetBytesFromInt(Quantity, endian));
                 }
                 else
                 {
-                    if (ExportValuesCount > 4)
+                    if (WillowSaveGame.ExportValuesCount > 4)
                     {
                         bytes.Add((byte)Locked);
                     }
@@ -1775,15 +1757,15 @@ namespace WillowTree.Services.DataAccess
                 if (mask == 0)
                 {
                     part = "None";
-                    ReadBytes(reader, 24, endian);
+                    WillowSaveGame.ReadBytes(reader, 24, endian);
                 }
                 else
                 {
-                    var padding = SearchForString(reader, endian);
+                    var padding = WillowSaveGame.SearchForString(reader, endian);
                     string partName = "";
                     for (int i = 0; i < (padding.Length == 8 ? 4 : 3); i++)
                     {
-                        var tmp = ReadString(reader, endian);
+                        var tmp = WillowSaveGame.ReadString(reader, endian);
                         if (i != 0)
                         {
                             partName += "." + tmp;
@@ -1796,27 +1778,27 @@ namespace WillowTree.Services.DataAccess
                     part = partName;
                     if (index == 2)
                     {
-                        uint temp = (uint)ReadInt32(reader, endian);
+                        uint temp = (uint)WillowSaveGame.ReadInt32(reader, endian);
                         Quality = (short)(temp % 65536);
                         Level = (short)(temp / 65536);
                     }
                 }
             }
 
-            private static void ReadOldFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
+            private static void ReadOldFooter(WillowSaveGame.BankEntry entry, BinaryReader reader, ByteOrder endian)
             {
                 byte[] footer = reader.ReadBytes(10);
                 entry.EquipedSlot = footer[8];
-                entry.Quantity = entry.TypeId == 1 ? ReadInt32(reader, endian) : reader.ReadByte();
+                entry.Quantity = entry.TypeId == 1 ? WillowSaveGame.ReadInt32(reader, endian) : reader.ReadByte();
             }
 
-            private static void ReadNewFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
+            private static void ReadNewFooter(WillowSaveGame.BankEntry entry, BinaryReader reader, ByteOrder endian)
             {
                 byte[] footer = reader.ReadBytes(12);
                 entry.EquipedSlot = footer[8];
                 if (entry.TypeId == 1)
                 {
-                    entry.Quantity = ReadInt32(reader, endian);//Ammo
+                    entry.Quantity = WillowSaveGame.ReadInt32(reader, endian);//Ammo
                     entry.Junk = footer[10];
                     entry.Locked = footer[11];
                 }
@@ -1828,14 +1810,14 @@ namespace WillowTree.Services.DataAccess
                 }
             }
 
-            public static void RepaireItem(BinaryReader reader, ByteOrder endian, BankEntry entry, int offset)
+            public static void RepaireItem(BinaryReader reader, ByteOrder endian, WillowSaveGame.BankEntry entry, int offset)
             {
                 Console.WriteLine("Repair item");
                 reader.BaseStream.Position -= offset + (entry.TypeId == 1 ? 16 : 11);
                 ReadOldFooter(entry, reader, endian);
             }
 
-            public void Deserialize(BinaryReader reader, ByteOrder endian, BankEntry previous)
+            public void Deserialize(BinaryReader reader, ByteOrder endian, WillowSaveGame.BankEntry previous)
             {
                 TypeId = reader.ReadByte();
                 if (TypeId != 1 && TypeId != 2)
@@ -1855,7 +1837,7 @@ namespace WillowTree.Services.DataAccess
                         }
                         else
                         {
-                            BankValuesCount = 4;
+                            WillowSaveGame.BankValuesCount = 4;
                         }
                     }
                 }
@@ -1869,7 +1851,7 @@ namespace WillowTree.Services.DataAccess
                     Console.WriteLine(part);
                 }
 
-                if (BankValuesCount > 4)
+                if (WillowSaveGame.BankValuesCount > 4)
                 {
                     ReadNewFooter(this, reader, endian);
                 }
@@ -1882,20 +1864,20 @@ namespace WillowTree.Services.DataAccess
             private static byte[] SearchNextItem(BinaryReader reader, ByteOrder endian)
             {
                 var bytes = new List<byte>();
-                var b = ReadBytes(reader, 1, endian);
+                var b = WillowSaveGame.ReadBytes(reader, 1, endian);
                 short val = b[0];
-                if (val == SubPart)
+                if (val == WillowSaveGame.SubPart)
                 {
                     reader.BaseStream.Position -= 2;
                     return bytes.ToArray();
                 }
                 bytes.AddRange(b);
                 //Looking for next byte != 0
-                while (val != SubPart)
+                while (val != WillowSaveGame.SubPart)
                 {
-                    b = ReadBytes(reader, 1, endian);
+                    b = WillowSaveGame.ReadBytes(reader, 1, endian);
                     val = b[0];
-                    if (val != SubPart)
+                    if (val != WillowSaveGame.SubPart)
                     {
                         bytes.AddRange(b);
                     }
@@ -1909,10 +1891,10 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        private BankEntry CreateBankEntry(BinaryReader reader, bool last)
+        private WillowSaveGame.BankEntry CreateBankEntry(BinaryReader reader, bool last)
         {
             //Create new entry
-            BankEntry entry = new BankEntry();
+            WillowSaveGame.BankEntry entry = new WillowSaveGame.BankEntry();
             entry.Deserialize(reader, EndianWsg, Dlc.BankInventory.Count == 0 ? null : Dlc.BankInventory[Dlc.BankInventory.Count - 1]);
             return entry;
         }
