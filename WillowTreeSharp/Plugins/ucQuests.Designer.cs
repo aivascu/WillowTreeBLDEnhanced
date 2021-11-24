@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+using WillowTree.Controls;
+
 namespace WillowTree.Plugins
 {
     partial class ucQuests
@@ -74,8 +77,8 @@ namespace WillowTree.Plugins
             this.ActivePT1QuestGroup = new WillowTree.CustomControls.WTGroupBox();
             this.ActiveQuest = new WillowTree.CustomControls.WTTextBox();
             this.SelectedQuestGroup = new WillowTree.CustomControls.WTGroupBox();
-            this.QuestDLCValue2 = new WillowTree.Plugins.StrictNumericUpDown();
-            this.QuestDLCValue1 = new WillowTree.Plugins.StrictNumericUpDown();
+            this.QuestDLCValue2 = new StrictNumericUpDown();
+            this.QuestDLCValue1 = new StrictNumericUpDown();
             this.labeQuestDLCValue2 = new WillowTree.CustomControls.WTLabel();
             this.labelQuestDLCValue1 = new WillowTree.CustomControls.WTLabel();
             this.QuestDescription = new WillowTree.CustomControls.WTTextBox();
@@ -83,8 +86,8 @@ namespace WillowTree.Plugins
             this.labelQuestDescription = new WillowTree.CustomControls.WTLabel();
             this.labelQuestSummary = new WillowTree.CustomControls.WTLabel();
             this.labelQuestObjectiveValue = new WillowTree.CustomControls.WTLabel();
-            this.NumberOfObjectives = new WillowTree.Plugins.StrictNumericUpDown();
-            this.ObjectiveValue = new WillowTree.Plugins.StrictNumericUpDown();
+            this.NumberOfObjectives = new StrictNumericUpDown();
+            this.ObjectiveValue = new StrictNumericUpDown();
             this.labelQuestObjectives = new WillowTree.CustomControls.WTLabel();
             this.Objectives = new WillowTree.CustomControls.WTComboBox();
             this.labelQuestProgress = new WillowTree.CustomControls.WTLabel();

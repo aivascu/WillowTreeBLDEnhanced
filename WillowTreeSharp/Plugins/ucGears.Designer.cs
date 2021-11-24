@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+using WillowTree.Controls;
+
 namespace WillowTree.Plugins
 {
     partial class ucGears
@@ -91,7 +94,7 @@ namespace WillowTree.Plugins
             this.EquippedSlotGear = new WillowTree.CustomControls.WTComboBox();
             this.labelGearQuantity = new WillowTree.CustomControls.WTLabel();
             this.labelGearEquipped = new WillowTree.CustomControls.WTLabel();
-            this.QuantityGear = new WillowTree.Plugins.StrictNumericUpDown();
+            this.QuantityGear = new StrictNumericUpDown();
             this.gbPartSelectorGear = new WillowTree.CustomControls.WTGroupBox();
             this.PartInfoGear = new WillowTree.CustomControls.WTTextBox();
             this.PartSelectorGear = new WillowTree.CustomControls.WTTreeView();

@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+using WillowTree.Controls;
+
 namespace WillowTree.Plugins
 {
     partial class ucLocker
@@ -95,10 +98,10 @@ namespace WillowTree.Plugins
             this.LevelIndexOverride = new WillowTree.CustomControls.WTSlideSelector();
             this.QualityOverride = new WillowTree.CustomControls.WTSlideSelector();
             this.labelOverrideRemAmmo = new WillowTree.CustomControls.WTLabel();
-            this.RemAmmoOverride = new WillowTree.Plugins.StrictNumericUpDown();
+            this.RemAmmoOverride = new StrictNumericUpDown();
             this.OverrideExportSettings = new WillowTree.CustomControls.WTCheckBox();
             this.LockerRemAmmoLabel = new WillowTree.CustomControls.WTLabel();
-            this.RemAmmoLocker = new WillowTree.Plugins.StrictNumericUpDown();
+            this.RemAmmoLocker = new StrictNumericUpDown();
             this.PartsLocker = new WillowTree.CustomControls.WTListBox();
             this.PartsLockerLabel = new WillowTree.CustomControls.WTLabel();
             this.DescriptionLockerLabel = new WillowTree.CustomControls.WTLabel();

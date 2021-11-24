@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using WillowTree.CustomControls;
 
-namespace WillowTree.Plugins
+namespace WillowTree.Controls
 {
     [DesignTimeVisible(true)]
     public class StrictNumericUpDown : WTNumericUpDown

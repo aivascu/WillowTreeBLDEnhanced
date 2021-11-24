@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace WillowTree
+namespace WillowTree.Controls
 {
     public class WTOpenFileDialog
     {

@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+using WillowTree.Controls;
+
 namespace WillowTree.Plugins
 {
     partial class ucSkills
@@ -59,9 +62,9 @@ namespace WillowTree.Plugins
             this.importToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupPanel12 = new WillowTree.CustomControls.WTGroupBox();
             this.skillLevelLabel = new WillowTree.CustomControls.WTLabel();
-            this.SkillLevel = new WillowTree.Plugins.StrictNumericUpDown();
+            this.SkillLevel = new StrictNumericUpDown();
             this.skillStringLabel = new WillowTree.CustomControls.WTLabel();
-            this.SkillExp = new WillowTree.Plugins.StrictNumericUpDown();
+            this.SkillExp = new StrictNumericUpDown();
             this.SkillName = new WillowTree.CustomControls.WTTextBox();
             this.skillExperienceLabel = new WillowTree.CustomControls.WTLabel();
             this.SkillActive = new WillowTree.CustomControls.WTComboBox();

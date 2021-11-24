@@ -18,6 +18,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with WillowTree#.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+using WillowTree.Controls;
+
 namespace WillowTree.Plugins
 {
     partial class ucGeneral
@@ -51,18 +54,18 @@ namespace WillowTree.Plugins
             this.GeneralTab = new WillowTree.CustomControls.CCPanel();
             this.groupPanel8 = new WillowTree.CustomControls.WTGroupBox();
             this.labelGeneralBankSpace = new WillowTree.CustomControls.WTLabel();
-            this.BankSpace = new WillowTree.Plugins.StrictNumericUpDown();
+            this.BankSpace = new StrictNumericUpDown();
             this.labelGeneralCurrentLocation = new WillowTree.CustomControls.WTLabel();
             this.CurrentLocation = new WillowTree.CustomControls.WTComboBox();
-            this.Level = new WillowTree.Plugins.StrictNumericUpDown();
+            this.Level = new StrictNumericUpDown();
             this.labelGeneralEquipSlots = new WillowTree.CustomControls.WTLabel();
-            this.Experience = new WillowTree.Plugins.StrictNumericUpDown();
-            this.EquipSlots = new WillowTree.Plugins.StrictNumericUpDown();
-            this.Cash = new WillowTree.Plugins.StrictNumericUpDown();
+            this.Experience = new StrictNumericUpDown();
+            this.EquipSlots = new StrictNumericUpDown();
+            this.Cash = new StrictNumericUpDown();
             this.labelGeneralBackpackSpace = new WillowTree.CustomControls.WTLabel();
-            this.SkillPoints = new WillowTree.Plugins.StrictNumericUpDown();
-            this.BackpackSpace = new WillowTree.Plugins.StrictNumericUpDown();
-            this.SaveNumber = new WillowTree.Plugins.StrictNumericUpDown();
+            this.SkillPoints = new StrictNumericUpDown();
+            this.BackpackSpace = new StrictNumericUpDown();
+            this.SaveNumber = new StrictNumericUpDown();
             this.labelGeneralPT2Unlocked = new WillowTree.CustomControls.WTLabel();
             this.labelGeneralLevel = new WillowTree.CustomControls.WTLabel();
             this.PT2Unlocked = new WillowTree.CustomControls.WTComboBox();

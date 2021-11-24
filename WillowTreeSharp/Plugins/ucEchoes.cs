@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using WillowTree.Controls;
 
 namespace WillowTree.Plugins
 {
