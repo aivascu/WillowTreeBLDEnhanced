@@ -12,22 +12,22 @@ namespace WillowTree.Plugins
 
         public UcAmmo()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void DoAmmoTree()
         {
-            AmmoTree.BeginUpdate();
+            this.AmmoTree.BeginUpdate();
             TreeModel model = new TreeModel();
-            AmmoTree.Model = model;
+            this.AmmoTree.Model = model;
 
-            for (int build = 0; build < currentWsg.NumberOfPools; build++)
+            for (int build = 0; build < this.currentWsg.NumberOfPools; build++)
             {
-                string ammoName = GetAmmoName(currentWsg.ResourcePools[build]);
+                string ammoName = this.GetAmmoName(this.currentWsg.ResourcePools[build]);
                 ColoredTextNode node = new ColoredTextNode(ammoName);
                 model.Nodes.Add(node);
             }
-            AmmoTree.EndUpdate();
+            this.AmmoTree.EndUpdate();
         }
 
         private string GetAmmoName(string resource)
@@ -79,36 +79,36 @@ namespace WillowTree.Plugins
             };
             pluginManager.RegisterPlugin(this, events);
 
-            Enabled = false;
+            this.Enabled = false;
         }
 
         private void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            currentWsg = e.WillowTreeMain.SaveData;
-            DoAmmoTree();
-            Enabled = true;
+            this.currentWsg = e.WillowTreeMain.SaveData;
+            this.DoAmmoTree();
+            this.Enabled = true;
         }
 
         public void ReleasePlugin()
         {
-            currentWsg = null;
+            this.currentWsg = null;
         }
 
         private void AmmoPoolRemaining_ValueChanged(object sender, EventArgs e)
         {
-            TreeNodeAdv selectedNode = AmmoTree.SelectedNode;
+            TreeNodeAdv selectedNode = this.AmmoTree.SelectedNode;
             if (selectedNode != null)
             {
-                currentWsg.RemainingPools[selectedNode.Index] = (float)AmmoPoolRemaining.Value;
+                this.currentWsg.RemainingPools[selectedNode.Index] = (float)this.AmmoPoolRemaining.Value;
             }
         }
 
         private void AmmoSDULevel_ValueChanged(object sender, EventArgs e)
         {
-            TreeNodeAdv selectedNode = AmmoTree.SelectedNode;
+            TreeNodeAdv selectedNode = this.AmmoTree.SelectedNode;
             if (selectedNode != null)
             {
-                currentWsg.PoolLevels[selectedNode.Index] = (int)AmmoSDULevel.Value;
+                this.currentWsg.PoolLevels[selectedNode.Index] = (int)this.AmmoSDULevel.Value;
             }
         }
 
@@ -116,30 +116,30 @@ namespace WillowTree.Plugins
         {
             if (e.KeyCode == Keys.Delete)
             {
-                DeleteAmmo_Click(this, EventArgs.Empty);
+                this.DeleteAmmo_Click(this, EventArgs.Empty);
             }
         }
 
         private void AmmoTree_SelectionChanged(object sender, EventArgs e)
         {
-            TreeNodeAdv selectedNode = AmmoTree.SelectedNode;
+            TreeNodeAdv selectedNode = this.AmmoTree.SelectedNode;
             if (selectedNode != null)
             {
-                AmmoPoolRemaining.Value = (decimal)currentWsg.RemainingPools[selectedNode.Index];
-                AmmoSDULevel.Value = currentWsg.PoolLevels[selectedNode.Index];
+                this.AmmoPoolRemaining.Value = (decimal)this.currentWsg.RemainingPools[selectedNode.Index];
+                this.AmmoSDULevel.Value = this.currentWsg.PoolLevels[selectedNode.Index];
             }
         }
 
         private void DeleteAmmo_Click(object sender, EventArgs e)
         {
-            if (AmmoTree.SelectedNode != null)
+            if (this.AmmoTree.SelectedNode != null)
             {
-                currentWsg.NumberOfPools--;
-                ArrayHelper.ResizeArraySmaller(ref currentWsg.AmmoPools, currentWsg.NumberOfPools);
-                ArrayHelper.ResizeArraySmaller(ref currentWsg.ResourcePools, currentWsg.NumberOfPools);
-                ArrayHelper.ResizeArraySmaller(ref currentWsg.RemainingPools, currentWsg.NumberOfPools);
-                ArrayHelper.ResizeArraySmaller(ref currentWsg.PoolLevels, currentWsg.NumberOfPools);
-                DoAmmoTree();
+                this.currentWsg.NumberOfPools--;
+                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.AmmoPools, this.currentWsg.NumberOfPools);
+                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.ResourcePools, this.currentWsg.NumberOfPools);
+                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.RemainingPools, this.currentWsg.NumberOfPools);
+                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.PoolLevels, this.currentWsg.NumberOfPools);
+                this.DoAmmoTree();
             }
         }
 
@@ -151,14 +151,14 @@ namespace WillowTree.Plugins
                 string newDResourcepools = Interaction.InputBox("Enter the 'd_resourcepools' for the new Ammo Pool", "New Ammo Pool", "", 10, 10);
                 if (newDResourcepools != "" && newDResources != "")
                 {
-                    currentWsg.NumberOfPools++;
-                    ArrayHelper.ResizeArrayLarger(ref currentWsg.AmmoPools, currentWsg.NumberOfPools);
-                    ArrayHelper.ResizeArrayLarger(ref currentWsg.ResourcePools, currentWsg.NumberOfPools);
-                    ArrayHelper.ResizeArrayLarger(ref currentWsg.RemainingPools, currentWsg.NumberOfPools);
-                    ArrayHelper.ResizeArrayLarger(ref currentWsg.PoolLevels, currentWsg.NumberOfPools);
-                    currentWsg.AmmoPools[currentWsg.NumberOfPools - 1] = newDResourcepools;
-                    currentWsg.ResourcePools[currentWsg.NumberOfPools - 1] = newDResources;
-                    DoAmmoTree();
+                    this.currentWsg.NumberOfPools++;
+                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.AmmoPools, this.currentWsg.NumberOfPools);
+                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.ResourcePools, this.currentWsg.NumberOfPools);
+                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.RemainingPools, this.currentWsg.NumberOfPools);
+                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.PoolLevels, this.currentWsg.NumberOfPools);
+                    this.currentWsg.AmmoPools[this.currentWsg.NumberOfPools - 1] = newDResourcepools;
+                    this.currentWsg.ResourcePools[this.currentWsg.NumberOfPools - 1] = newDResources;
+                    this.DoAmmoTree();
                 }
             }
             catch

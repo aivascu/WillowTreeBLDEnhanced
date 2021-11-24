@@ -28,11 +28,11 @@ namespace WillowTree.Plugins
 
         public ucGears(IGameData gameData, IGlobalSettings settings, IXmlCache xmlCache, IFile file)
         {
-            GameData = gameData;
-            GlobalSettings = settings;
-            XmlCache = xmlCache;
-            File = file;
-            InitializeComponent();
+            this.GameData = gameData;
+            this.GlobalSettings = settings;
+            this.XmlCache = xmlCache;
+            this.File = file;
+            this.InitializeComponent();
         }
 
         public IGameData GameData { get; }
@@ -51,48 +51,48 @@ namespace WillowTree.Plugins
             };
             pluginManager.RegisterPlugin(this, events);
 
-            switch (Text)
+            switch (this.Text)
             {
                 case "Weapons":
-                    GearTL = new InventoryTreeList(GearTree, GameData.WeaponList);
-                    gbGear.Text = "Weapon Backpack";
-                    copyToBackpackToolStripMenuItem.Visible = false;
+                    this.GearTL = new InventoryTreeList(this.GearTree, this.GameData.WeaponList);
+                    this.gbGear.Text = "Weapon Backpack";
+                    this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
 
                 case "Items":
-                    GearTL = new InventoryTreeList(GearTree, GameData.ItemList);
-                    gbGear.Text = "Item Backpack";
-                    copyToBackpackToolStripMenuItem.Visible = false;
+                    this.GearTL = new InventoryTreeList(this.GearTree, this.GameData.ItemList);
+                    this.gbGear.Text = "Item Backpack";
+                    this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
 
                 case "Bank":
-                    GearTL = new InventoryTreeList(GearTree, GameData.BankList);
-                    gbGear.Text = "Bank";
-                    copyToBankToolStripMenuItem.Visible = false;
+                    this.GearTL = new InventoryTreeList(this.GearTree, this.GameData.BankList);
+                    this.gbGear.Text = "Bank";
+                    this.copyToBankToolStripMenuItem.Visible = false;
                     break;
             }
 
-            Init();
+            this.Init();
 
             // The index translators control the caption that goes over the top of each
             // level or quality SlideSelector.  Attach each translator then signal the
             // value changed event to cause the translator to update the caption.
-            LevelIndexGear.IndexTranslator += LevelTranslator;
-            QualityGear.IndexTranslator += QualityTranslator;
-            LevelIndexGear.OnValueChanged(EventArgs.Empty);
-            QualityGear.OnValueChanged(EventArgs.Empty);
+            this.LevelIndexGear.IndexTranslator += this.LevelTranslator;
+            this.QualityGear.IndexTranslator += this.QualityTranslator;
+            this.LevelIndexGear.OnValueChanged(EventArgs.Empty);
+            this.QualityGear.OnValueChanged(EventArgs.Empty);
 
-            HighlightFont = new Font(GearTree.Font, FontStyle.Italic | FontStyle.Bold);
+            this.HighlightFont = new Font(this.GearTree.Font, FontStyle.Italic | FontStyle.Bold);
 
-            Enabled = false;
+            this.Enabled = false;
         }
 
         private void Init()
         {
-            string tabName = Text;
+            string tabName = this.Text;
 
             //Section for Bank to change interface
-            if (GearTree.SelectedNode?.GetEntry() is InventoryEntry entry)
+            if (this.GearTree.SelectedNode?.GetEntry() is InventoryEntry entry)
             {
                 if (entry.Type == InventoryType.Weapon)
                 {
@@ -105,68 +105,68 @@ namespace WillowTree.Plugins
             }
 
             //Config interface for Weapon, Item, Bank
-            EquippedSlotGear.Items.Clear();
+            this.EquippedSlotGear.Items.Clear();
             switch (tabName)
             {
                 case "Weapons":
-                    DoGearTabs("weapon_tabs.txt");//TODO RSM Push both Weapon/Item in array (db.WpnFile) so we don't have to reload
-                    gearTextName = "Weapon";
-                    gearVisibleLine = 15;
+                    this.DoGearTabs("weapon_tabs.txt");//TODO RSM Push both Weapon/Item in array (db.WpnFile) so we don't have to reload
+                    this.gearTextName = "Weapon";
+                    this.gearVisibleLine = 15;
 
                     //Change control label and text
-                    exportGearToolStripMenuItem.Text = "Export Weapon";
-                    GearPartsGroup.Text = "Weapon Parts";
-                    labelGearEquipped.Text = "Equipped Slot";
-                    labelGearQuantity.Text = "Remaining Ammo";
+                    this.exportGearToolStripMenuItem.Text = "Export Weapon";
+                    this.GearPartsGroup.Text = "Weapon Parts";
+                    this.labelGearEquipped.Text = "Equipped Slot";
+                    this.labelGearQuantity.Text = "Remaining Ammo";
 
-                    EquippedSlotGear.Items.AddRange(new object[] { "Unequipped", "Slot 1 (Up)", "Slot 2 (Down)", "Slot 3 (Left)", "Slot 4 (Right)" });
+                    this.EquippedSlotGear.Items.AddRange(new object[] { "Unequipped", "Slot 1 (Up)", "Slot 2 (Down)", "Slot 3 (Left)", "Slot 4 (Right)" });
                     break;
 
                 case "Items":
-                    DoGearTabs("item_tabs.txt");
-                    gearTextName = "Item";
-                    gearVisibleLine = 17;
+                    this.DoGearTabs("item_tabs.txt");
+                    this.gearTextName = "Item";
+                    this.gearVisibleLine = 17;
 
                     //Change control label and text
-                    exportGearToolStripMenuItem.Text = "Export Item";
-                    GearPartsGroup.Text = "Item Parts";
-                    labelGearEquipped.Text = "Equipped";
-                    labelGearQuantity.Text = "Quantity";
+                    this.exportGearToolStripMenuItem.Text = "Export Item";
+                    this.GearPartsGroup.Text = "Item Parts";
+                    this.labelGearEquipped.Text = "Equipped";
+                    this.labelGearQuantity.Text = "Quantity";
 
-                    EquippedSlotGear.Items.AddRange(new object[] { "No", "Yes" });
+                    this.EquippedSlotGear.Items.AddRange(new object[] { "No", "Yes" });
                     break;
             }
         }
 
         public void ReleasePlugin()
         {
-            LevelIndexGear.IndexTranslator -= LevelTranslator;
-            QualityGear.IndexTranslator -= QualityTranslator;
+            this.LevelIndexGear.IndexTranslator -= this.LevelTranslator;
+            this.QualityGear.IndexTranslator -= this.QualityTranslator;
 
-            pluginManager = null;
-            HighlightFont = null;
-            CurrentWSG = null;
+            this.pluginManager = null;
+            this.HighlightFont = null;
+            this.CurrentWSG = null;
 
-            GearTL = null;
+            this.GearTL = null;
         }
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            CurrentWSG = e.WillowTreeMain.SaveData;
-            GearTL.UpdateTree();
+            this.CurrentWSG = e.WillowTreeMain.SaveData;
+            this.GearTL.UpdateTree();
 
             //Config interface with WTM for Weapon, Item
-            switch (Text)
+            switch (this.Text)
             {
                 case "Weapons":
                 case "Weapons Bank":
                 case "Items":
                 case "Items Bank":
-                    gearFileName = $"{CurrentWSG.CharacterName}'s {gearTextName}s";
+                    this.gearFileName = $"{this.CurrentWSG.CharacterName}'s {this.gearTextName}s";
                     break;
             }
 
-            Enabled = true;
+            this.Enabled = true;
         }
 
         public void OnPluginCommand(object sender, PluginCommandEventArgs e)
@@ -174,65 +174,65 @@ namespace WillowTree.Plugins
             switch (e.Command)
             {
                 case PluginCommand.IncreaseNavigationDepth:
-                    GearTL.IncreaseNavigationDepth();
+                    this.GearTL.IncreaseNavigationDepth();
                     break;
 
                 case PluginCommand.ChangeSortMode:
-                    GearTL.NextSort();
+                    this.GearTL.NextSort();
                     break;
             }
         }
 
         private void DoGearTabs(string textFile)
         {
-            PartSelectorGear.Clear();
+            this.PartSelectorGear.Clear();
 
-            string TabsLine = File.ReadAllText(GameData.DataPath + textFile);
+            string TabsLine = this.File.ReadAllText(this.GameData.DataPath + textFile);
             string[] TabsList = TabsLine.Split(';');
             for (int Progress = 0; Progress < TabsList.Length; Progress++)
             {
-                DoPartsCategory(TabsList[Progress], PartSelectorGear);
+                this.DoPartsCategory(TabsList[Progress], this.PartSelectorGear);
             }
         }
 
         private void NewGear_Click(object sender, EventArgs e)
         {
-            GearTL.AddNew(GearTL.Unsorted.invType);//Bank AddNewWeapon/Item
-            GearTL.AdjustSelectionAfterAdd();
-            GearTree.EnsureVisible(GearTree.SelectedNode);
+            this.GearTL.AddNew(this.GearTL.Unsorted.invType);//Bank AddNewWeapon/Item
+            this.GearTL.AdjustSelectionAfterAdd();
+            this.GearTree.EnsureVisible(this.GearTree.SelectedNode);
         }
 
         private void DeletePartGear_Click(object sender, EventArgs e)
         {
-            if (PartsGear.SelectedIndex != -1)
+            if (this.PartsGear.SelectedIndex != -1)
             {
-                PartsGear.Items[PartsGear.SelectedIndex] = "None";
+                this.PartsGear.Items[this.PartsGear.SelectedIndex] = "None";
             }
         }
 
         private void DeleteGear_Click(object sender, EventArgs e)
         {
-            GearTL.DeleteSelected();
+            this.GearTL.DeleteSelected();
         }
 
         private void DuplicateGear_Click(object sender, EventArgs e)
         {
-            GearTL.DuplicateSelected();
+            this.GearTL.DuplicateSelected();
         }
 
         private void MoveGear_Click(object sender, EventArgs e)
         {
-            GearTL.CopySelected(GameData.LockerList, true);
+            this.GearTL.CopySelected(this.GameData.LockerList, true);
         }
 
         private void CopyLocker_Click(object sender, EventArgs e)
         {
-            GearTL.CopySelected(GameData.LockerList, false);
+            this.GearTL.CopySelected(this.GameData.LockerList, false);
         }
 
         private void CopyBackpack_Click(object sender, EventArgs e)
         {
-            var entries = GearTree.SelectedNodes
+            var entries = this.GearTree.SelectedNodes
                 .Where(node => node.Children.Count == 0)
                 .Select(x => x.GetEntry())
                 .OfType<InventoryEntry>();
@@ -241,47 +241,47 @@ namespace WillowTree.Plugins
             {
                 if (entry.Type == InventoryType.Weapon)
                 {
-                    GameData.WeaponList.Duplicate(entry);
+                    this.GameData.WeaponList.Duplicate(entry);
                 }
                 else if (entry.Type == InventoryType.Item)
                 {
-                    GameData.ItemList.Duplicate(entry);
+                    this.GameData.ItemList.Duplicate(entry);
                 }
             }
         }
 
         private void CopyBank_Click(object sender, EventArgs e)
         {
-            GearTL.CopySelected(GameData.BankList, false);
+            this.GearTL.CopySelected(this.GameData.BankList, false);
         }
 
         private void ClearAllGear_Click(object sender, EventArgs e)
         {
-            GearTL.Clear();
+            this.GearTL.Clear();
         }
 
         private void PurgeDuplicatesGear_Click(object sender, EventArgs e)
         {
-            GearTL.PurgeDuplicates();
+            this.GearTL.PurgeDuplicates();
         }
 
         private string ExportToTextGear()
         {
             List<string> InOutParts = new List<string>();
 
-            for (int Progress = 0; Progress < PartsGear.Items.Count; Progress++)
+            for (int Progress = 0; Progress < this.PartsGear.Items.Count; Progress++)
             {
-                InOutParts.Add((string)PartsGear.Items[Progress]);
+                InOutParts.Add((string)this.PartsGear.Items[Progress]);
             }
 
             List<int> values = InventoryEntry.CalculateValues(
-                (int)QuantityGear.Value,
-                QualityGear.Value,
-                EquippedSlotGear.SelectedIndex,
-                LevelIndexGear.Value,
-                (int)JunkGear.Value,
-                (int)LockedGear.Value,
-                (string)PartsGear.Items[0]);
+                (int)this.QuantityGear.Value,
+                this.QualityGear.Value,
+                this.EquippedSlotGear.SelectedIndex,
+                this.LevelIndexGear.Value,
+                (int)this.JunkGear.Value,
+                (int)this.LockedGear.Value,
+                (string)this.PartsGear.Items[0]);
 
             int valueCount = WillowSaveGame.ExportValuesCount;
             for (int i = 0; i < valueCount; i++)
@@ -296,7 +296,7 @@ namespace WillowTree.Plugins
         {
             try
             {
-                Clipboard.SetText(ExportToTextGear());
+                Clipboard.SetText(this.ExportToTextGear());
             }
             catch
             {
@@ -306,33 +306,33 @@ namespace WillowTree.Plugins
 
         private void ExportToFileGear_Click(object sender, EventArgs e)
         {
-            WTSaveFileDialog ToFile = new WTSaveFileDialog("txt", GearPartsGroup.Text);
+            WTSaveFileDialog ToFile = new WTSaveFileDialog("txt", this.GearPartsGroup.Text);
             if (ToFile.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(ToFile.FileName(), ExportToTextGear());
+                this.File.WriteAllText(ToFile.FileName(), this.ExportToTextGear());
             }
         }
 
         private void ExportToXmlGears_Click(object sender, EventArgs e)
         {
-            WTSaveFileDialog fileDlg = new WTSaveFileDialog("xml", gearFileName);
+            WTSaveFileDialog fileDlg = new WTSaveFileDialog("xml", this.gearFileName);
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
-                GearTL.SaveToXml(fileDlg.FileName());
+                this.GearTL.SaveToXml(fileDlg.FileName());
             }
         }
 
         private bool ImportFromTextGear(string text)
         {
-            InventoryEntry gear = InventoryEntry.ImportFromText(text, GearTL.Unsorted.invType);
+            InventoryEntry gear = InventoryEntry.ImportFromText(text, this.GearTL.Unsorted.invType);
 
             if (gear == null)
             {
                 return false;
             }
 
-            GearTL.Add(gear);
+            this.GearTL.Add(gear);
             return true;
         }
 
@@ -340,22 +340,22 @@ namespace WillowTree.Plugins
         {
             try
             {
-                if (ImportFromTextGear(Clipboard.GetText()))
+                if (this.ImportFromTextGear(Clipboard.GetText()))
                 {
-                    GearTree.SelectedNode = GearTree.AllNodes.Last();
-                    InventoryEntry gear = GearTree.SelectedNode.GetEntry() as InventoryEntry;
-                    RefreshGearTree(gear);
+                    this.GearTree.SelectedNode = this.GearTree.AllNodes.Last();
+                    InventoryEntry gear = this.GearTree.SelectedNode.GetEntry() as InventoryEntry;
+                    this.RefreshGearTree(gear);
                 }
             }
             catch
             {
-                MessageBox.Show($"Invalid clipboard data, {gearTextName} not inserted.");
+                MessageBox.Show($"Invalid clipboard data, {this.gearTextName} not inserted.");
             }
         }
 
         private void ImportFromFilesGears_Click(object sender, EventArgs e)
         {
-            WTOpenFileDialog FromFile = new WTOpenFileDialog("txt", gearFileName);
+            WTOpenFileDialog FromFile = new WTOpenFileDialog("txt", this.gearFileName);
             FromFile.Multiselect(true);
 
             if (FromFile.ShowDialog() == DialogResult.OK)
@@ -364,9 +364,9 @@ namespace WillowTree.Plugins
                 {
                     try
                     {
-                        if (ImportFromTextGear(File.ReadAllText(file)))
+                        if (this.ImportFromTextGear(this.File.ReadAllText(file)))
                         {
-                            GearTree.SelectedNode = GearTree.AllNodes.Last();
+                            this.GearTree.SelectedNode = this.GearTree.AllNodes.Last();
                         }
                     }
                     catch (IOException)
@@ -379,97 +379,97 @@ namespace WillowTree.Plugins
 
         private void ImportAllFromXmlGears_Click(object sender, EventArgs e)
         {
-            WTOpenFileDialog fileDlg = new WTOpenFileDialog("xml", gearFileName);
+            WTOpenFileDialog fileDlg = new WTOpenFileDialog("xml", this.gearFileName);
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
-                GearTL.ImportFromXml(fileDlg.FileName(), GearTL.Unsorted.invType);
+                this.GearTL.ImportFromXml(fileDlg.FileName(), this.GearTL.Unsorted.invType);
             }
         }
 
         private void GearTree_SelectionChanged(object sender, EventArgs e)
         {
-            int OldPartIndex = PartsGear.SelectedIndex;
+            int OldPartIndex = this.PartsGear.SelectedIndex;
 
-            PartsGear.Items.Clear();
+            this.PartsGear.Items.Clear();
 
             // If the node has children it not an item. It is a category label.
-            if (GearTree.SelectedNode == null || GearTree.SelectedNode.Children.Count > 0)
+            if (this.GearTree.SelectedNode == null || this.GearTree.SelectedNode.Children.Count > 0)
             {
-                GearPartsGroup.Text = $"No {gearTextName} Selected";
+                this.GearPartsGroup.Text = $"No {this.gearTextName} Selected";
                 return;
             }
 
-            if (!(GearTree.SelectedNode.GetEntry() is InventoryEntry gear))
+            if (!(this.GearTree.SelectedNode.GetEntry() is InventoryEntry gear))
             {
                 return;
             }
 
-            GearPartsGroup.Text = gear.Name;
+            this.GearPartsGroup.Text = gear.Name;
 
-            Init();
+            this.Init();
             for (int i = 0; i < gear.Parts.Count; i++)
             {
-                PartsGear.Items.Add(gear.Parts[i]);
+                this.PartsGear.Items.Add(gear.Parts[i]);
             }
 
-            WTSlideSelector.MinMaxAdvanced(gear.UsesBigLevel, ref LevelIndexGear);
+            WTSlideSelector.MinMaxAdvanced(gear.UsesBigLevel, ref this.LevelIndexGear);
 
-            QuantityGear.Value = gear.Quantity;
-            QualityGear.Value = gear.QualityIndex;
-            EquippedSlotGear.SelectedIndex = gear.EquippedSlot;
-            LevelIndexGear.Value = gear.LevelIndex;
-            JunkGear.Value = gear.IsJunk;
-            LockedGear.Value = gear.IsLocked;
+            this.QuantityGear.Value = gear.Quantity;
+            this.QualityGear.Value = gear.QualityIndex;
+            this.EquippedSlotGear.SelectedIndex = gear.EquippedSlot;
+            this.LevelIndexGear.Value = gear.LevelIndex;
+            this.JunkGear.Value = gear.IsJunk;
+            this.LockedGear.Value = gear.IsLocked;
 
-            if (PartsGear.Items.Count > OldPartIndex)
+            if (this.PartsGear.Items.Count > OldPartIndex)
             {
-                PartsGear.SelectedIndex = OldPartIndex;
+                this.PartsGear.SelectedIndex = OldPartIndex;
             }
 
-            GearInformationUpdate();
+            this.GearInformationUpdate();
         }
 
         private void SaveChangesGear_Click(object sender, EventArgs e)
         {
-            if (GearTree.SelectedNode == null)
+            if (this.GearTree.SelectedNode == null)
             {
                 return;
             }
 
             // Do nothing if it is a category not an item.
-            if (GearTree.SelectedNode.Children.Count > 0)
+            if (this.GearTree.SelectedNode.Children.Count > 0)
             {
                 return;
             }
 
-            if (GearTree.SelectedNode.GetEntry() is InventoryEntry gear)
+            if (this.GearTree.SelectedNode.GetEntry() is InventoryEntry gear)
             {
-                RefreshGearTree(gear);
+                this.RefreshGearTree(gear);
             }
         }
 
         private void RefreshGearTree(InventoryEntry gear)
         {
-            for (int Progress = 0; Progress < PartsGear.Items.Count; Progress++)
+            for (int Progress = 0; Progress < this.PartsGear.Items.Count; Progress++)
             {
-                gear.Parts[Progress] = (string)PartsGear.Items[Progress];
+                gear.Parts[Progress] = (string)this.PartsGear.Items[Progress];
             }
 
-            gear.UsesBigLevel = InventoryEntry.ItemgradePartUsesBigLevel((string)PartsGear.Items[0]);
-            gear.Quantity = (int)QuantityGear.Value;
-            gear.QualityIndex = QualityGear.Value;
-            gear.EquippedSlot = EquippedSlotGear.SelectedIndex;
-            gear.LevelIndex = LevelIndexGear.Value;
-            gear.IsJunk = (int)JunkGear.Value;
-            gear.IsLocked = (int)LockedGear.Value;
+            gear.UsesBigLevel = InventoryEntry.ItemgradePartUsesBigLevel((string)this.PartsGear.Items[0]);
+            gear.Quantity = (int)this.QuantityGear.Value;
+            gear.QualityIndex = this.QualityGear.Value;
+            gear.EquippedSlot = this.EquippedSlotGear.SelectedIndex;
+            gear.LevelIndex = this.LevelIndexGear.Value;
+            gear.IsJunk = (int)this.JunkGear.Value;
+            gear.IsLocked = (int)this.LockedGear.Value;
 
             // Recalculate the gear stats
-            if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Weapon)
+            if ((this.GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Weapon)
             {
                 gear.RecalculateDataWeapon();
             }
-            else if ((GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Item)
+            else if ((this.GearTree.SelectedNode.GetEntry() as InventoryEntry).Type == InventoryType.Item)
             {
                 gear.RecalculateDataItem();
             }
@@ -482,20 +482,20 @@ namespace WillowTree.Plugins
             // make sure it is relocated to the proper location, then select the
             // node and make sure it is visible so the user is focused on the new
             // location after the changes.
-            GearTL.RemoveFromTreeView(GearTree.SelectedNode, false);
-            GearTL.AddToTreeView(gear);
-            GearTL.AdjustSelectionAfterAdd();
-            GearTree.EnsureVisible(GearTree.SelectedNode);
+            this.GearTL.RemoveFromTreeView(this.GearTree.SelectedNode, false);
+            this.GearTL.AddToTreeView(gear);
+            this.GearTL.AdjustSelectionAfterAdd();
+            this.GearTree.EnsureVisible(this.GearTree.SelectedNode);
 
             // Set the parts group page header to display the new name
-            GearPartsGroup.Text = gear.Name;
+            this.GearPartsGroup.Text = gear.Name;
         }
 
         //TODO Should be less dependant from "Colorize Lists" menu
         private void btnGearSearch_Click(object sender, EventArgs e)
         {
-            string searchText = GearSearch.Text.ToUpper();
-            IEnumerable<TreeNodeAdv> nodes = GearTL.Tree.AllNodes
+            string searchText = this.GearSearch.Text.ToUpper();
+            IEnumerable<TreeNodeAdv> nodes = this.GearTL.Tree.AllNodes
                 .Where(node => node.Children.Count == 0);
             foreach (var node in nodes)
             {
@@ -503,26 +503,26 @@ namespace WillowTree.Plugins
                 {
                     var text = entry.ToXmlText().ToUpper();
                     coloredNode.Font = searchText != "" && text.Contains(searchText)
-                        ? HighlightFont
-                        : GearTree.Font;
+                        ? this.HighlightFont
+                        : this.GearTree.Font;
                 }
             }
 
-            Refresh(); //LockerTree_SelectionChanged is not needed for visual update
+            this.Refresh(); //LockerTree_SelectionChanged is not needed for visual update
         }
 
         private void GearSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                btnGearSearch_Click(this, EventArgs.Empty);
+                this.btnGearSearch_Click(this, EventArgs.Empty);
             }
         }
 
         private void EditQualityAllGears_Click(object sender, EventArgs e)
         {
             int quality;
-            string qualityText = Interaction.InputBox($"All of the {gearTextName}s in your backpack will be adjusted to the following level:", "Edit All Qualitys", "", 10, 10);
+            string qualityText = Interaction.InputBox($"All of the {this.gearTextName}s in your backpack will be adjusted to the following level:", "Edit All Qualitys", "", 10, 10);
 
             try
             {
@@ -533,12 +533,12 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            foreach (InventoryEntry gear in GearTL.Sorted)
+            foreach (InventoryEntry gear in this.GearTL.Sorted)
             {
                 gear.QualityIndex = quality;
             }
 
-            QualityGear.Value = quality;
+            this.QualityGear.Value = quality;
         }
 
         private void EditLevelAllGears_Click(object sender, EventArgs e)
@@ -546,7 +546,7 @@ namespace WillowTree.Plugins
             int level;
             int levelindex;
 
-            string levelText = Interaction.InputBox($"All of the {gearTextName}s in your backpack will be adjusted to the following level:", "Edit All Levels", "", 10, 10);
+            string levelText = Interaction.InputBox($"All of the {this.gearTextName}s in your backpack will be adjusted to the following level:", "Edit All Levels", "", 10, 10);
             try
             {
                 level = Parse.AsInt(levelText);
@@ -557,109 +557,109 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            foreach (InventoryEntry gear in GearTL.Sorted)
+            foreach (InventoryEntry gear in this.GearTL.Sorted)
             {
                 gear.EffectiveLevel = level;
                 gear.NameParts[5] = $"(L{level})";
                 gear.LevelIndex = levelindex;
             }
 
-            GearTL.UpdateNames();
+            this.GearTL.UpdateNames();
 
-            LevelIndexGear.Value = levelindex;
+            this.LevelIndexGear.Value = levelindex;
         }
 
         private void PartSelectorGear_SelectionChanged(object sender, EventArgs e)
         {
-            PartInfoGear.Clear();
+            this.PartInfoGear.Clear();
             try
             {
                 // Read ALL subsections of a given XML section
-                XmlFile Category = XmlCache.XmlFileFromCache(
-                    $"{GameData.DataPath}{PartSelectorGear.SelectedNode.Parent.GetKey()}.txt");
+                XmlFile Category = this.XmlCache.XmlFileFromCache(
+                    $"{this.GameData.DataPath}{this.PartSelectorGear.SelectedNode.Parent.GetKey()}.txt");
 
                 // XML Section: PartCategories.SelectedNode.Text
-                List<string> xmlSection = Category.XmlReadSection(PartSelectorGear.SelectedNode.GetText());
+                List<string> xmlSection = Category.XmlReadSection(this.PartSelectorGear.SelectedNode.GetText());
 
-                PartInfoGear.Lines = xmlSection.ToArray();
+                this.PartInfoGear.Lines = xmlSection.ToArray();
             }
             catch { }
         }
 
         private void PartSelectorGear_NodeDoubleClick(object sender, MouseEventArgs e)
         {
-            if (PartsGear.SelectedItem != null && PartSelectorGear.SelectedNode.Children.Count == 0)
+            if (this.PartsGear.SelectedItem != null && this.PartSelectorGear.SelectedNode.Children.Count == 0)
             {
                 // If part selector tracking is active it'll reposition the node
                 // when the selected item is changed, so temporarily disable it.
-                bool tracking = GlobalSettings.PartSelectorTracking;
-                GlobalSettings.PartSelectorTracking = false;
-                PartsGear.Items[PartsGear.SelectedIndex] =
-                    $"{PartSelectorGear.SelectedNode.Parent.GetKey()}.{PartSelectorGear.SelectedNode.GetText()}";
-                GlobalSettings.PartSelectorTracking = true;
+                bool tracking = this.GlobalSettings.PartSelectorTracking;
+                this.GlobalSettings.PartSelectorTracking = false;
+                this.PartsGear.Items[this.PartsGear.SelectedIndex] =
+                    $"{this.PartSelectorGear.SelectedNode.Parent.GetKey()}.{this.PartSelectorGear.SelectedNode.GetText()}";
+                this.GlobalSettings.PartSelectorTracking = true;
             }
         }
 
         private void PartsGear_DoubleClick(object sender, EventArgs e)
         {
-            string tempManualPart = Interaction.InputBox("Enter a new part", "Manual Edit", (string)PartsGear.SelectedItem, 10, 10);
+            string tempManualPart = Interaction.InputBox("Enter a new part", "Manual Edit", (string)this.PartsGear.SelectedItem, 10, 10);
             if (tempManualPart != "")
             {
-                PartsGear.Items[PartsGear.SelectedIndex] = tempManualPart;
+                this.PartsGear.Items[this.PartsGear.SelectedIndex] = tempManualPart;
             }
         }
 
         private void PartsGear_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (PartsGear.SelectedIndex == -1)
+            if (this.PartsGear.SelectedIndex == -1)
             {
                 return;
             }
 
-            string part = PartsGear.SelectedItem.ToString();
+            string part = this.PartsGear.SelectedItem.ToString();
 
-            if (GlobalSettings.PartSelectorTracking)
+            if (this.GlobalSettings.PartSelectorTracking)
             {
-                PartSelectorGear.BeginUpdate();
-                TreeNodeAdv categoryNode = PartSelectorGear.FindFirstNodeByTag(part.Before('.'), false);
+                this.PartSelectorGear.BeginUpdate();
+                TreeNodeAdv categoryNode = this.PartSelectorGear.FindFirstNodeByTag(part.Before('.'), false);
                 if (categoryNode != null)
                 {
                     TreeNodeAdv partNode = categoryNode.FindFirstByTag(part.After('.'), false);
-                    PartSelectorGear.CollapseAll();
-                    PartSelectorGear.SelectedNode = partNode;
+                    this.PartSelectorGear.CollapseAll();
+                    this.PartSelectorGear.SelectedNode = partNode;
                     if (partNode != null)
                     {
-                        CenterNode(PartSelectorGear.SelectedNode, gearVisibleLine);
+                        CenterNode(this.PartSelectorGear.SelectedNode, this.gearVisibleLine);
                     }
                 }
-                PartSelectorGear.EndUpdate();
+                this.PartSelectorGear.EndUpdate();
             }
             else
             {
-                PartInfoGear.Clear();
+                this.PartInfoGear.Clear();
 
-                List<string> xmlSection = GameData.GetPartSection(part);
+                List<string> xmlSection = this.GameData.GetPartSection(part);
 
                 if (xmlSection != null)
                 {
-                    PartInfoGear.Lines = xmlSection.ToArray();
+                    this.PartInfoGear.Lines = xmlSection.ToArray();
                 }
             }
         }
 
         private void PartsGear_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (PartsGear.SelectedIndex == 0)
+            if (this.PartsGear.SelectedIndex == 0)
             {
-                if (InventoryEntry.ItemgradePartUsesBigLevel((string)PartsGear.Items[0]))
+                if (InventoryEntry.ItemgradePartUsesBigLevel((string)this.PartsGear.Items[0]))
                 {
-                    LevelIndexGear.MaximumAdvanced = int.MaxValue;
-                    LevelIndexGear.MinimumAdvanced = int.MinValue;
+                    this.LevelIndexGear.MaximumAdvanced = int.MaxValue;
+                    this.LevelIndexGear.MinimumAdvanced = int.MinValue;
                 }
                 else
                 {
-                    LevelIndexGear.MaximumAdvanced = short.MaxValue;
-                    LevelIndexGear.MinimumAdvanced = short.MinValue;
+                    this.LevelIndexGear.MaximumAdvanced = short.MaxValue;
+                    this.LevelIndexGear.MinimumAdvanced = short.MinValue;
                 }
             }
         }
@@ -669,26 +669,26 @@ namespace WillowTree.Plugins
             switch (e.KeyCode)
             {
                 case Keys.Delete:
-                    DeleteGear_Click(this, EventArgs.Empty);
+                    this.DeleteGear_Click(this, EventArgs.Empty);
                     break;
 
                 case Keys.Insert:
-                    DuplicateGear_Click(this, EventArgs.Empty);
+                    this.DuplicateGear_Click(this, EventArgs.Empty);
                     break;
 
                 default:
                     switch (e.KeyData)
                     {
                         case Keys.Control | Keys.B:
-                            CopyBackpack_Click(this, EventArgs.Empty);
+                            this.CopyBackpack_Click(this, EventArgs.Empty);
                             break;
 
                         case Keys.Control | Keys.N:
-                            CopyBank_Click(this, EventArgs.Empty);
+                            this.CopyBank_Click(this, EventArgs.Empty);
                             break;
 
                         case Keys.Control | Keys.L:
-                            CopyLocker_Click(this, EventArgs.Empty);
+                            this.CopyLocker_Click(this, EventArgs.Empty);
                             break;
                     }
 
@@ -700,17 +700,17 @@ namespace WillowTree.Plugins
         {
             if (e.KeyCode == Keys.Delete)
             {
-                DeletePartGear_Click(this, EventArgs.Empty);
+                this.DeletePartGear_Click(this, EventArgs.Empty);
             }
         }
 
         private void GearInformationUpdate()
         {
-            txtGearInformation.Clear();
+            this.txtGearInformation.Clear();
 
-            if (GearTree.SelectedNode?.GetEntry() is InventoryEntry entry && entry.Type == InventoryType.Weapon)
+            if (this.GearTree.SelectedNode?.GetEntry() is InventoryEntry entry && entry.Type == InventoryType.Weapon)
             {
-                txtGearInformation.Text = GameData.WeaponInfo(entry);
+                this.txtGearInformation.Text = this.GameData.WeaponInfo(entry);
             }
         }
 
@@ -772,7 +772,7 @@ namespace WillowTree.Plugins
 
         private void DoPartsCategory(string Category, TreeViewAdv Tree)
         {
-            XmlFile PartList = XmlCache.XmlFileFromCache($"{GameData.DataPath}{Category}.txt");
+            XmlFile PartList = this.XmlCache.XmlFileFromCache($"{this.GameData.DataPath}{Category}.txt");
             TreeModel model = Tree.Model as TreeModel;
 
             Tree.BeginUpdate();
@@ -801,7 +801,7 @@ namespace WillowTree.Plugins
             WTSlideSelector levelindex = (WTSlideSelector)obj;
 
             return levelindex.InputMode == InputMode.Advanced
-                ? GlobalSettings.UseHexInAdvancedMode
+                ? this.GlobalSettings.UseHexInAdvancedMode
                     ? "Level Index (hexadecimal)"
                     : "Level Index (decimal)"
                 : levelindex.Value == 0
@@ -814,7 +814,7 @@ namespace WillowTree.Plugins
             WTSlideSelector qualityindex = (WTSlideSelector)obj;
 
             return qualityindex.InputMode == InputMode.Advanced
-                ? GlobalSettings.UseHexInAdvancedMode
+                ? this.GlobalSettings.UseHexInAdvancedMode
                     ? "Quality Index (hexadecimal)"
                     : "Quality Index (decimal)"
                 : $"Quality: {qualityindex.Value}";

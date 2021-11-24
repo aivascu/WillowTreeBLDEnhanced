@@ -9,7 +9,7 @@ namespace WillowTree.Controls
     {
         public StrictNumericUpDown()
         {
-            this.ValueChanged += RestrictValueToBounds;
+            this.ValueChanged += this.RestrictValueToBounds;
         }
 
         private void RestrictValueToBounds(object sender, EventArgs e)

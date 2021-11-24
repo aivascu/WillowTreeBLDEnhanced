@@ -104,19 +104,19 @@ namespace WillowTree.Inventory
             this.Tree = tree;
             this.NavigationLayers = 1;
 
-            Unsorted.EntryAdd += OnEntryAdd;
-            Unsorted.EntryRemove += OnEntryRemove;
-            Unsorted.EntryRemoveNode += OnEntryRemoveNode;
-            Unsorted.ListReload += OnListReload;
-            Unsorted.NameFormatChanged += OnNameFormatChanged;
-            Unsorted.TreeThemeChanged += OnTreeThemeChanged;
+            this.Unsorted.EntryAdd += this.OnEntryAdd;
+            this.Unsorted.EntryRemove += this.OnEntryRemove;
+            this.Unsorted.EntryRemoveNode += this.OnEntryRemoveNode;
+            this.Unsorted.ListReload += this.OnListReload;
+            this.Unsorted.NameFormatChanged += this.OnNameFormatChanged;
+            this.Unsorted.TreeThemeChanged += this.OnTreeThemeChanged;
             //Unsorted.NavigationDepthChanged += OnNavigationDepthChanged;
             //Unsorted.SortModeChanged += OnSortModeChanged;
         }
 
         public void Add(InventoryEntry entry)
         {
-            Unsorted.Add(entry);
+            this.Unsorted.Add(entry);
             // Implicit event call to OnEntryAdd occurs here
         }
 
@@ -128,12 +128,12 @@ namespace WillowTree.Inventory
             if (invType == InventoryType.Weapon)
             {
                 values = new List<int>() { 0, 5, 0, 0 };
-                parts.AddRange(weaponParts);
+                parts.AddRange(this.weaponParts);
             }
             else if (invType == InventoryType.Item)
             {
                 values = new List<int>() { 1, 5, 0, 0 };
-                parts.AddRange(itemParts);
+                parts.AddRange(this.itemParts);
             }
 
             this.Add(new InventoryEntry(invType, parts, values));
@@ -143,9 +143,9 @@ namespace WillowTree.Inventory
         // The child that was added to the last parent node
         public void AddToTreeView(InventoryEntry entry)
         {
-            _parent = CreateNavigationNodes(entry);
+            this._parent = this.CreateNavigationNodes(entry);
 
-            _node = new ColoredTextNode
+            this._node = new ColoredTextNode
             {
                 Tag = entry,
                 ForeColor = entry.Color,
@@ -153,60 +153,60 @@ namespace WillowTree.Inventory
             };
 
             Collection<Node> nodes;
-            if (_parent == null)
+            if (this._parent == null)
             {
-                _parent = Tree.Root;
-                nodes = (Tree.Model as TreeModel).Nodes;
+                this._parent = this.Tree.Root;
+                nodes = (this.Tree.Model as TreeModel).Nodes;
             }
             else
             {
-                nodes = (_parent.Tag as Node).Nodes;
+                nodes = (this._parent.Tag as Node).Nodes;
             }
 
-            IComparer<InventoryEntry> Comparer = IEComparisonEngine.CurrentComparer();
+            IComparer<InventoryEntry> Comparer = this.IEComparisonEngine.CurrentComparer();
 
             for (int i = nodes.Count - 1; i >= 0; i--)
             {
                 if (Comparer.Compare(nodes[i].Tag as InventoryEntry, entry) == -1)
                 {
-                    _lastNodeIndex = i + 1;
-                    nodes.Insert(_lastNodeIndex, _node);
+                    this._lastNodeIndex = i + 1;
+                    nodes.Insert(this._lastNodeIndex, this._node);
                     return;
                 }
             }
-            nodes.Insert(0, _node);
-            _lastNodeIndex = 0;
+            nodes.Insert(0, this._node);
+            this._lastNodeIndex = 0;
         }
 
         public void AdjustSelectionAfterAdd()
         {
-            Tree.SelectedNode = _parent.FindNodeAdvByTag(_node, false);
+            this.Tree.SelectedNode = this._parent.FindNodeAdvByTag(this._node, false);
         }
 
         public void AdjustSelectionAfterRemove()
         {
-            if (_next != null)
+            if (this._next != null)
             {
-                Tree.SelectedNode = _next;
+                this.Tree.SelectedNode = this._next;
             }
         }
 
         public void Clear()
         {
-            Unsorted.Clear();
+            this.Unsorted.Clear();
             // Implicit event call to OnListReload here
         }
 
         public void ClearTreeView()
         {
-            Tree.Clear();
+            this.Tree.Clear();
         }
 
         public void CopySelected(InventoryList dest, bool deleteSource)
         {
-            TreeNodeAdv[] nodes = Tree.SelectedNodes.ToArray();
+            TreeNodeAdv[] nodes = this.Tree.SelectedNodes.ToArray();
 
-            Tree.BeginUpdate();
+            this.Tree.BeginUpdate();
             foreach (TreeNodeAdv node in nodes)
             {
                 InventoryEntry old = node.GetEntry() as InventoryEntry;
@@ -221,18 +221,18 @@ namespace WillowTree.Inventory
                 InventoryEntry entry = new InventoryEntry(old);
                 if (deleteSource)
                 {
-                    Remove(node, false);
+                    this.Remove(node, false);
                 }
 
                 dest.Add(entry);
             }
-            Tree.EndUpdate();
+            this.Tree.EndUpdate();
         }
 
         public TreeNodeAdv CreateNavigationNodes(InventoryEntry entry)
         {
-            int[] sortmodes = IEComparisonEngine.CurrentComparer().comparisons;
-            int loopcount = (NavigationLayers < sortmodes.Length) ? NavigationLayers : sortmodes.Length;
+            int[] sortmodes = this.IEComparisonEngine.CurrentComparer().comparisons;
+            int loopcount = (this.NavigationLayers < sortmodes.Length) ? this.NavigationLayers : sortmodes.Length;
 
             TreeNodeAdv navnode = null;
             TreeNodeAdv newbranch = null;
@@ -259,7 +259,7 @@ namespace WillowTree.Inventory
                             currentcategory = "none";
                         }
 
-                        if (!CategoryLookup.TryGetValue(currentcategory, out categorytext))
+                        if (!this.CategoryLookup.TryGetValue(currentcategory, out categorytext))
                         {
                             currentcategory = "(Unknown)";
                             categorytext = "(Unknown)";
@@ -326,7 +326,7 @@ namespace WillowTree.Inventory
                 }
                 else
                 {
-                    newbranch = Tree.Root.FindFirstByTag(currentcategory, false);
+                    newbranch = this.Tree.Root.FindFirstByTag(currentcategory, false);
                 }
 
                 if (newbranch == null)
@@ -348,8 +348,8 @@ namespace WillowTree.Inventory
 
                     if (navnode == null)
                     {
-                        (Tree.Model as TreeModel).Nodes.Add(data);
-                        navnode = Tree.Root;
+                        (this.Tree.Model as TreeModel).Nodes.Add(data);
+                        navnode = this.Tree.Root;
                     }
                     else
                     {
@@ -367,22 +367,22 @@ namespace WillowTree.Inventory
 
         public void DeleteSelected()
         {
-            TreeNodeAdv[] nodes = Tree.SelectedNodes.ToArray();
+            TreeNodeAdv[] nodes = this.Tree.SelectedNodes.ToArray();
 
             this.Remove(nodes);
-            AdjustSelectionAfterRemove();
+            this.AdjustSelectionAfterRemove();
         }
 
         public void Duplicate(InventoryEntry entry)
         {
             InventoryEntry copy = new InventoryEntry(entry);
-            Unsorted.Add(copy);
+            this.Unsorted.Add(copy);
             // Implicit event call to OnEntryAdd occurs here
         }
 
         public void DuplicateSelected()
         {
-            foreach (TreeNodeAdv node in Tree.SelectedNodes.ToArray())
+            foreach (TreeNodeAdv node in this.Tree.SelectedNodes.ToArray())
             {
                 InventoryEntry old = node.GetEntry() as InventoryEntry;
                 // If the entry is null it is because the tag isn't an inventory
@@ -394,7 +394,7 @@ namespace WillowTree.Inventory
                 }
 
                 InventoryEntry entry = new InventoryEntry(old);
-                Add(entry);
+                this.Add(entry);
             }
         }
 
@@ -413,7 +413,7 @@ namespace WillowTree.Inventory
             }
 
             XmlNodeList nodes = doc.SelectNodes("/INI/Section");
-            Tree.BeginUpdate();
+            this.Tree.BeginUpdate();
             foreach (XmlNode node in nodes)
             {
                 InventoryEntry entry = new InventoryEntry(node);
@@ -430,79 +430,79 @@ namespace WillowTree.Inventory
                     this.Add(entry);
                 }
             }
-            Tree.EndUpdate();
+            this.Tree.EndUpdate();
         }
 
         public void IncreaseNavigationDepth()
         {
-            NavigationLayers++;
-            if (NavigationLayers > 3)
+            this.NavigationLayers++;
+            if (this.NavigationLayers > 3)
             {
-                NavigationLayers = 0;
+                this.NavigationLayers = 0;
             }
 
-            UpdateTree();
+            this.UpdateTree();
         }
 
         public void LoadFromXml(string InputFile, int EntryType)
         {
-            Tree.BeginUpdate();
+            this.Tree.BeginUpdate();
             this.Clear();
-            ImportFromXml(InputFile, EntryType);
-            Tree.EndUpdate();
+            this.ImportFromXml(InputFile, EntryType);
+            this.Tree.EndUpdate();
         }
 
         public void NextSort()
         {
-            IEComparisonEngine.NextComparer();
-            SortByCustom();
+            this.IEComparisonEngine.NextComparer();
+            this.SortByCustom();
         }
 
         public void OnEntryAdd(InventoryList ilist, InventoryEntry entry)
         {
-            Sorted.Add(entry);
-            AddToTreeView(entry);
+            this.Sorted.Add(entry);
+            this.AddToTreeView(entry);
         }
 
         public void OnEntryRemove(InventoryList ilist, InventoryEntry entry)
         {
-            Sorted.Remove(entry);
-            RemoveFromTreeView(entry, false);
+            this.Sorted.Remove(entry);
+            this.RemoveFromTreeView(entry, false);
         }
 
         public void OnEntryRemoveNode(InventoryList ilist, TreeNodeAdv node)
         {
             InventoryEntry entry = node.GetEntry() as InventoryEntry;
-            Sorted.Remove(entry);
-            RemoveFromTreeView(node, false);
+            this.Sorted.Remove(entry);
+            this.RemoveFromTreeView(node, false);
         }
 
         public void OnListReload(InventoryList ilist)
         {
-            Sorted.Clear();
-            ClearTreeView();
+            this.Sorted.Clear();
+            this.ClearTreeView();
 
-            Sorted.AddRange(Unsorted.Items.Values);
-            SortByCustom();
+            this.Sorted.AddRange(this.Unsorted.Items.Values);
+            this.SortByCustom();
         }
 
         public void OnNameFormatChanged(InventoryList ilist)
         {
-            UpdateNames();
+            this.UpdateNames();
         }
 
         public void OnTreeThemeChanged(InventoryList ilist, TreeViewTheme theme)
         {
-            Tree.Theme = theme;
+            this.Tree.Theme = theme;
         }
 
         public void PurgeDuplicates()
         {
             string lastGoodFile = GameData.OpenedLockerFilename();    //Keep last valid locker path file
             string tempfile = GameData.DataPath + "purgeduplicates.temp";
-            SaveToXml(tempfile);
+            this.SaveToXml(tempfile);
             new PurgeDuplicateNodesCommand(tempfile).Execute();
-            LoadFromXml(tempfile, InventoryType.Any);
+            this.LoadFromXml(tempfile, InventoryType.Any);
             File.Delete(tempfile);
 
             GameData.OpenedLockerFilename(lastGoodFile);  //Restore last valid locker path file
@@ -511,28 +511,28 @@ namespace WillowTree.Inventory
         public void Remove(TreeNodeAdv nodeAdv, bool updateSelection)
         {
             this.updateSelection = updateSelection;
-            Unsorted.Remove(nodeAdv);
+            this.Unsorted.Remove(nodeAdv);
         }
 
         public void Remove(IEnumerable<TreeNodeAdv> nodesToRemove)
         {
             TreeNodeAdv[] nodes = nodesToRemove.ToArray();
-            Tree.BeginUpdate();
+            this.Tree.BeginUpdate();
 
             foreach (TreeNodeAdv node in nodes)
             {
                 // Nodes with children are not items they are categories
                 if (node.Children.Count == 0)
                 {
-                    Remove(node, false);
+                    this.Remove(node, false);
                 }
             }
-            Tree.EndUpdate();
+            this.Tree.EndUpdate();
         }
 
         public void RemoveFromTreeView(TreeNodeAdv node, bool selectNextNode)
         {
-            _next = null;
+            this._next = null;
 
             if (node == null)
             {
@@ -541,16 +541,16 @@ namespace WillowTree.Inventory
 
             // If the node being removed is the selected node in the tree
             // a new node will have to be selected.
-            if (node == Tree.SelectedNode)
+            if (node == this.Tree.SelectedNode)
             {
-                _next = node.NextVisibleNode;
+                this._next = node.NextVisibleNode;
                 // Navigate through children until an actual item node is
                 // found if the new node is a navigation node.
-                if (_next != null)
+                if (this._next != null)
                 {
-                    while (_next.Children.Count > 0)
+                    while (this._next.Children.Count > 0)
                     {
-                        _next = _next.Children[0];
+                        this._next = this._next.Children[0];
                     }
                     //while (newnode.Children.Count > 0)
                     //    newnode = newnode.Children[0];
@@ -563,7 +563,7 @@ namespace WillowTree.Inventory
             {
                 TreeNodeAdv parent = node.Parent;
                 node.Remove();
-                while ((parent != Tree.Root) && (parent.Children.Count == 0))
+                while ((parent != this.Tree.Root) && (parent.Children.Count == 0))
                 {
                     node = parent;
                     parent = node.Parent;
@@ -573,7 +573,7 @@ namespace WillowTree.Inventory
 
             if (selectNextNode)
             {
-                Tree.SelectedNode = _next;
+                this.Tree.SelectedNode = this._next;
             }
         }
 
@@ -583,10 +583,10 @@ namespace WillowTree.Inventory
             // has to search the whole tree for the entry first.  Use
             // RemoveFromTreeView(TreeNodeAdv node, bool selectNextNode) when
             // possible.
-            _next = null;
+            this._next = null;
 
             // First find the node being removed in the tree
-            TreeNodeAdv node = Tree.FindFirstNodeByTag(entry, true);
+            TreeNodeAdv node = this.Tree.FindFirstNodeByTag(entry, true);
             if (node == null)
             {
                 return;
@@ -594,16 +594,16 @@ namespace WillowTree.Inventory
 
             // If the node being removed is the selected node in the tree
             // a new node will have to be selected.
-            if (node == Tree.SelectedNode)
+            if (node == this.Tree.SelectedNode)
             {
-                _next = node.NextVisibleNode;
+                this._next = node.NextVisibleNode;
                 // Navigate through children until an actual item node is
                 // found if the new node is a navigation node.
-                if (_next != null)
+                if (this._next != null)
                 {
-                    while (_next.Children.Count > 0)
+                    while (this._next.Children.Count > 0)
                     {
-                        _next = _next.Children[0];
+                        this._next = this._next.Children[0];
                     }
                     //while (newnode.Children.Count > 0)
                     //    newnode = newnode.Children[0];
@@ -616,7 +616,7 @@ namespace WillowTree.Inventory
             {
                 TreeNodeAdv parent = node.Parent;
                 node.Remove();
-                while ((parent != Tree.Root) && (parent.Children.Count == 0))
+                while ((parent != this.Tree.Root) && (parent.Children.Count == 0))
                 {
                     node = parent;
                     parent = node.Parent;
@@ -626,7 +626,7 @@ namespace WillowTree.Inventory
 
             if (selectNextNode)
             {
-                Tree.SelectedNode = _next;
+                this.Tree.SelectedNode = this._next;
             }
         }
 
@@ -661,32 +661,32 @@ namespace WillowTree.Inventory
 
         public void SortByCustom()
         {
-            Sorted.Sort(IEComparisonEngine.CurrentComparer().Compare);
-            UpdateTree();
+            this.Sorted.Sort(this.IEComparisonEngine.CurrentComparer().Compare);
+            this.UpdateTree();
         }
 
         public void UpdateNames()
         {
-            foreach (InventoryEntry entry in Sorted)
+            foreach (InventoryEntry entry in this.Sorted)
             {
                 entry.BuildName();
             }
 
-            UpdateTree();
+            this.UpdateTree();
         }
 
         public void UpdateTree()
         {
             // This procedure clears the GUI tree and rebuilds it.  It
             // adds navigation nodes as needed to show item categories
-            Tree.BeginUpdate();
-            Tree.Clear();
-            foreach (InventoryEntry entry in Sorted)
+            this.Tree.BeginUpdate();
+            this.Tree.Clear();
+            foreach (InventoryEntry entry in this.Sorted)
             {
-                AddToTreeView(entry);
+                this.AddToTreeView(entry);
             }
 
-            Tree.EndUpdate();
+            this.Tree.EndUpdate();
         }
     }
 }

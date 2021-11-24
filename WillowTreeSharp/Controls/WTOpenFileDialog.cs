@@ -13,7 +13,7 @@ namespace WillowTree.Controls
                 fileName = "";
             }
 
-            dialog = new OpenFileDialog
+            this.dialog = new OpenFileDialog
             {
                 DefaultExt = $"*.{fileExt}",
                 Filter = $"WillowTree (*.{fileExt})|*.{fileExt}|All Files (*.*)|*.*",
@@ -22,15 +22,15 @@ namespace WillowTree.Controls
         }
 
         public DialogResult ShowDialog()
-        { return dialog.ShowDialog(); }
+        { return this.dialog.ShowDialog(); }
 
         public string FileName()
-        { return dialog.FileName; }
+        { return this.dialog.FileName; }
 
         public string[] FileNames()
-        { return dialog.FileNames; }
+        { return this.dialog.FileNames; }
 
         public void Multiselect(bool multiselect)
-        { dialog.Multiselect = multiselect; }
+        { this.dialog.Multiselect = multiselect; }
     }
 }

@@ -45,8 +45,8 @@ namespace WillowTree.Plugins
 
         public UcSkills(IGameData gameData)
         {
-            InitializeComponent();
-            GameData = gameData;
+            this.InitializeComponent();
+            this.GameData = gameData;
         }
 
         public IGameData GameData { get; }
@@ -55,19 +55,19 @@ namespace WillowTree.Plugins
         {
             XmlFile xml;
 
-            SkillList.Items.Clear();
+            this.SkillList.Items.Clear();
 
-            lastClass = currentWsg.Class;
-            xml = GetClassSkillXml(lastClass);
+            this.lastClass = this.currentWsg.Class;
+            xml = this.GetClassSkillXml(this.lastClass);
             foreach (string section in xml.StListSectionNames())
             {
-                SkillList.Items.Add(xml.XmlReadValue(section, "SkillName"));
+                this.SkillList.Items.Add(xml.XmlReadValue(section, "SkillName"));
             }
 
-            xml = skillsCommonXml;
+            xml = this.skillsCommonXml;
             foreach (string section in xml.StListSectionNames())
             {
-                SkillList.Items.Add(xml.XmlReadValue(section, "SkillName"));
+                this.SkillList.Items.Add(xml.XmlReadValue(section, "SkillName"));
             }
         }
 
@@ -79,40 +79,40 @@ namespace WillowTree.Plugins
             };
             pm.RegisterPlugin(this, events);
 
-            pluginManager = pm;
-            skillsAllXml = GameData.SkillsAllXml;
-            skillsCommonXml = GameData.SkillsCommonXml;
-            skillsBerserkerXml = GameData.SkillsBerserkerXml;
-            skillsSoldierXml = GameData.SkillsSoldierXml;
-            skillsSirenXml = GameData.SkillsSirenXml;
-            skillsHunterXml = GameData.SkillsHunterXml;
+            this.pluginManager = pm;
+            this.skillsAllXml = this.GameData.SkillsAllXml;
+            this.skillsCommonXml = this.GameData.SkillsCommonXml;
+            this.skillsBerserkerXml = this.GameData.SkillsBerserkerXml;
+            this.skillsSoldierXml = this.GameData.SkillsSoldierXml;
+            this.skillsSirenXml = this.GameData.SkillsSirenXml;
+            this.skillsHunterXml = this.GameData.SkillsHunterXml;
 
-            Enabled = false;
+            this.Enabled = false;
         }
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            currentWsg = e.WillowTreeMain.SaveData;
-            DoSkillList();
-            Enabled = true;
-            DoSkillTree();
+            this.currentWsg = e.WillowTreeMain.SaveData;
+            this.DoSkillList();
+            this.Enabled = true;
+            this.DoSkillTree();
         }
 
         public void ReleasePlugin()
         {
-            pluginManager = null;
-            currentWsg = null;
-            skillsAllXml = null;
-            skillsCommonXml = null;
-            skillsBerserkerXml = null;
-            skillsSoldierXml = null;
-            skillsSirenXml = null;
-            skillsHunterXml = null;
+            this.pluginManager = null;
+            this.currentWsg = null;
+            this.skillsAllXml = null;
+            this.skillsCommonXml = null;
+            this.skillsBerserkerXml = null;
+            this.skillsSoldierXml = null;
+            this.skillsSirenXml = null;
+            this.skillsHunterXml = null;
         }
 
         private void DeleteSkill_Click(object sender, EventArgs e)
         {
-            TreeNodeAdv[] selectedNodes = SkillTree.SelectedNodes.ToArray();
+            TreeNodeAdv[] selectedNodes = this.SkillTree.SelectedNodes.ToArray();
 
             int count = selectedNodes.Length;
             for (int i = 0; i < count; i++)
@@ -120,37 +120,37 @@ namespace WillowTree.Plugins
                 string skillName = selectedNodes[i].GetKey();
 
                 // Remove the skill from the WillowSaveGame data
-                int selected = currentWsg.SkillNames.IndexOf(skillName);
+                int selected = this.currentWsg.SkillNames.IndexOf(skillName);
                 if (selected != -1)
                 {
-                    for (int position = selected; position < currentWsg.NumberOfSkills - 1; position++)
+                    for (int position = selected; position < this.currentWsg.NumberOfSkills - 1; position++)
                     {
-                        currentWsg.SkillNames[position] = currentWsg.SkillNames[position + 1];
-                        currentWsg.InUse[position] = currentWsg.InUse[position + 1];
-                        currentWsg.ExpOfSkills[position] = currentWsg.ExpOfSkills[position + 1];
-                        currentWsg.LevelOfSkills[position] = currentWsg.LevelOfSkills[position + 1];
+                        this.currentWsg.SkillNames[position] = this.currentWsg.SkillNames[position + 1];
+                        this.currentWsg.InUse[position] = this.currentWsg.InUse[position + 1];
+                        this.currentWsg.ExpOfSkills[position] = this.currentWsg.ExpOfSkills[position + 1];
+                        this.currentWsg.LevelOfSkills[position] = this.currentWsg.LevelOfSkills[position + 1];
                     }
 
-                    ArrayHelper.ResizeArraySmaller(ref currentWsg.SkillNames, currentWsg.NumberOfSkills);
-                    ArrayHelper.ResizeArraySmaller(ref currentWsg.InUse, currentWsg.NumberOfSkills);
-                    ArrayHelper.ResizeArraySmaller(ref currentWsg.ExpOfSkills, currentWsg.NumberOfSkills);
-                    ArrayHelper.ResizeArraySmaller(ref currentWsg.LevelOfSkills, currentWsg.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref this.currentWsg.SkillNames, this.currentWsg.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref this.currentWsg.InUse, this.currentWsg.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref this.currentWsg.ExpOfSkills, this.currentWsg.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref this.currentWsg.LevelOfSkills, this.currentWsg.NumberOfSkills);
 
-                    currentWsg.NumberOfSkills--;
+                    this.currentWsg.NumberOfSkills--;
                 }
 
                 // Remove the skill from the skill tree
-                if (selectedNodes[i] == SkillTree.SelectedNode)
+                if (selectedNodes[i] == this.SkillTree.SelectedNode)
                 {
-                    SkillTree.SelectedNode = SkillTree.SelectedNode.NextVisibleNode;
+                    this.SkillTree.SelectedNode = this.SkillTree.SelectedNode.NextVisibleNode;
                 }
 
                 selectedNodes[i].Remove();
             }
 
-            if (SkillTree.SelectedNode == null && SkillTree.Root.Children.Count > 0)
+            if (this.SkillTree.SelectedNode == null && this.SkillTree.Root.Children.Count > 0)
             {
-                SkillTree.SelectedNode = SkillTree.Root.Children.Last();
+                this.SkillTree.SelectedNode = this.SkillTree.Root.Children.Last();
             }
         }
 
@@ -159,32 +159,32 @@ namespace WillowTree.Plugins
             // Skill tree
             //     Key = name of the skill as stored in CurrentWSG.SkillNames
             //     Text = human readable display name of the skill
-            SkillTree.BeginUpdate();
+            this.SkillTree.BeginUpdate();
             TreeModel model = new TreeModel();
-            SkillTree.Model = model;
+            this.SkillTree.Model = model;
 
-            SkillLevel.Value = 0;
-            SkillExp.Value = 0;
-            SkillActive.SelectedItem = "No";
-            for (int build = 0; build < currentWsg.NumberOfSkills; build++)
+            this.SkillLevel.Value = 0;
+            this.SkillExp.Value = 0;
+            this.SkillActive.SelectedItem = "No";
+            for (int build = 0; build < this.currentWsg.NumberOfSkills; build++)
             {
                 ColoredTextNode node = new ColoredTextNode();
 
-                string key = currentWsg.SkillNames[build];
+                string key = this.currentWsg.SkillNames[build];
                 node.Key = key;
 
-                string name = skillsAllXml.XmlReadValue(key, "SkillName");
-                node.Text = name != "" ? name : currentWsg.SkillNames[build];
+                string name = this.skillsAllXml.XmlReadValue(key, "SkillName");
+                node.Text = name != "" ? name : this.currentWsg.SkillNames[build];
 
                 model.Nodes.Add(node);
             }
 
-            SkillTree.EndUpdate();
+            this.SkillTree.EndUpdate();
         }
 
         private void ExportToFileSkills_Click(object sender, EventArgs e)
         {
-            WTSaveFileDialog tempExport = new WTSaveFileDialog("skills", $"{currentWsg.CharacterName}.skills");
+            WTSaveFileDialog tempExport = new WTSaveFileDialog("skills", $"{this.currentWsg.CharacterName}.skills");
 
             if (tempExport.ShowDialog() != DialogResult.OK)
             {
@@ -208,7 +208,7 @@ namespace WillowTree.Plugins
             List<string> subsectionnames = new List<string>();
             List<string> subsectionvalues = new List<string>();
 
-            for (int progress = 0; progress < currentWsg.NumberOfSkills; progress++)
+            for (int progress = 0; progress < this.currentWsg.NumberOfSkills; progress++)
             {
                 subsectionnames.Clear();
                 subsectionvalues.Clear();
@@ -216,11 +216,11 @@ namespace WillowTree.Plugins
                 subsectionnames.Add("Level");
                 subsectionnames.Add("Experience");
                 subsectionnames.Add("InUse");
-                subsectionvalues.Add(currentWsg.LevelOfSkills[progress].ToString());
-                subsectionvalues.Add(currentWsg.ExpOfSkills[progress].ToString());
-                subsectionvalues.Add(currentWsg.InUse[progress].ToString());
+                subsectionvalues.Add(this.currentWsg.LevelOfSkills[progress].ToString());
+                subsectionvalues.Add(this.currentWsg.ExpOfSkills[progress].ToString());
+                subsectionvalues.Add(this.currentWsg.InUse[progress].ToString());
 
-                skills.AddSection(currentWsg.SkillNames[progress], subsectionnames, subsectionvalues);
+                skills.AddSection(this.currentWsg.SkillNames[progress], subsectionnames, subsectionvalues);
             }
         }
 
@@ -229,25 +229,25 @@ namespace WillowTree.Plugins
             switch (classString)
             {
                 case "gd_Roland.Character.CharacterClass_Roland":
-                    return skillsSoldierXml;
+                    return this.skillsSoldierXml;
 
                 case "gd_lilith.Character.CharacterClass_Lilith":
-                    return skillsSirenXml;
+                    return this.skillsSirenXml;
 
                 case "gd_mordecai.Character.CharacterClass_Mordecai":
-                    return skillsHunterXml;
+                    return this.skillsHunterXml;
 
                 case "gd_Brick.Character.CharacterClass_Brick":
-                    return skillsBerserkerXml;
+                    return this.skillsBerserkerXml;
 
                 default:
-                    return skillsCommonXml;
+                    return this.skillsCommonXml;
             }
         }
 
         private void ImportFromFileSkills_Click(object sender, EventArgs e)
         {
-            WTOpenFileDialog tempImport = new WTOpenFileDialog("skills", $"{currentWsg.CharacterName}.skills");
+            WTOpenFileDialog tempImport = new WTOpenFileDialog("skills", $"{this.currentWsg.CharacterName}.skills");
 
             if (tempImport.ShowDialog() != DialogResult.OK)
             {
@@ -273,97 +273,97 @@ namespace WillowTree.Plugins
                 tempSkillInUse[progress] = Parse.AsInt(importSkills.XmlReadValue(name, "InUse"));
             }
 
-            currentWsg.SkillNames = tempSkillNames;
-            currentWsg.LevelOfSkills = tempSkillLevels;
-            currentWsg.ExpOfSkills = tempSkillExp;
-            currentWsg.InUse = tempSkillInUse;
-            currentWsg.NumberOfSkills = sectionCount;
-            DoSkillTree();
+            this.currentWsg.SkillNames = tempSkillNames;
+            this.currentWsg.LevelOfSkills = tempSkillLevels;
+            this.currentWsg.ExpOfSkills = tempSkillExp;
+            this.currentWsg.InUse = tempSkillInUse;
+            this.currentWsg.NumberOfSkills = sectionCount;
+            this.DoSkillTree();
         }
 
         private void SkillActive_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (SkillTree.SelectedNode == null)
+            if (this.SkillTree.SelectedNode == null)
             {
                 return;
             }
 
-            int index = currentWsg.SkillNames.IndexOf((SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
+            int index = this.currentWsg.SkillNames.IndexOf((this.SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
             if (index != -1)
             {
-                currentWsg.InUse[index] = SkillActive.SelectedIndex == 1 ? 1 : -1;
+                this.currentWsg.InUse[index] = this.SkillActive.SelectedIndex == 1 ? 1 : -1;
             }
         }
 
         private void SkillExp_ValueChanged(object sender, EventArgs e)
         {
-            if (SkillTree.SelectedNode == null)
+            if (this.SkillTree.SelectedNode == null)
             {
                 return;
             }
 
-            int index = currentWsg.SkillNames.IndexOf((SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
+            int index = this.currentWsg.SkillNames.IndexOf((this.SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
             if (index != -1)
             {
-                currentWsg.ExpOfSkills[index] = (int)SkillExp.Value;
+                this.currentWsg.ExpOfSkills[index] = (int)this.SkillExp.Value;
             }
         }
 
         private void SkillLevel_ValueChanged(object sender, EventArgs e)
         {
-            if (SkillTree.SelectedNode == null)
+            if (this.SkillTree.SelectedNode == null)
             {
                 return;
             }
 
-            int index = currentWsg.SkillNames.IndexOf((SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
+            int index = this.currentWsg.SkillNames.IndexOf((this.SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
             if (index != -1)
             {
-                currentWsg.LevelOfSkills[index] = (int)SkillLevel.Value;
+                this.currentWsg.LevelOfSkills[index] = (int)this.SkillLevel.Value;
             }
         }
 
         private void SkillList_Click(object sender, EventArgs e)
         {
-            newToolStripMenuItem4.HideDropDown();
+            this.newToolStripMenuItem4.HideDropDown();
             try
             {
                 // Make sure that if the class was changed, the new skill list is loaded
-                if (lastClass != currentWsg.Class)
+                if (this.lastClass != this.currentWsg.Class)
                 {
-                    DoSkillList();
+                    this.DoSkillList();
                 }
 
                 // Look up the name of the selected skill from its display text
                 string skillName =
-                    skillsAllXml.XmlReadAssociatedValue("Name", "SkillName", (string)SkillList.SelectedItem);
+                    this.skillsAllXml.XmlReadAssociatedValue("Name", "SkillName", (string)this.SkillList.SelectedItem);
                 if (skillName == "")
                 {
-                    skillName = (string)SkillList.SelectedItem;
+                    skillName = (string)this.SkillList.SelectedItem;
                 }
 
                 // If the skill is already in the tree, just select it and do nothing
-                TreeNodeAdv skillNode = SkillTree.FindFirstNodeByTag(skillName, false);
+                TreeNodeAdv skillNode = this.SkillTree.FindFirstNodeByTag(skillName, false);
                 if (skillNode != null)
                 {
-                    SkillTree.SelectedNode = skillNode;
+                    this.SkillTree.SelectedNode = skillNode;
                     return;
                 }
 
                 // Add enough room for the new skill in each of the skill arrays
-                currentWsg.NumberOfSkills++;
-                ArrayHelper.ResizeArrayLarger(ref currentWsg.SkillNames, currentWsg.NumberOfSkills);
-                ArrayHelper.ResizeArrayLarger(ref currentWsg.LevelOfSkills, currentWsg.NumberOfSkills);
-                ArrayHelper.ResizeArrayLarger(ref currentWsg.ExpOfSkills, currentWsg.NumberOfSkills);
-                ArrayHelper.ResizeArrayLarger(ref currentWsg.InUse, currentWsg.NumberOfSkills);
+                this.currentWsg.NumberOfSkills++;
+                ArrayHelper.ResizeArrayLarger(ref this.currentWsg.SkillNames, this.currentWsg.NumberOfSkills);
+                ArrayHelper.ResizeArrayLarger(ref this.currentWsg.LevelOfSkills, this.currentWsg.NumberOfSkills);
+                ArrayHelper.ResizeArrayLarger(ref this.currentWsg.ExpOfSkills, this.currentWsg.NumberOfSkills);
+                ArrayHelper.ResizeArrayLarger(ref this.currentWsg.InUse, this.currentWsg.NumberOfSkills);
 
                 // Set the data for the new skill.
-                int index = currentWsg.NumberOfSkills - 1;
-                currentWsg.InUse[index] = -1;
-                currentWsg.LevelOfSkills[index] = 0;
-                currentWsg.ExpOfSkills[index] = 01;
-                currentWsg.SkillNames[currentWsg.NumberOfSkills - 1] = skillName;
-                DoSkillTree();
+                int index = this.currentWsg.NumberOfSkills - 1;
+                this.currentWsg.InUse[index] = -1;
+                this.currentWsg.LevelOfSkills[index] = 0;
+                this.currentWsg.ExpOfSkills[index] = 01;
+                this.currentWsg.SkillNames[this.currentWsg.NumberOfSkills - 1] = skillName;
+                this.DoSkillTree();
             }
             catch
             {
@@ -375,33 +375,33 @@ namespace WillowTree.Plugins
         {
             if (e.KeyCode == Keys.Delete)
             {
-                DeleteSkill_Click(this, EventArgs.Empty);
+                this.DeleteSkill_Click(this, EventArgs.Empty);
             }
         }
 
         private void SkillTree_SelectionChanged(object sender, EventArgs e)
         {
-            if (SkillTree.SelectedNode == null)
+            if (this.SkillTree.SelectedNode == null)
             {
-                SkillName.Text = "";
-                SkillLevel.Value = 0;
-                SkillExp.Value = 0;
+                this.SkillName.Text = "";
+                this.SkillLevel.Value = 0;
+                this.SkillExp.Value = 0;
                 return;
             }
 
-            int index = currentWsg.SkillNames.IndexOf((SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
+            int index = this.currentWsg.SkillNames.IndexOf((this.SkillTree.SelectedNode.Tag as ColoredTextNode).Key);
             if (index == -1)
             {
-                SkillName.Text = "";
-                SkillLevel.Value = 0;
-                SkillExp.Value = 0;
+                this.SkillName.Text = "";
+                this.SkillLevel.Value = 0;
+                this.SkillExp.Value = 0;
             }
             else
             {
-                SkillName.Text = currentWsg.SkillNames[index];
-                SkillLevel.Value = currentWsg.LevelOfSkills[index];
-                SkillExp.Value = currentWsg.ExpOfSkills[index];
-                SkillActive.SelectedItem = currentWsg.InUse[index] == -1 ? "No" : "Yes";
+                this.SkillName.Text = this.currentWsg.SkillNames[index];
+                this.SkillLevel.Value = this.currentWsg.LevelOfSkills[index];
+                this.SkillExp.Value = this.currentWsg.ExpOfSkills[index];
+                this.SkillActive.SelectedItem = this.currentWsg.InUse[index] == -1 ? "No" : "Yes";
             }
         }
     }

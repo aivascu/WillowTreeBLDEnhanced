@@ -8,7 +8,7 @@ namespace WillowTree.Controls
 
         public WTSaveFileDialog(string fileExt, string fileName)
         {
-            dialog = new SaveFileDialog
+            this.dialog = new SaveFileDialog
             {
                 DefaultExt = $"*.{fileExt}",
                 Filter = $"WillowTree (*.{fileExt})|*.{fileExt}|All Files (*.*)|*.*",
@@ -17,9 +17,9 @@ namespace WillowTree.Controls
         }
 
         public DialogResult ShowDialog()
-        { return dialog.ShowDialog(); }
+        { return this.dialog.ShowDialog(); }
 
         public string FileName()
-        { return dialog.FileName; }
+        { return this.dialog.FileName; }
     }
 }

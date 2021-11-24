@@ -12,7 +12,7 @@ namespace WillowTree.Plugins
 
         public UcAbout()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace WillowTree.Plugins
                         return;
                     }
 
-                    versionFromServer = remoteVersionInfo[0];
-                    downloadUrlFromServer = remoteVersionInfo[1];
+                    this.versionFromServer = remoteVersionInfo[0];
+                    this.downloadUrlFromServer = remoteVersionInfo[1];
                 }
             }
             catch
@@ -53,7 +53,7 @@ namespace WillowTree.Plugins
 
             // Only check for new version if it's not a debug build.
             //ThreadPool.QueueUserWorkItem(CheckVersion);
-            UpdateButton.Hide();
+            this.UpdateButton.Hide();
         }
 
         public void ReleasePlugin()
@@ -67,42 +67,42 @@ namespace WillowTree.Plugins
 
         private void CheckVerPopup()
         {
-            if (versionFromServer == GetVersion() || string.IsNullOrEmpty(versionFromServer))
+            if (this.versionFromServer == GetVersion() || string.IsNullOrEmpty(this.versionFromServer))
             {
                 return;
             }
 
-            UpdateButton.Text = $"Version {versionFromServer} is now available! Click here to download.";
-            UpdateButton.Show();
+            this.UpdateButton.Text = $"Version {this.versionFromServer} is now available! Click here to download.";
+            this.UpdateButton.Show();
         }
 
         private void OnPluginSelected(object sender, PluginEventArgs e)
         {
-            if (versionFromServer == null)
+            if (this.versionFromServer == null)
             {
-                timer1.Enabled = true;
+                this.timer1.Enabled = true;
             }
         }
 
         private void OnPluginUnselected(object sender, PluginEventArgs e)
         {
-            timer1.Enabled = false;
+            this.timer1.Enabled = false;
         }
 
         private void OnTimerTick(object sender, EventArgs e)
         {
-            if (versionFromServer == null)
+            if (this.versionFromServer == null)
             {
                 return;
             }
 
-            timer1.Enabled = false;
-            CheckVerPopup();
+            this.timer1.Enabled = false;
+            this.CheckVerPopup();
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            Process.Start($"http://{downloadUrlFromServer}");
+            Process.Start($"http://{this.downloadUrlFromServer}");
         }
     }
 }

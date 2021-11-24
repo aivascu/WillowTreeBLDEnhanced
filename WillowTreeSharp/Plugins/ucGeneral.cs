@@ -16,9 +16,9 @@ namespace WillowTree.Plugins
 
         public ucGeneral(IGameData gameData, IGlobalSettings globalSettings)
         {
-            InitializeComponent();
-            GameData = gameData;
-            GlobalSettings = globalSettings;
+            this.InitializeComponent();
+            this.GameData = gameData;
+            this.GlobalSettings = globalSettings;
         }
 
         public IGameData GameData { get; }
@@ -26,8 +26,8 @@ namespace WillowTree.Plugins
 
         public void DoWindowTitle()
         {
-            ParentForm.Text =
-                $"WillowTree# - {CharacterName.Text}  Level {Level.Value} {Class.Text} ({currentWsg.Platform})";
+            this.ParentForm.Text =
+                $"WillowTree# - {this.CharacterName.Text}  Level {this.Level.Value} {this.Class.Text} ({this.currentWsg.Platform})";
         }
 
         public void InitializePlugin(PluginComponentManager pluginManager)
@@ -39,87 +39,87 @@ namespace WillowTree.Plugins
             };
             pluginManager.RegisterPlugin(this, events);
 
-            Enabled = false;
-            locationsXml = GameData.LocationsXml;
-            GameData.SetXPchart();
-            DoLocationsList();
-            Cash.Maximum = GlobalSettings.MaxCash;
-            Experience.Maximum = GlobalSettings.MaxExperience;
-            Level.Maximum = GlobalSettings.MaxLevel;
-            BankSpace.Maximum = GlobalSettings.MaxBankSlots;
-            BackpackSpace.Maximum = GlobalSettings.MaxBackpackSlots;
-            SkillPoints.Maximum = GlobalSettings.MaxSkillPoints;
+            this.Enabled = false;
+            this.locationsXml = this.GameData.LocationsXml;
+            this.GameData.SetXPchart();
+            this.DoLocationsList();
+            this.Cash.Maximum = this.GlobalSettings.MaxCash;
+            this.Experience.Maximum = this.GlobalSettings.MaxExperience;
+            this.Level.Maximum = this.GlobalSettings.MaxLevel;
+            this.BankSpace.Maximum = this.GlobalSettings.MaxBankSlots;
+            this.BackpackSpace.Maximum = this.GlobalSettings.MaxBackpackSlots;
+            this.SkillPoints.Maximum = this.GlobalSettings.MaxSkillPoints;
         }
 
         public void ReleasePlugin()
         {
-            currentWsg = null;
-            locationsXml = null;
+            this.currentWsg = null;
+            this.locationsXml = null;
         }
 
         private void CharacterName_TextChanged(object sender, EventArgs e)
         {
-            DoWindowTitle();
+            this.DoWindowTitle();
         }
 
         private void Class_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateClass();
-            DoWindowTitle();
+            this.UpdateClass();
+            this.DoWindowTitle();
         }
 
         private void DeleteAllLocations()
         {
-            currentWsg.TotalLocations = 0;
-            currentWsg.LocationStrings = Array.Empty<string>();
-            DoLocationTree();
+            this.currentWsg.TotalLocations = 0;
+            this.currentWsg.LocationStrings = Array.Empty<string>();
+            this.DoLocationTree();
         }
 
         private void DeleteAllLocations_Click(object sender, EventArgs e)
         {
-            DeleteAllLocations();
+            this.DeleteAllLocations();
         }
 
         private void DeleteLocation_Click(object sender, EventArgs e)
         {
             TreeNodeAdv nextSelection = null;
-            while (LocationTree.SelectedNode != null)
+            while (this.LocationTree.SelectedNode != null)
             {
-                int selected = LocationTree.SelectedNode.Index;
+                int selected = this.LocationTree.SelectedNode.Index;
 
-                currentWsg.TotalLocations--;
-                for (int position = selected; position < currentWsg.TotalLocations; position++)
+                this.currentWsg.TotalLocations--;
+                for (int position = selected; position < this.currentWsg.TotalLocations; position++)
                 {
-                    currentWsg.LocationStrings[position] = currentWsg.LocationStrings[position + 1];
+                    this.currentWsg.LocationStrings[position] = this.currentWsg.LocationStrings[position + 1];
                 }
 
-                ArrayHelper.ResizeArraySmaller(ref currentWsg.LocationStrings, currentWsg.TotalLocations);
+                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.LocationStrings, this.currentWsg.TotalLocations);
 
-                nextSelection = LocationTree.SelectedNode.NextVisibleNode;
-                LocationTree.SelectedNode.Remove();
+                nextSelection = this.LocationTree.SelectedNode.NextVisibleNode;
+                this.LocationTree.SelectedNode.Remove();
             }
 
             if (nextSelection != null)
             {
-                LocationTree.SelectedNode = nextSelection;
+                this.LocationTree.SelectedNode = nextSelection;
             }
 
-            DoLocationTree();
+            this.DoLocationTree();
         }
 
         private void DoLocationsList()
         {
-            LocationsList.Items.Clear();
+            this.LocationsList.Items.Clear();
 
-            foreach (string section in locationsXml.StListSectionNames())
+            foreach (string section in this.locationsXml.StListSectionNames())
             {
-                string outpostName = locationsXml.XmlReadValue(section, "OutpostDisplayName");
+                string outpostName = this.locationsXml.XmlReadValue(section, "OutpostDisplayName");
                 if (outpostName == "")
                 {
-                    outpostName = locationsXml.XmlReadValue(section, "OutpostName");
+                    outpostName = this.locationsXml.XmlReadValue(section, "OutpostName");
                 }
 
-                LocationsList.Items.Add(outpostName);
+                this.LocationsList.Items.Add(outpostName);
             }
         }
 
@@ -127,13 +127,13 @@ namespace WillowTree.Plugins
         {
             // Clear the tree
             TreeModel model = new TreeModel();
-            LocationTree.Model = model;
+            this.LocationTree.Model = model;
 
-            LocationTree.BeginUpdate();
-            for (int build = 0; build < currentWsg.TotalLocations; build++)
+            this.LocationTree.BeginUpdate();
+            for (int build = 0; build < this.currentWsg.TotalLocations; build++)
             {
-                string key = currentWsg.LocationStrings[build];
-                string name = locationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", key);
+                string key = this.currentWsg.LocationStrings[build];
+                string name = this.locationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", key);
                 if (name?.Length == 0)
                 {
                     name = key;
@@ -142,7 +142,7 @@ namespace WillowTree.Plugins
                 model.Nodes.Add(new ColoredTextNode(name) { Tag = key });
             }
 
-            LocationTree.EndUpdate();
+            this.LocationTree.EndUpdate();
         }
 
         private void ExportAllToFileLocations_Click(object sender, EventArgs e)
@@ -152,7 +152,7 @@ namespace WillowTree.Plugins
             {
                 if (tempSave.ShowDialog() == DialogResult.OK)
                 {
-                    SaveToXmlLocations(tempSave.FileName());
+                    this.SaveToXmlLocations(tempSave.FileName());
                     MessageBox.Show($"Locations saved to {tempSave.FileName()}");
                 }
             }
@@ -170,7 +170,7 @@ namespace WillowTree.Plugins
             {
                 if (tempSave.ShowDialog() == DialogResult.OK)
                 {
-                    SaveSelectedToXmlLocations(tempSave.FileName());
+                    this.SaveSelectedToXmlLocations(tempSave.FileName());
                     MessageBox.Show($"Locations saved to {tempSave.FileName()}");
                 }
             }
@@ -188,7 +188,7 @@ namespace WillowTree.Plugins
             {
                 try
                 {
-                    LoadLocations(tempOpen.FileName());
+                    this.LoadLocations(tempOpen.FileName());
                 }
                 catch (ApplicationException ex)
                 {
@@ -225,23 +225,23 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            currentWsg.TotalLocations = otherSave.TotalLocations;
-            currentWsg.LocationStrings = otherSave.LocationStrings;
-            DoLocationTree();
+            this.currentWsg.TotalLocations = otherSave.TotalLocations;
+            this.currentWsg.LocationStrings = otherSave.LocationStrings;
+            this.DoLocationTree();
         }
 
         private void Level_ValueChanged(object sender, EventArgs e)
         {
-            if (Level.Value > 0 && Level.Value < 70)
+            if (this.Level.Value > 0 && this.Level.Value < 70)
             {
-                Experience.Minimum = GameData.XPChart[(int)Level.Value];
+                this.Experience.Minimum = this.GameData.XPChart[(int)this.Level.Value];
             }
             else
             {
-                Experience.Minimum = 0;
+                this.Experience.Minimum = 0;
             }
 
-            DoWindowTitle();
+            this.DoWindowTitle();
         }
 
         private void LoadLocations(string filename)
@@ -263,21 +263,21 @@ namespace WillowTree.Plugins
                 location[i] = locationnodes[i].InnerText;
             }
 
-            currentWsg.LocationStrings = location;
-            currentWsg.TotalLocations = locationcount;
-            DoLocationTree();
+            this.currentWsg.LocationStrings = location;
+            this.currentWsg.TotalLocations = locationcount;
+            this.DoLocationTree();
         }
 
         private void LocationsList_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                int selectedItem = LocationsList.SelectedIndex;
-                currentWsg.TotalLocations++;
-                ArrayHelper.ResizeArrayLarger(ref currentWsg.LocationStrings, currentWsg.TotalLocations);
-                currentWsg.LocationStrings[currentWsg.TotalLocations - 1] =
-                    locationsXml.StListSectionNames()[selectedItem];
-                DoLocationTree();
+                int selectedItem = this.LocationsList.SelectedIndex;
+                this.currentWsg.TotalLocations++;
+                ArrayHelper.ResizeArrayLarger(ref this.currentWsg.LocationStrings, this.currentWsg.TotalLocations);
+                this.currentWsg.LocationStrings[this.currentWsg.TotalLocations - 1] =
+                    this.locationsXml.StListSectionNames()[selectedItem];
+                this.DoLocationTree();
             }
             catch
             {
@@ -289,7 +289,7 @@ namespace WillowTree.Plugins
         {
             if (e.KeyCode == Keys.Delete)
             {
-                DeleteLocation_Click(this, EventArgs.Empty);
+                this.DeleteLocation_Click(this, EventArgs.Empty);
             }
         }
 
@@ -301,7 +301,7 @@ namespace WillowTree.Plugins
             {
                 try
                 {
-                    MergeAllFromXmlLocations(tempOpen.FileName());
+                    this.MergeAllFromXmlLocations(tempOpen.FileName());
                 }
                 catch (ApplicationException ex)
                 {
@@ -334,7 +334,7 @@ namespace WillowTree.Plugins
             }
 
             // Construct a list structure with the current locations
-            List<string> locations = new List<string>(currentWsg.LocationStrings);
+            List<string> locations = new List<string>(this.currentWsg.LocationStrings);
 
             // Copy only the locations that are not duplicates from the XML file
             foreach (XmlNode node in locationNodes)
@@ -347,9 +347,9 @@ namespace WillowTree.Plugins
             }
 
             // Update WSG data from the newly constructed list
-            currentWsg.LocationStrings = locations.ToArray();
-            currentWsg.TotalLocations = locations.Count;
-            DoLocationTree();
+            this.currentWsg.LocationStrings = locations.ToArray();
+            this.currentWsg.TotalLocations = locations.Count;
+            this.DoLocationTree();
         }
 
         private void MergeFromSaveLocations(string filename)
@@ -363,7 +363,7 @@ namespace WillowTree.Plugins
             }
 
             // Construct a list structure with the current locations
-            List<string> locations = new List<string>(currentWsg.LocationStrings);
+            List<string> locations = new List<string>(this.currentWsg.LocationStrings);
 
             // Copy only the locations that are not duplicates from the other save
             foreach (string location in otherSave.LocationStrings)
@@ -375,9 +375,9 @@ namespace WillowTree.Plugins
             }
 
             // Update WSG data from the newly constructed list
-            currentWsg.LocationStrings = locations.ToArray();
-            currentWsg.TotalLocations = locations.Count;
-            DoLocationTree();
+            this.currentWsg.LocationStrings = locations.ToArray();
+            this.currentWsg.TotalLocations = locations.Count;
+            this.DoLocationTree();
         }
 
         private void MergeFromSaveLocations_Click(object sender, EventArgs e)
@@ -388,7 +388,7 @@ namespace WillowTree.Plugins
             {
                 try
                 {
-                    MergeFromSaveLocations(tempOpen.FileName());
+                    this.MergeFromSaveLocations(tempOpen.FileName());
                 }
                 catch
                 {
@@ -396,7 +396,7 @@ namespace WillowTree.Plugins
                     return;
                 }
 
-                DoLocationTree();
+                this.DoLocationTree();
             }
         }
 
@@ -406,96 +406,96 @@ namespace WillowTree.Plugins
             // range will cause an exception and crash the program.  It is safest to use
             // Util.SetNumericUpDown() to set them since it will adjust the value to a valid value
             // if it is too high or low.
-            currentWsg = e.WillowTreeMain.SaveData;
+            this.currentWsg = e.WillowTreeMain.SaveData;
 
-            CharacterName.Text = currentWsg.CharacterName;
-            Level.Value = currentWsg.Level;
-            if (Level.Value != currentWsg.Level)
+            this.CharacterName.Text = this.currentWsg.CharacterName;
+            this.Level.Value = this.currentWsg.Level;
+            if (this.Level.Value != this.currentWsg.Level)
             {
                 MessageBox.Show(
-                    $"The character's level was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.Level}\nNew: {(int)Level.Value}");
+                    $"The character's level was outside the acceptable range.  It has been adjusted.\n\nOld: {this.currentWsg.Level}\nNew: {(int)this.Level.Value}");
             }
 
-            Experience.Value = currentWsg.Experience;
-            if (Experience.Value != currentWsg.Experience)
+            this.Experience.Value = this.currentWsg.Experience;
+            if (this.Experience.Value != this.currentWsg.Experience)
             {
                 MessageBox.Show(
-                    $"The character's experience was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.Experience}\nNew: {(int)Experience.Value}");
+                    $"The character's experience was outside the acceptable range.  It has been adjusted.\n\nOld: {this.currentWsg.Experience}\nNew: {(int)this.Experience.Value}");
             }
 
-            SkillPoints.Value = currentWsg.SkillPoints;
-            if (SkillPoints.Value != currentWsg.SkillPoints)
+            this.SkillPoints.Value = this.currentWsg.SkillPoints;
+            if (this.SkillPoints.Value != this.currentWsg.SkillPoints)
             {
                 MessageBox.Show(
-                    $"The character's skill point count was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.SkillPoints}\nNew: {(int)SkillPoints.Value}");
+                    $"The character's skill point count was outside the acceptable range.  It has been adjusted.\n\nOld: {this.currentWsg.SkillPoints}\nNew: {(int)this.SkillPoints.Value}");
             }
 
-            PT2Unlocked.SelectedIndex = currentWsg.FinishedPlaythrough1 == 0 ? 0 : 1;
+            this.PT2Unlocked.SelectedIndex = this.currentWsg.FinishedPlaythrough1 == 0 ? 0 : 1;
 
             // No message when cash is adjusted because it will likely have to be changed on
             // every load for people who exceed the limit.  The spam would be annoying.
-            Cash.Value = currentWsg.Cash < 0 ? int.MaxValue : currentWsg.Cash;
+            this.Cash.Value = this.currentWsg.Cash < 0 ? int.MaxValue : this.currentWsg.Cash;
 
-            BackpackSpace.Value = currentWsg.BackpackSize;
-            if (BackpackSpace.Value != currentWsg.BackpackSize)
+            this.BackpackSpace.Value = this.currentWsg.BackpackSize;
+            if (this.BackpackSpace.Value != this.currentWsg.BackpackSize)
             {
                 MessageBox.Show(
-                    $"The character's backpack capacity was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.BackpackSize}\nNew: {(int)BackpackSpace.Value}");
+                    $"The character's backpack capacity was outside the acceptable range.  It has been adjusted.\n\nOld: {this.currentWsg.BackpackSize}\nNew: {(int)this.BackpackSpace.Value}");
             }
 
-            EquipSlots.Value = currentWsg.EquipSlots;
-            SaveNumber.Value = currentWsg.SaveNumber;
+            this.EquipSlots.Value = this.currentWsg.EquipSlots;
+            this.SaveNumber.Value = this.currentWsg.SaveNumber;
 
-            UI_UpdateCurrentLocationComboBox(currentWsg.CurrentLocation);
+            this.UI_UpdateCurrentLocationComboBox(this.currentWsg.CurrentLocation);
 
-            switch (currentWsg.Class)
+            switch (this.currentWsg.Class)
             {
                 case "gd_Roland.Character.CharacterClass_Roland":
-                    Class.SelectedIndex = 0;
+                    this.Class.SelectedIndex = 0;
                     break;
 
                 case "gd_lilith.Character.CharacterClass_Lilith":
-                    Class.SelectedIndex = 1;
+                    this.Class.SelectedIndex = 1;
                     break;
 
                 case "gd_mordecai.Character.CharacterClass_Mordecai":
-                    Class.SelectedIndex = 2;
+                    this.Class.SelectedIndex = 2;
                     break;
 
                 case "gd_Brick.Character.CharacterClass_Brick":
-                    Class.SelectedIndex = 3;
+                    this.Class.SelectedIndex = 3;
                     break;
             }
 
             // If DLC section 1 is not present then the bank does not exist, so disable the
             // control to prevent the user from editing its size.
-            labelGeneralBankSpace.Enabled = currentWsg.Dlc.HasSection1;
-            BankSpace.Enabled = currentWsg.Dlc.HasSection1;
-            if (currentWsg.Dlc.HasSection1)
+            this.labelGeneralBankSpace.Enabled = this.currentWsg.Dlc.HasSection1;
+            this.BankSpace.Enabled = this.currentWsg.Dlc.HasSection1;
+            if (this.currentWsg.Dlc.HasSection1)
             {
-                BankSpace.Value = currentWsg.Dlc.BankSize;
-                if (BankSpace.Value != currentWsg.Dlc.BankSize)
+                this.BankSpace.Value = this.currentWsg.Dlc.BankSize;
+                if (this.BankSpace.Value != this.currentWsg.Dlc.BankSize)
                 {
                     MessageBox.Show(
-                        $"The character's bank capacity was outside the acceptable range.  It has been adjusted.\n\nOld: {currentWsg.BackpackSize}\nNew: {(int)BackpackSpace.Value}");
+                        $"The character's bank capacity was outside the acceptable range.  It has been adjusted.\n\nOld: {this.currentWsg.BackpackSize}\nNew: {(int)this.BackpackSpace.Value}");
                 }
             }
             else
             {
-                BankSpace.Value = 0;
+                this.BankSpace.Value = 0;
             }
 
-            DoWindowTitle();
+            this.DoWindowTitle();
             Application.DoEvents();
-            DoLocationTree();
-            Enabled = true;
+            this.DoLocationTree();
+            this.Enabled = true;
         }
 
         private void OnGameSaving(object sender, PluginEventArgs e)
         {
-            if (BankSpace.Enabled)
+            if (this.BankSpace.Enabled)
             {
-                currentWsg.Dlc.BankSize = (int)BankSpace.Value;
+                this.currentWsg.Dlc.BankSize = (int)this.BankSpace.Value;
             }
 
             // TODO: Most of these values that are being set in GameSaving should
@@ -503,30 +503,30 @@ namespace WillowTree.Plugins
             // play nicely with other plugins.  There is the potential for this
             // plugin to change a value and another plugin may not be aware of the
             // change because it only gets applied at save time the way it works now.
-            currentWsg.CharacterName = CharacterName.Text;
-            currentWsg.Level = (int)Level.Value;
-            currentWsg.Experience = (int)Experience.Value;
-            currentWsg.SkillPoints = (int)SkillPoints.Value;
-            currentWsg.FinishedPlaythrough1 = PT2Unlocked.SelectedIndex;
-            currentWsg.Cash = (int)Cash.Value;
-            currentWsg.BackpackSize = (int)BackpackSpace.Value;
-            currentWsg.EquipSlots = (int)EquipSlots.Value;
-            currentWsg.SaveNumber = (int)SaveNumber.Value;
+            this.currentWsg.CharacterName = this.CharacterName.Text;
+            this.currentWsg.Level = (int)this.Level.Value;
+            this.currentWsg.Experience = (int)this.Experience.Value;
+            this.currentWsg.SkillPoints = (int)this.SkillPoints.Value;
+            this.currentWsg.FinishedPlaythrough1 = this.PT2Unlocked.SelectedIndex;
+            this.currentWsg.Cash = (int)this.Cash.Value;
+            this.currentWsg.BackpackSize = (int)this.BackpackSpace.Value;
+            this.currentWsg.EquipSlots = (int)this.EquipSlots.Value;
+            this.currentWsg.SaveNumber = (int)this.SaveNumber.Value;
 
             // Try to look up the outpost name from the text that is displayed in the combo box.
-            string currentLocation = locationsXml.XmlReadAssociatedValue(
+            string currentLocation = this.locationsXml.XmlReadAssociatedValue(
                 "OutpostName",
                 "OutpostDisplayName",
-                (string)CurrentLocation.SelectedItem);
+                (string)this.CurrentLocation.SelectedItem);
 
             // If the outpost name is not found then this location is not in the data file
             // so the string stored in CurrentLocation is already the outpost name.
             if (currentLocation == "")
             {
-                currentLocation = (string)CurrentLocation.SelectedItem;
+                currentLocation = (string)this.CurrentLocation.SelectedItem;
             }
 
-            currentWsg.CurrentLocation = currentLocation;
+            this.currentWsg.CurrentLocation = currentLocation;
         }
 
         private void SaveSelectedToXmlLocations(string filename)
@@ -542,7 +542,7 @@ namespace WillowTree.Plugins
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Locations");
 
-            foreach (TreeNodeAdv nodeAdv in LocationTree.SelectedNodes)
+            foreach (TreeNodeAdv nodeAdv in this.LocationTree.SelectedNodes)
             {
                 string name = nodeAdv.GetKey();
                 if (!string.IsNullOrEmpty(name))
@@ -567,9 +567,9 @@ namespace WillowTree.Plugins
             writer.WriteComment("Note: the XML tags are case sensitive");
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Locations");
-            for (int i = 0; i < currentWsg.TotalLocations; i++)
+            for (int i = 0; i < this.currentWsg.TotalLocations; i++)
             {
-                writer.WriteElementString("Location", currentWsg.LocationStrings[i]);
+                writer.WriteElementString("Location", this.currentWsg.LocationStrings[i]);
             }
 
             writer.WriteEndDocument();
@@ -578,50 +578,50 @@ namespace WillowTree.Plugins
 
         private void UI_UpdateCurrentLocationComboBox(string locationToSelect)
         {
-            CurrentLocation.Items.Clear();
-            CurrentLocation.Items.Add("None");
+            this.CurrentLocation.Items.Clear();
+            this.CurrentLocation.Items.Add("None");
 
             // See if the selected location can be found in the WT# data file.
-            string loc = locationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", locationToSelect);
+            string loc = this.locationsXml.XmlReadAssociatedValue("OutpostDisplayName", "OutpostName", locationToSelect);
             if (loc == "")
             {
                 // Not in the data file, so an entry must be added or the combo
                 // box won't even be able to display the selected location.
                 if (locationToSelect != "None")
                 {
-                    CurrentLocation.Items.Add(locationToSelect);
+                    this.CurrentLocation.Items.Add(locationToSelect);
                 }
 
                 loc = locationToSelect;
             }
 
             // Add all the location entries that were in the WT# location file
-            foreach (string location in LocationsList.Items)
+            foreach (string location in this.LocationsList.Items)
             {
-                CurrentLocation.Items.Add(location);
+                this.CurrentLocation.Items.Add(location);
             }
 
-            CurrentLocation.SelectedItem = loc;
+            this.CurrentLocation.SelectedItem = loc;
         }
 
         private void UpdateClass()
         {
-            switch (Class.SelectedIndex)
+            switch (this.Class.SelectedIndex)
             {
                 case 0:
-                    currentWsg.Class = "gd_Roland.Character.CharacterClass_Roland";
+                    this.currentWsg.Class = "gd_Roland.Character.CharacterClass_Roland";
                     break;
 
                 case 1:
-                    currentWsg.Class = "gd_lilith.Character.CharacterClass_Lilith";
+                    this.currentWsg.Class = "gd_lilith.Character.CharacterClass_Lilith";
                     break;
 
                 case 2:
-                    currentWsg.Class = "gd_mordecai.Character.CharacterClass_Mordecai";
+                    this.currentWsg.Class = "gd_mordecai.Character.CharacterClass_Mordecai";
                     break;
 
                 case 3:
-                    currentWsg.Class = "gd_Brick.Character.CharacterClass_Brick";
+                    this.currentWsg.Class = "gd_Brick.Character.CharacterClass_Brick";
                     break;
             }
         }

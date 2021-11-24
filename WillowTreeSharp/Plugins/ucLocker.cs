@@ -21,7 +21,7 @@ namespace WillowTree.Plugins
 
         public ucLocker()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         public void InitializePlugin(PluginComponentManager pm)
@@ -34,26 +34,26 @@ namespace WillowTree.Plugins
             };
             pm.RegisterPlugin(this, events);
 
-            pluginManager = pm;
+            this.pluginManager = pm;
 
             // The index translators control the caption that goes over the top of each
             // level or quality SlideSelector.  Attach each translator then signal the
             // value changed event to cause the translator to update the caption.
-            QualityLocker.IndexTranslator += QualityTranslator;
-            LevelIndexLocker.IndexTranslator += LevelTranslator;
-            LevelIndexOverride.IndexTranslator += LevelTranslator;
-            QualityOverride.IndexTranslator += QualityTranslator;
-            LevelIndexLocker.OnValueChanged(EventArgs.Empty);
-            QualityLocker.OnValueChanged(EventArgs.Empty);
-            LevelIndexOverride.OnValueChanged(EventArgs.Empty);
-            QualityOverride.OnValueChanged(EventArgs.Empty);
+            this.QualityLocker.IndexTranslator += QualityTranslator;
+            this.LevelIndexLocker.IndexTranslator += LevelTranslator;
+            this.LevelIndexOverride.IndexTranslator += LevelTranslator;
+            this.QualityOverride.IndexTranslator += QualityTranslator;
+            this.LevelIndexLocker.OnValueChanged(EventArgs.Empty);
+            this.QualityLocker.OnValueChanged(EventArgs.Empty);
+            this.LevelIndexOverride.OnValueChanged(EventArgs.Empty);
+            this.QualityOverride.OnValueChanged(EventArgs.Empty);
 
-            highlightFont = new Font(LockerTree.Font, FontStyle.Italic | FontStyle.Bold);
+            this.highlightFont = new Font(this.LockerTree.Font, FontStyle.Italic | FontStyle.Bold);
 
-            ImportAllFromItems.Enabled = false;
-            ImportAllFromWeapons.Enabled = false;
+            this.ImportAllFromItems.Enabled = false;
+            this.ImportAllFromWeapons.Enabled = false;
 
-            lockerTl = new InventoryTreeList(LockerTree, GameData.LockerList);
+            this.lockerTl = new InventoryTreeList(this.LockerTree, GameData.LockerList);
 
             string lockerFilename = GameData.OpenedLockerFilename();
             if (!File.Exists(lockerFilename))
@@ -63,8 +63,8 @@ namespace WillowTree.Plugins
 
             try
             {
-                LoadLocker(GameData.OpenedLockerFilename());
-                lockerTl.UpdateTree();
+                this.LoadLocker(GameData.OpenedLockerFilename());
+                this.lockerTl.UpdateTree();
             }
             catch (ApplicationException)
             {
@@ -76,78 +76,78 @@ namespace WillowTree.Plugins
 
         public void ReleasePlugin()
         {
-            QualityLocker.IndexTranslator -= QualityTranslator;
-            LevelIndexLocker.IndexTranslator -= LevelTranslator;
-            LevelIndexOverride.IndexTranslator -= LevelTranslator;
-            QualityOverride.IndexTranslator -= QualityTranslator;
+            this.QualityLocker.IndexTranslator -= QualityTranslator;
+            this.LevelIndexLocker.IndexTranslator -= LevelTranslator;
+            this.LevelIndexOverride.IndexTranslator -= LevelTranslator;
+            this.QualityOverride.IndexTranslator -= QualityTranslator;
 
-            pluginManager = null;
-            highlightFont = null;
+            this.pluginManager = null;
+            this.highlightFont = null;
 
-            lockerTl = null;
+            this.lockerTl = null;
             GameData.OpenedLockerFilename(null);
         }
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            ImportAllFromItems.Enabled = true;
-            ImportAllFromWeapons.Enabled = true;
-            lockerTl.UpdateTree();
+            this.ImportAllFromItems.Enabled = true;
+            this.ImportAllFromWeapons.Enabled = true;
+            this.lockerTl.UpdateTree();
         }
 
         public void OnGameSaving(object sender, PluginEventArgs e)
         {
-            lockerTl.SaveToXml(GameData.OpenedLockerFilename());
+            this.lockerTl.SaveToXml(GameData.OpenedLockerFilename());
         }
 
         public void OnPluginCommand(object sender, PluginCommandEventArgs e)
         {
             if (e.Command == PluginCommand.IncreaseNavigationDepth)
             {
-                lockerTl.IncreaseNavigationDepth();
+                this.lockerTl.IncreaseNavigationDepth();
             }
             else if (e.Command == PluginCommand.ChangeSortMode)
             {
-                lockerTl.NextSort();
+                this.lockerTl.NextSort();
             }
         }
 
         public void LoadLocker(string inputFile)
         {
-            lockerTl.Tree.BeginUpdate();
-            lockerTl.Clear();
-            lockerTl.ImportFromXml(inputFile, InventoryType.Any);
-            lockerTl.Tree.EndUpdate();
+            this.lockerTl.Tree.BeginUpdate();
+            this.lockerTl.Clear();
+            this.lockerTl.ImportFromXml(inputFile, InventoryType.Any);
+            this.lockerTl.Tree.EndUpdate();
         }
 
         private void NewWeaponLocker_Click(object sender, EventArgs e)
         {
-            lockerTl.AddNew(InventoryType.Weapon);
-            lockerTl.AdjustSelectionAfterAdd();
-            LockerTree.EnsureVisible(LockerTree.SelectedNode);
+            this.lockerTl.AddNew(InventoryType.Weapon);
+            this.lockerTl.AdjustSelectionAfterAdd();
+            this.LockerTree.EnsureVisible(this.LockerTree.SelectedNode);
         }
 
         private void NewItemLocker_Click(object sender, EventArgs e)
         {
-            lockerTl.AddNew(InventoryType.Item);
-            lockerTl.AdjustSelectionAfterAdd();
-            LockerTree.EnsureVisible(LockerTree.SelectedNode);
+            this.lockerTl.AddNew(InventoryType.Item);
+            this.lockerTl.AdjustSelectionAfterAdd();
+            this.LockerTree.EnsureVisible(this.LockerTree.SelectedNode);
         }
 
         private void DeleteLocker_Click(object sender, EventArgs e)
         {
-            lockerTl.DeleteSelected();
+            this.lockerTl.DeleteSelected();
         }
 
         private void DuplicateLocker_Click(object sender, EventArgs e)
         {
-            lockerTl.DuplicateSelected();
+            this.lockerTl.DuplicateSelected();
         }
 
         private void MoveLocker_Click(object sender, EventArgs e)
         {
             // Copy the selection because it will change as nodes are removed.
-            TreeNodeAdv[] nodes = LockerTree.SelectedNodes.ToArray();
+            TreeNodeAdv[] nodes = this.LockerTree.SelectedNodes.ToArray();
 
             foreach (TreeNodeAdv node in nodes)
             {
@@ -163,14 +163,14 @@ namespace WillowTree.Plugins
                         GameData.ItemList.Add(entry);
                     }
 
-                    lockerTl.Remove(node, false);
+                    this.lockerTl.Remove(node, false);
                 }
             }
         }
 
         private void CopyBackpack_Click(object sender, EventArgs e)
         {
-            foreach (TreeNodeAdv node in LockerTree.SelectedNodes)
+            foreach (TreeNodeAdv node in this.LockerTree.SelectedNodes)
             {
                 if (node.Children.Count == 0)
                 {
@@ -189,34 +189,34 @@ namespace WillowTree.Plugins
 
         private void CopyBank_Click(object sender, EventArgs e)
         {
-            lockerTl.CopySelected(GameData.BankList, false);
+            this.lockerTl.CopySelected(GameData.BankList, false);
         }
 
         private void ClearAllLocker_Click(object sender, EventArgs e)
         {
-            lockerTl.Clear();
+            this.lockerTl.Clear();
         }
 
         private void PurgeDuplicatesLocker_Click(object sender, EventArgs e)
         {
-            lockerTl.PurgeDuplicates();
+            this.lockerTl.PurgeDuplicates();
         }
 
         private string ExportToTextLocker()
         {
-            List<string> inOutParts = PartsLocker.Items.Cast<string>().ToList();
+            List<string> inOutParts = this.PartsLocker.Items.Cast<string>().ToList();
 
             List<int> values = null;
 
-            if (OverrideExportSettings.Checked)
+            if (this.OverrideExportSettings.Checked)
             {
-                values = InventoryEntry.CalculateValues((int)RemAmmoOverride.Value,
-                    QualityOverride.Value, 0, LevelIndexOverride.Value, (int)JunkLocker.Value, (int)LockedLocker.Value, ((string)PartsLocker.Items[0]));
+                values = InventoryEntry.CalculateValues((int)this.RemAmmoOverride.Value,
+                    this.QualityOverride.Value, 0, this.LevelIndexOverride.Value, (int)this.JunkLocker.Value, (int)this.LockedLocker.Value, ((string)this.PartsLocker.Items[0]));
             }
             else
             {
-                values = InventoryEntry.CalculateValues((int)RemAmmoLocker.Value,
-                    QualityLocker.Value, 0, LevelIndexLocker.Value, (int)JunkLocker.Value, (int)LockedLocker.Value, ((string)PartsLocker.Items[0]));
+                values = InventoryEntry.CalculateValues((int)this.RemAmmoLocker.Value,
+                    this.QualityLocker.Value, 0, this.LevelIndexLocker.Value, (int)this.JunkLocker.Value, (int)this.LockedLocker.Value, ((string)this.PartsLocker.Items[0]));
             }
 
             for (int i = 0; i < WillowSaveGame.ExportValuesCount; i++)
@@ -231,7 +231,7 @@ namespace WillowTree.Plugins
         {
             try
             {
-                Clipboard.SetText(ExportToTextLocker());
+                Clipboard.SetText(this.ExportToTextLocker());
             }
             catch
             {
@@ -241,10 +241,10 @@ namespace WillowTree.Plugins
 
         private void ExportToFileLocker_Click(object sender, EventArgs e)
         {
-            WTSaveFileDialog toFile = new WTSaveFileDialog("txt", LockerPartsGroup.Text);
+            WTSaveFileDialog toFile = new WTSaveFileDialog("txt", this.LockerPartsGroup.Text);
             if (toFile.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(toFile.FileName(), ExportToTextLocker());
+                File.WriteAllText(toFile.FileName(), this.ExportToTextLocker());
             }
         }
 
@@ -254,7 +254,7 @@ namespace WillowTree.Plugins
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
-                lockerTl.SaveToXml(fileDlg.FileName());
+                this.lockerTl.SaveToXml(fileDlg.FileName());
             }
         }
 
@@ -267,7 +267,7 @@ namespace WillowTree.Plugins
                 return false;
             }
 
-            lockerTl.Add(gear);
+            this.lockerTl.Add(gear);
             return true;
         }
 
@@ -275,9 +275,9 @@ namespace WillowTree.Plugins
         {
             try
             {
-                if (ImportFromTextLocker(Clipboard.GetText()))
+                if (this.ImportFromTextLocker(Clipboard.GetText()))
                 {
-                    LockerTree.SelectedNode = LockerTree.AllNodes.Last();
+                    this.LockerTree.SelectedNode = this.LockerTree.AllNodes.Last();
                 }
             }
             catch
@@ -297,9 +297,9 @@ namespace WillowTree.Plugins
                 {
                     try
                     {
-                        if (ImportFromTextLocker(File.ReadAllText(file)))
+                        if (this.ImportFromTextLocker(File.ReadAllText(file)))
                         {
-                            LockerTree.SelectedNode = LockerTree.AllNodes.Last();
+                            this.LockerTree.SelectedNode = this.LockerTree.AllNodes.Last();
                         }
                     }
                     catch (IOException)
@@ -315,100 +315,100 @@ namespace WillowTree.Plugins
             WTOpenFileDialog fileDlg = new WTOpenFileDialog("xml", "");
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
-                lockerTl.ImportFromXml(fileDlg.FileName(), InventoryType.Any);
-                lockerTl.SaveToXml(fileDlg.FileName());
+                this.lockerTl.ImportFromXml(fileDlg.FileName(), InventoryType.Any);
+                this.lockerTl.SaveToXml(fileDlg.FileName());
             }
         }
 
         private void ImportAllFromItemsLocker_Click(object sender, EventArgs e)
         {
-            LockerTree.BeginUpdate();
+            this.LockerTree.BeginUpdate();
             foreach (InventoryEntry item in GameData.ItemList.Items.Values)
             {
-                lockerTl.Duplicate(item);
+                this.lockerTl.Duplicate(item);
             }
 
-            LockerTree.EndUpdate();
-            lockerTl.SaveToXml(GameData.OpenedLockerFilename());
+            this.LockerTree.EndUpdate();
+            this.lockerTl.SaveToXml(GameData.OpenedLockerFilename());
         }
 
         private void ImportAllFromWeaponsLocker_Click(object sender, EventArgs e)
         {
-            LockerTree.BeginUpdate();
+            this.LockerTree.BeginUpdate();
             foreach (InventoryEntry weapon in GameData.WeaponList.Items.Values)
             {
-                lockerTl.Duplicate(weapon);
+                this.lockerTl.Duplicate(weapon);
             }
 
-            LockerTree.EndUpdate();
-            lockerTl.SaveToXml(GameData.OpenedLockerFilename());
+            this.LockerTree.EndUpdate();
+            this.lockerTl.SaveToXml(GameData.OpenedLockerFilename());
         }
 
         private void LockerTree_SelectionChanged(object sender, EventArgs e)
         {
-            PartsLocker.Items.Clear();
+            this.PartsLocker.Items.Clear();
 
-            if (LockerTree.SelectedNode == null || LockerTree.SelectedNode.Children.Count > 0)
+            if (this.LockerTree.SelectedNode == null || this.LockerTree.SelectedNode.Children.Count > 0)
             {
                 return;
             }
 
-            InventoryEntry entry = LockerTree.SelectedNode.GetEntry() as InventoryEntry;
+            InventoryEntry entry = this.LockerTree.SelectedNode.GetEntry() as InventoryEntry;
 
-            if (LockerTree.SelectedNode.Children.Count == 0)
+            if (this.LockerTree.SelectedNode.Children.Count == 0)
             {   // Tree nodes with no children are items or weapons.  Entries with children would be section headers.
-                string selectedItem = LockerTree.SelectedNode.Data().Text;
+                string selectedItem = this.LockerTree.SelectedNode.Data().Text;
 
-                LockerPartsGroup.Text = entry.Name;
-                RatingLocker.Text = entry.Rating;
-                DescriptionLocker.Text = entry.Description.Replace("$LINE$", "\r\n");
+                this.LockerPartsGroup.Text = entry.Name;
+                this.RatingLocker.Text = entry.Rating;
+                this.DescriptionLocker.Text = entry.Description.Replace("$LINE$", "\r\n");
 
                 int partcount = entry.GetPartCount();
 
                 for (int progress = 0; progress < partcount; progress++)
                 {
-                    PartsLocker.Items.Add(entry.Parts[progress]);
+                    this.PartsLocker.Items.Add(entry.Parts[progress]);
                 }
 
-                WTSlideSelector.MinMaxAdvanced(entry.UsesBigLevel, ref LevelIndexLocker);
+                WTSlideSelector.MinMaxAdvanced(entry.UsesBigLevel, ref this.LevelIndexLocker);
 
-                RemAmmoLocker.Value = entry.Quantity;
-                QualityLocker.Value = entry.QualityIndex;
-                LevelIndexLocker.Value = entry.LevelIndex;
-                JunkLocker.Value = entry.IsJunk;
-                LockedLocker.Value = entry.IsLocked;
+                this.RemAmmoLocker.Value = entry.Quantity;
+                this.QualityLocker.Value = entry.QualityIndex;
+                this.LevelIndexLocker.Value = entry.LevelIndex;
+                this.JunkLocker.Value = entry.IsJunk;
+                this.LockedLocker.Value = entry.IsLocked;
             }
         }
 
         private void SaveChangesLocker_Click(object sender, EventArgs e)
         {
-            if (LockerTree.SelectedNode == null)
+            if (this.LockerTree.SelectedNode == null)
             {
                 return;
             }
 
-            if (LockerTree.SelectedNode.Children.Count > 0)
+            if (this.LockerTree.SelectedNode.Children.Count > 0)
             {
                 return;
             }
 
-            InventoryEntry entry = LockerTree.SelectedNode.GetEntry() as InventoryEntry;
+            InventoryEntry entry = this.LockerTree.SelectedNode.GetEntry() as InventoryEntry;
 
             int partcount = entry.GetPartCount();
 
             for (int progress = 0; progress < partcount; progress++)
             {
-                entry.Parts[progress] = (string)PartsLocker.Items[progress];
+                entry.Parts[progress] = (string)this.PartsLocker.Items[progress];
             }
 
-            entry.UsesBigLevel = InventoryEntry.ItemgradePartUsesBigLevel((string)PartsLocker.Items[0]);
+            entry.UsesBigLevel = InventoryEntry.ItemgradePartUsesBigLevel((string)this.PartsLocker.Items[0]);
 
-            entry.Quantity = (int)RemAmmoLocker.Value;
-            entry.QualityIndex = QualityLocker.Value;
+            entry.Quantity = (int)this.RemAmmoLocker.Value;
+            entry.QualityIndex = this.QualityLocker.Value;
             entry.EquippedSlot = 0;
-            entry.LevelIndex = LevelIndexLocker.Value;
-            entry.IsJunk = (int)JunkLocker.Value;
-            entry.IsLocked = (int)LockedLocker.Value;
+            entry.LevelIndex = this.LevelIndexLocker.Value;
+            entry.IsJunk = (int)this.JunkLocker.Value;
+            entry.IsLocked = (int)this.LockedLocker.Value;
 
             if (entry.Type == InventoryType.Weapon)
             {
@@ -432,22 +432,22 @@ namespace WillowTree.Plugins
             // make sure it is relocated to the proper location, then select the
             // node and make sure it is visible so the user is focused on the new
             // location after the changes.
-            lockerTl.RemoveFromTreeView(LockerTree.SelectedNode, false);
-            lockerTl.AddToTreeView(entry);
-            lockerTl.AdjustSelectionAfterAdd();
-            LockerTree.EnsureVisible(LockerTree.SelectedNode);
+            this.lockerTl.RemoveFromTreeView(this.LockerTree.SelectedNode, false);
+            this.lockerTl.AddToTreeView(entry);
+            this.lockerTl.AdjustSelectionAfterAdd();
+            this.LockerTree.EnsureVisible(this.LockerTree.SelectedNode);
 
-            LockerPartsGroup.Text = entry.Name;
-            LockerTree.Focus();
+            this.LockerPartsGroup.Text = entry.Name;
+            this.LockerTree.Focus();
         }
 
         //TODO Should be less dependant from "Colorize Lists" menu
         private void btnlockerSearch_Click(object sender, EventArgs e)
         {
-            string searchText = lockerSearch.Text.ToUpper();
+            string searchText = this.lockerSearch.Text.ToUpper();
             string text = "";
 
-            foreach (TreeNodeAdv node in lockerTl.Tree.AllNodes)
+            foreach (TreeNodeAdv node in this.lockerTl.Tree.AllNodes)
             {
                 if (node.Children.Count == 0)
                 {
@@ -455,22 +455,22 @@ namespace WillowTree.Plugins
 
                     if (searchText != "" && text.Contains(searchText))
                     {
-                        (node.Tag as ColoredTextNode).Font = highlightFont;
+                        (node.Tag as ColoredTextNode).Font = this.highlightFont;
                     }
                     else
                     {
-                        (node.Tag as ColoredTextNode).Font = LockerTree.Font;
+                        (node.Tag as ColoredTextNode).Font = this.LockerTree.Font;
                     }
                 }
             }
-            Refresh(); //LockerTree_SelectionChanged is not needed for visual update
+            this.Refresh(); //LockerTree_SelectionChanged is not needed for visual update
         }
 
         private void lockerSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                btnlockerSearch_Click(this, EventArgs.Empty);
+                this.btnlockerSearch_Click(this, EventArgs.Empty);
             }
         }
 
@@ -484,7 +484,7 @@ namespace WillowTree.Plugins
                 {
                     return;
                 }
-                LoadLocker(fromFile.FileName());
+                this.LoadLocker(fromFile.FileName());
                 GameData.OpenedLockerFilename(fromFile.FileName());
             }
             catch
@@ -498,20 +498,20 @@ namespace WillowTree.Plugins
             switch (e.KeyCode)
             {
                 case Keys.Delete:
-                    DeleteLocker_Click(this, EventArgs.Empty);
+                    this.DeleteLocker_Click(this, EventArgs.Empty);
                     break;
                 case Keys.Insert:
-                    DuplicateLocker_Click(this, EventArgs.Empty);
+                    this.DuplicateLocker_Click(this, EventArgs.Empty);
                     break;
                 default:
                 {
                     switch (e.KeyData)
                     {
                         case Keys.Control | Keys.B:
-                            CopyBackpack_Click(this, EventArgs.Empty);
+                                this.CopyBackpack_Click(this, EventArgs.Empty);
                             break;
                         case Keys.Control | Keys.N:
-                            CopyBank_Click(this, EventArgs.Empty);
+                                this.CopyBank_Click(this, EventArgs.Empty);
                             break;
                     }
 

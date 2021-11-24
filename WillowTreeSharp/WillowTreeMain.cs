@@ -38,13 +38,13 @@ namespace WillowTree
             this.settings = settings;
             this.pluginManager = pluginManager;
             this.themes = themes;
-            MessageBox = messageBox;
+            this.MessageBox = messageBox;
 
             this.settings.Load(this.gameData.XmlPath + "options.xml");
 
             if (!this.directory.Exists(this.gameData.DataPath))
             {
-                MessageBox.Show(
+                this.MessageBox.Show(
                     "Couldn't find the 'Data' folder! Please make sure that WillowTree# and its data folder are in the same directory.");
                 Application.Exit();
                 return;
@@ -56,37 +56,37 @@ namespace WillowTree
                     "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
             }
 
-            InitializeComponent();
+            this.InitializeComponent();
 
             this.gameData.InitializeNameLookup();
 
-            Save.Enabled = false;
-            SaveAs.Enabled = false;
-            SelectFormat.Enabled = false;
+            this.Save.Enabled = false;
+            this.SaveAs.Enabled = false;
+            this.SelectFormat.Enabled = false;
 
-            CreatePluginAsTab("General", new ucGeneral(this.gameData, this.settings));
-            CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.settings, xmlCache, this.file));
-            CreatePluginAsTab("Items", new ucGears(this.gameData, this.settings, xmlCache, this.file));
-            CreatePluginAsTab("Skills", new UcSkills(this.gameData));
-            CreatePluginAsTab("Quest", new UcQuests());
-            CreatePluginAsTab("Ammo Pools", new UcAmmo());
-            CreatePluginAsTab("Echo Logs", new ucEchoes());
-            CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings, xmlCache, this.file));
-            CreatePluginAsTab("Locker", new ucLocker());
-            CreatePluginAsTab("About", new UcAbout());
+            this.CreatePluginAsTab("General", new ucGeneral(this.gameData, this.settings));
+            this.CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.settings, xmlCache, this.file));
+            this.CreatePluginAsTab("Items", new ucGears(this.gameData, this.settings, xmlCache, this.file));
+            this.CreatePluginAsTab("Skills", new UcSkills(this.gameData));
+            this.CreatePluginAsTab("Quest", new UcQuests());
+            this.CreatePluginAsTab("Ammo Pools", new UcAmmo());
+            this.CreatePluginAsTab("Echo Logs", new ucEchoes());
+            this.CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings, xmlCache, this.file));
+            this.CreatePluginAsTab("Locker", new ucLocker());
+            this.CreatePluginAsTab("About", new UcAbout());
 
             try
             {
-                tabControl1.SelectTab("ucAbout");
+                this.tabControl1.SelectTab("ucAbout");
             }
             catch
             {
             }
 
-            SetUiTreeStyles(this.settings.UseColor);
+            this.SetUiTreeStyles(this.settings.UseColor);
         }
 
-        public WillowSaveGame SaveData => currentWsg;
+        public WillowSaveGame SaveData => this.currentWsg;
 
         public IMessageBox MessageBox { get; }
 
@@ -96,8 +96,8 @@ namespace WillowTree
             {
                 control.Text = tabTitle;
                 control.BackColor = Color.Transparent;
-                tabControl1.Controls.Add(control);
-                pluginManager.InitializePlugin(plugin);
+                this.tabControl1.Controls.Add(control);
+                this.pluginManager.InitializePlugin(plugin);
             }
         }
 
@@ -116,7 +116,7 @@ namespace WillowTree
         private void colorizeListsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.settings.UseColor = !this.settings.UseColor;
-            SetUiTreeStyles(this.settings.UseColor);
+            this.SetUiTreeStyles(this.settings.UseColor);
         }
 
         private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.WillowObject
@@ -196,7 +196,7 @@ namespace WillowTree
 
         private void DoWindowTitle()
         {
-            if (pluginManager.GetPlugin(typeof(ucGeneral)) is ucGeneral eGeneral)
+            if (this.pluginManager.GetPlugin(typeof(ucGeneral)) is ucGeneral eGeneral)
             {
                 eGeneral.DoWindowTitle();
             }
@@ -210,9 +210,9 @@ namespace WillowTree
 
         private void IncreaseNavigationLayers_Click(object sender, EventArgs e)
         {
-            if (tabControl1.TabPages[tabControl1.SelectedIndex] is IPlugin page)
+            if (this.tabControl1.TabPages[this.tabControl1.SelectedIndex] is IPlugin page)
             {
-                pluginManager.OnPluginCommand(page,
+                this.pluginManager.OnPluginCommand(page,
                     new PluginCommandEventArgs(this, PluginCommand.IncreaseNavigationDepth));
             }
         }
@@ -224,15 +224,15 @@ namespace WillowTree
 
         private void NextSort_Click(object sender, EventArgs e)
         {
-            if (tabControl1.TabPages[tabControl1.SelectedIndex] is IPlugin page)
+            if (this.tabControl1.TabPages[this.tabControl1.SelectedIndex] is IPlugin page)
             {
-                pluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.ChangeSortMode));
+                this.pluginManager.OnPluginCommand(page, new PluginCommandEventArgs(this, PluginCommand.ChangeSortMode));
             }
         }
 
         private void Open_Click(object sender, EventArgs e)
         {
-            string fileName = (currentWsg != null) ? currentWsg.OpenedWsg : "";
+            string fileName = (this.currentWsg != null) ? this.currentWsg.OpenedWsg : "";
 
             WTOpenFileDialog openDlg = new WTOpenFileDialog("sav", fileName);
             if (openDlg.ShowDialog() != DialogResult.OK)
@@ -242,17 +242,17 @@ namespace WillowTree
 
             fileName = openDlg.FileName();
 
-            pluginManager.OnGameLoading(new PluginEventArgs(this, fileName));
+            this.pluginManager.OnGameLoading(new PluginEventArgs(this, fileName));
             Application.DoEvents();
-            currentWsg = new WillowSaveGame
+            this.currentWsg = new WillowSaveGame
             {
                 AutoRepair = true
             };
-            currentWsg.LoadWsg(fileName);
+            this.currentWsg.LoadWsg(fileName);
 
-            if (currentWsg.RequiredRepair)
+            if (this.currentWsg.RequiredRepair)
             {
-                DialogResult result = MessageBox.Show(
+                DialogResult result = this.MessageBox.Show(
                     "Your savegame contains corrupted data so it cannot be loaded.  It is possible to discard the invalid data to repair your savegame so that it can be opened.  Repairing WILL CAUSE SOME DATA LOSS but should bring your savegame back to a working state.\r\n\r\nDo you want to repair the savegame?",
                     "Recoverable Corruption Detected",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
@@ -263,64 +263,64 @@ namespace WillowTree
                 }
             }
 
-            ConvertListForEditing(this.gameData.WeaponList, ref currentWsg.Weapons);
-            ConvertListForEditing(this.gameData.ItemList, ref currentWsg.Items);
-            ConvertListForEditing(this.gameData.BankList, ref currentWsg.Dlc.BankInventory);
+            this.ConvertListForEditing(this.gameData.WeaponList, ref this.currentWsg.Weapons);
+            this.ConvertListForEditing(this.gameData.ItemList, ref this.currentWsg.Items);
+            this.ConvertListForEditing(this.gameData.BankList, ref this.currentWsg.Dlc.BankInventory);
 
-            pluginManager.OnGameLoaded(new PluginEventArgs(this, fileName));
+            this.pluginManager.OnGameLoaded(new PluginEventArgs(this, fileName));
 
-            Save.Enabled = true;
-            SaveAs.Enabled = true;
-            SelectFormat.Enabled = true;
+            this.Save.Enabled = true;
+            this.SaveAs.Enabled = true;
+            this.SelectFormat.Enabled = true;
         }
 
         private void optionsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            colorizeListsToolStripMenuItem.Checked = this.settings.UseColor;
-            showRarityValueToolStripMenuItem.Checked = this.settings.ShowRarity;
-            showEffectiveLevelsToolStripMenuItem.Checked = this.settings.ShowLevel;
-            showManufacturerToolStripMenuItem.Checked = this.settings.ShowManufacturer;
-            MenuItemPartSelectorTracking.Checked = this.settings.PartSelectorTracking;
+            this.colorizeListsToolStripMenuItem.Checked = this.settings.UseColor;
+            this.showRarityValueToolStripMenuItem.Checked = this.settings.ShowRarity;
+            this.showEffectiveLevelsToolStripMenuItem.Checked = this.settings.ShowLevel;
+            this.showManufacturerToolStripMenuItem.Checked = this.settings.ShowManufacturer;
+            this.MenuItemPartSelectorTracking.Checked = this.settings.PartSelectorTracking;
         }
 
         private void PCFormat_Click(object sender, EventArgs e)
         {
-            if (currentWsg.Platform == "PC")
+            if (this.currentWsg.Platform == "PC")
             {
                 return;
             }
 
-            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.LittleEndian) && !UIAction_RemoveRawData())
+            if (this.currentWsg.ContainsRawData && (this.currentWsg.EndianWsg != ByteOrder.LittleEndian) && !this.UIAction_RemoveRawData())
             {
                 return;
             }
 
-            currentWsg.Platform = "PC";
-            currentWsg.EndianWsg = ByteOrder.LittleEndian;
-            DoWindowTitle();
-            currentWsg.OpenedWsg = "";
-            Save.Enabled = false;
+            this.currentWsg.Platform = "PC";
+            this.currentWsg.EndianWsg = ByteOrder.LittleEndian;
+            this.DoWindowTitle();
+            this.currentWsg.OpenedWsg = "";
+            this.Save.Enabled = false;
         }
 
         private void PS3Format_Click(object sender, EventArgs e)
         {
-            if (currentWsg.Platform == "PS3")
+            if (this.currentWsg.Platform == "PS3")
             {
                 return;
             }
 
-            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian) && !UIAction_RemoveRawData())
+            if (this.currentWsg.ContainsRawData && (this.currentWsg.EndianWsg != ByteOrder.BigEndian) && !this.UIAction_RemoveRawData())
             {
                 return;
             }
 
-            currentWsg.Platform = "PS3";
-            currentWsg.EndianWsg = ByteOrder.BigEndian;
-            DoWindowTitle();
-            MessageBox.Show(
+            this.currentWsg.Platform = "PS3";
+            this.currentWsg.EndianWsg = ByteOrder.BigEndian;
+            this.DoWindowTitle();
+            this.MessageBox.Show(
                 "This save data will be stored in the PS3 format. Please note that you will require \r\nproper SFO, PNG, and PFD files to be transfered back to the \r\nPS3. These can be acquired from another Borderlands save \r\nfor the same profile.");
-            currentWsg.OpenedWsg = "";
-            Save.Enabled = false;
+            this.currentWsg.OpenedWsg = "";
+            this.Save.Enabled = false;
         }
 
         private void RepopulateListForSaving<T>(InventoryList itmList, ref List<T> objs)
@@ -398,17 +398,17 @@ namespace WillowTree
         {
             try
             {
-                this.file.Copy(currentWsg.OpenedWsg, $"{currentWsg.OpenedWsg}.bak0", true);
-                if (this.file.Exists($"{currentWsg.OpenedWsg}.bak10"))
+                this.file.Copy(this.currentWsg.OpenedWsg, $"{this.currentWsg.OpenedWsg}.bak0", true);
+                if (this.file.Exists($"{this.currentWsg.OpenedWsg}.bak10"))
                 {
-                    this.file.Delete($"{currentWsg.OpenedWsg}.bak10");
+                    this.file.Delete($"{this.currentWsg.OpenedWsg}.bak10");
                 }
 
                 for (int i = 9; i >= 0; i--)
                 {
-                    if (this.file.Exists($"{currentWsg.OpenedWsg}.bak{i}"))
+                    if (this.file.Exists($"{this.currentWsg.OpenedWsg}.bak{i}"))
                     {
-                        this.file.Move($"{currentWsg.OpenedWsg}.bak{i}", $"{currentWsg.OpenedWsg}.bak{(i + 1)}");
+                        this.file.Move($"{this.currentWsg.OpenedWsg}.bak{i}", $"{this.currentWsg.OpenedWsg}.bak{(i + 1)}");
                     }
                 }
             }
@@ -416,22 +416,22 @@ namespace WillowTree
             {
             }
 
-            SaveToFile(currentWsg.OpenedWsg);
-            MessageBox.Show($"Saved WSG to: {currentWsg.OpenedWsg}");
+            this.SaveToFile(this.currentWsg.OpenedWsg);
+            this.MessageBox.Show($"Saved WSG to: {this.currentWsg.OpenedWsg}");
         }
 
         private void SaveAs_Click(object sender, EventArgs e)
         {
-            WTSaveFileDialog tempSave = new WTSaveFileDialog("sav", currentWsg.OpenedWsg);
+            WTSaveFileDialog tempSave = new WTSaveFileDialog("sav", this.currentWsg.OpenedWsg);
 
             if (tempSave.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            SaveToFile(tempSave.FileName());
-            MessageBox.Show($"Saved WSG to: {currentWsg.OpenedWsg}");
-            Save.Enabled = true;
+            this.SaveToFile(tempSave.FileName());
+            this.MessageBox.Show($"Saved WSG to: {this.currentWsg.OpenedWsg}");
+            this.Save.Enabled = true;
         }
 
         private void SaveOptions_Click(object sender, EventArgs e)
@@ -441,25 +441,25 @@ namespace WillowTree
 
         private void SaveToFile(string filename)
         {
-            pluginManager.OnGameSaving(new PluginEventArgs(this, filename));
+            this.pluginManager.OnGameSaving(new PluginEventArgs(this, filename));
             Application.DoEvents();
 
             // Convert the weapons and items data from WeaponList/ItemList into
             // the format used by WillowSaveGame.
-            RepopulateListForSaving(this.gameData.WeaponList, ref currentWsg.Weapons);
-            RepopulateListForSaving(this.gameData.ItemList, ref currentWsg.Items);
-            RepopulateListForSaving(this.gameData.BankList, ref currentWsg.Dlc.BankInventory);
-            currentWsg.SaveWsg(filename);
-            currentWsg.OpenedWsg = filename;
+            this.RepopulateListForSaving(this.gameData.WeaponList, ref this.currentWsg.Weapons);
+            this.RepopulateListForSaving(this.gameData.ItemList, ref this.currentWsg.Items);
+            this.RepopulateListForSaving(this.gameData.BankList, ref this.currentWsg.Dlc.BankInventory);
+            this.currentWsg.SaveWsg(filename);
+            this.currentWsg.OpenedWsg = filename;
 
             // Release the WillowSaveGame inventory data now that saving is complete.  The
             // same data is still contained in db.WeaponList, db.ItemList, and db.BankList
             // in the format used by the WillowTree UI.
-            currentWsg.Weapons = null;
-            currentWsg.Items = null;
-            currentWsg.Dlc.BankInventory = null;
+            this.currentWsg.Weapons = null;
+            this.currentWsg.Items = null;
+            this.currentWsg.Dlc.BankInventory = null;
 
-            pluginManager.OnGameSaved(new PluginEventArgs(this, currentWsg.OpenedWsg));
+            this.pluginManager.OnGameSaved(new PluginEventArgs(this, this.currentWsg.OpenedWsg));
         }
 
         private void SetUiTreeStyles(bool useColor)
@@ -475,19 +475,19 @@ namespace WillowTree
         private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.settings.ShowLevel = !this.settings.ShowLevel;
-            UpdateNames();
+            this.UpdateNames();
         }
 
         private void showManufacturerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.settings.ShowManufacturer = !this.settings.ShowManufacturer;
-            UpdateNames();
+            this.UpdateNames();
         }
 
         private void showRarityValueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.settings.ShowRarity = !this.settings.ShowRarity;
-            UpdateNames();
+            this.UpdateNames();
         }
 
         private void StandardInput_Click(object sender, EventArgs e)
@@ -497,23 +497,23 @@ namespace WillowTree
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (selectedTabObject is IPlugin tabObject)
+            if (this.selectedTabObject is IPlugin tabObject)
             {
-                pluginManager.OnPluginUnselected(tabObject, new PluginEventArgs(this, null));
+                this.pluginManager.OnPluginUnselected(tabObject, new PluginEventArgs(this, null));
             }
 
-            int selected = tabControl1.SelectedIndex;
+            int selected = this.tabControl1.SelectedIndex;
             if (selected >= 0)
             {
-                selectedTabObject = tabControl1.Controls[selected];
-                if (selectedTabObject is IPlugin plugin)
+                this.selectedTabObject = this.tabControl1.Controls[selected];
+                if (this.selectedTabObject is IPlugin plugin)
                 {
-                    pluginManager.OnPluginSelected(plugin, new PluginEventArgs(this, null));
+                    this.pluginManager.OnPluginSelected(plugin, new PluginEventArgs(this, null));
                 }
             }
             else
             {
-                selectedTabObject = null;
+                this.selectedTabObject = null;
             }
         }
 
@@ -526,7 +526,7 @@ namespace WillowTree
         /// <returns></returns>
         private bool UIAction_RemoveRawData()
         {
-            DialogResult result = MessageBox.Show(
+            DialogResult result = this.MessageBox.Show(
                 "This savegame contains some unexpected or possibly corrupt DLC data that WillowTree# does not know how to parse, so it cannot be rewritten in a different machine byte order.  The extra data can be discarded to allow you to convert the savegame, but this will cause DLC data loss if the unknown DLC data is actually used by Borderlands.  It is typical for Steam PC savegames to have a data section like this and it must be removed to convert to Xbox 360 or PS3 format.  The data probably serves no gameplay purpose because it doesn't exist in the PC DVD version.\r\n\r\nDo you want to discard the raw data to allow the conversion?",
                 "Unexpected Raw Data", MessageBoxButtons.YesNo);
             if (result == DialogResult.No)
@@ -534,7 +534,7 @@ namespace WillowTree
                 return false;
             }
 
-            currentWsg.DiscardRawData();
+            this.currentWsg.DiscardRawData();
             return true;
         }
 
@@ -553,17 +553,17 @@ namespace WillowTree
 
         private void XBoxFormat_Click(object sender, EventArgs e)
         {
-            if (currentWsg.Platform == "X360")
+            if (this.currentWsg.Platform == "X360")
             {
                 return;
             }
 
-            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian) && !UIAction_RemoveRawData())
+            if (this.currentWsg.ContainsRawData && (this.currentWsg.EndianWsg != ByteOrder.BigEndian) && !this.UIAction_RemoveRawData())
             {
                 return;
             }
 
-            if (currentWsg.DeviceId == null)
+            if (this.currentWsg.DeviceId == null)
             {
                 XBoxIDDialog dlgXBoxId = new XBoxIDDialog();
                 if (dlgXBoxId.ShowDialog() != DialogResult.OK)
@@ -571,32 +571,32 @@ namespace WillowTree
                     return;
                 }
 
-                currentWsg.ProfileId = dlgXBoxId.ID.ProfileID;
+                this.currentWsg.ProfileId = dlgXBoxId.ID.ProfileID;
                 int deviceIdLength = dlgXBoxId.ID.DeviceID.Length;
-                currentWsg.DeviceId = new byte[deviceIdLength];
-                Array.Copy(dlgXBoxId.ID.DeviceID, currentWsg.DeviceId, deviceIdLength);
+                this.currentWsg.DeviceId = new byte[deviceIdLength];
+                Array.Copy(dlgXBoxId.ID.DeviceID, this.currentWsg.DeviceId, deviceIdLength);
             }
 
-            currentWsg.Platform = "X360";
-            currentWsg.EndianWsg = ByteOrder.BigEndian;
-            DoWindowTitle();
-            currentWsg.OpenedWsg = "";
-            Save.Enabled = false;
+            this.currentWsg.Platform = "X360";
+            this.currentWsg.EndianWsg = ByteOrder.BigEndian;
+            this.DoWindowTitle();
+            this.currentWsg.OpenedWsg = "";
+            this.Save.Enabled = false;
         }
 
         private void XBoxJPFormat_Click(object sender, EventArgs e)
         {
-            if (currentWsg.Platform == "X360JP")
+            if (this.currentWsg.Platform == "X360JP")
             {
                 return;
             }
 
-            if (currentWsg.ContainsRawData && (currentWsg.EndianWsg != ByteOrder.BigEndian) && !UIAction_RemoveRawData())
+            if (this.currentWsg.ContainsRawData && (this.currentWsg.EndianWsg != ByteOrder.BigEndian) && !this.UIAction_RemoveRawData())
             {
                 return;
             }
 
-            if (currentWsg.DeviceId == null)
+            if (this.currentWsg.DeviceId == null)
             {
                 XBoxIDDialog dlgXBoxId = new XBoxIDDialog();
                 if (dlgXBoxId.ShowDialog() != DialogResult.OK)
@@ -604,17 +604,17 @@ namespace WillowTree
                     return;
                 }
 
-                currentWsg.ProfileId = dlgXBoxId.ID.ProfileID;
+                this.currentWsg.ProfileId = dlgXBoxId.ID.ProfileID;
                 int deviceIdLength = dlgXBoxId.ID.DeviceID.Length;
-                currentWsg.DeviceId = new byte[deviceIdLength];
-                Array.Copy(dlgXBoxId.ID.DeviceID, currentWsg.DeviceId, deviceIdLength);
+                this.currentWsg.DeviceId = new byte[deviceIdLength];
+                Array.Copy(dlgXBoxId.ID.DeviceID, this.currentWsg.DeviceId, deviceIdLength);
             }
 
-            currentWsg.Platform = "X360JP";
-            currentWsg.EndianWsg = ByteOrder.BigEndian;
-            DoWindowTitle();
-            currentWsg.OpenedWsg = "";
-            Save.Enabled = false;
+            this.currentWsg.Platform = "X360JP";
+            this.currentWsg.EndianWsg = ByteOrder.BigEndian;
+            this.DoWindowTitle();
+            this.currentWsg.OpenedWsg = "";
+            this.Save.Enabled = false;
         }
     }
 }

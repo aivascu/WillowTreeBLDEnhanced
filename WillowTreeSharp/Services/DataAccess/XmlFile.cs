@@ -28,16 +28,16 @@ namespace WillowTree.Services.DataAccess
         public XmlFile(string dataPath, string xmlPath, string filePath)
         {
             List<string> listFilePath = new List<string>();
-            filePath = Path.GetFullPath(filePath);
+            filePath = this.Path.GetFullPath(filePath);
             this.path = filePath;
             listFilePath.Add(filePath); //Contains all ini style filenames
-            string fileExtension = Path.GetExtension(filePath);
+            string fileExtension = this.Path.GetExtension(filePath);
             if ((fileExtension == ".ini") || (fileExtension == ".txt"))
             {
-                string filename = Path.GetFileNameWithoutExtension(filePath);
+                string filename = this.Path.GetFileNameWithoutExtension(filePath);
                 // Must add the directory separator character to the end of the folder because
                 // it is stored that way in db.DataPath.
-                string folder = Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar;
+                string folder = this.Path.GetDirectoryName(filePath) + this.Path.DirectorySeparatorChar;
 
                 if (dataPath.Length <= folder.Length && folder.Substring(0, dataPath.Length)
                     .Equals(dataPath, StringComparison.OrdinalIgnoreCase))
@@ -64,34 +64,34 @@ namespace WillowTree.Services.DataAccess
                     // the Data folder, so this code line is probably never executed.  It might
                     // have some use if an application other than WT# was to use the XML
                     // code though.
-                    folder = folder + "Xml" + Path.DirectorySeparatorChar;
+                    folder = folder + "Xml" + this.Path.DirectorySeparatorChar;
                 }
 
-                string targetFile = Path.Combine(folder, $"{filename}.xml");
-                if (!Directory.Exists(Path.GetDirectoryName(targetFile)))
+                string targetFile = this.Path.Combine(folder, $"{filename}.xml");
+                if (!this.Directory.Exists(this.Path.GetDirectoryName(targetFile)))
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
+                    this.Directory.CreateDirectory(this.Path.GetDirectoryName(targetFile));
                 }
 
-                ConvertIni2Xml(listFilePath, targetFile);
+                this.ConvertIni2Xml(listFilePath, targetFile);
                 this.path = targetFile;
             }
 
-            xmlDocument = null;
-            listListSectionNames.Clear();
+            this.xmlDocument = null;
+            this.listListSectionNames.Clear();
         }
 
         public XmlFile(List<string> filePaths, string targetFile)
         {
-            ConvertIni2Xml(filePaths, targetFile);
-            path = targetFile;
+            this.ConvertIni2Xml(filePaths, targetFile);
+            this.path = targetFile;
 
-            xmlDocument = null;
+            this.xmlDocument = null;
         }
 
         public void AddSection(string sectionName, List<string> subsectionNames, List<string> subsectionValues)
         {
-            XmlTextReader reader = new XmlTextReader(path);
+            XmlTextReader reader = new XmlTextReader(this.path);
             XmlDocument doc = new XmlDocument();
             doc.Load(reader);
             reader.Close();
@@ -109,33 +109,33 @@ namespace WillowTree.Services.DataAccess
             newSection.InnerXml = innerXml;
             root.AppendChild(newSection);
 
-            doc.Save(path);
+            doc.Save(this.path);
 
-            listListSectionNames.Add(sectionName);
+            this.listListSectionNames.Add(sectionName);
 
             // Read in new
-            xmlDocument = null;
+            this.xmlDocument = null;
         }
 
         public List<string> StListSectionNames()
         {
-            if (xmlDocument == null)
+            if (this.xmlDocument == null)
             {
-                xmlDocument = new XmlDocument();
-                xmlDocument.Load(path);
+                this.xmlDocument = new XmlDocument();
+                this.xmlDocument.Load(this.path);
             }
 
-            if (listListSectionNames.Count != 0)
+            if (this.listListSectionNames.Count != 0)
             {
-                return listListSectionNames;
+                return this.listListSectionNames;
             }
 
-            foreach (XmlNode node in xmlDocument.SelectNodes("/INI/Section/Name"))
+            foreach (XmlNode node in this.xmlDocument.SelectNodes("/INI/Section/Name"))
             {
-                listListSectionNames.Add(node.InnerText);
+                this.listListSectionNames.Add(node.InnerText);
             }
 
-            return listListSectionNames;
+            return this.listListSectionNames;
         }
 
         /// <summary>
@@ -148,13 +148,13 @@ namespace WillowTree.Services.DataAccess
         /// <returns></returns>
         public string XmlReadAssociatedValue(string key, string associatedKey, string associatedValue)
         {
-            if (xmlDocument is null)
+            if (this.xmlDocument is null)
             {
-                xmlDocument = new XmlDocument();
-                xmlDocument.Load(path);
+                this.xmlDocument = new XmlDocument();
+                this.xmlDocument.Load(this.path);
             }
 
-            foreach (XmlNode xn in xmlDocument.SelectNodes($"/INI/Section[{associatedKey}=\"{associatedValue}\"]"))
+            foreach (XmlNode xn in this.xmlDocument.SelectNodes($"/INI/Section[{associatedKey}=\"{associatedValue}\"]"))
             {
                 XmlNode node = xn[key];
                 if (node != null)
@@ -168,26 +168,26 @@ namespace WillowTree.Services.DataAccess
 
         public XmlNode XmlReadNode(string section)
         {
-            if (xmlDocument == null)
+            if (this.xmlDocument == null)
             {
-                xmlDocument = new XmlDocument();
-                xmlDocument.Load(path);
+                this.xmlDocument = new XmlDocument();
+                this.xmlDocument.Load(this.path);
             }
 
-            return xmlDocument.SelectSingleNode($"/INI/Section[Name=\"{section}\"]");
+            return this.xmlDocument.SelectSingleNode($"/INI/Section[Name=\"{section}\"]");
         }
 
         public List<string> XmlReadSection(string section)
         {
-            if (xmlDocument == null)
+            if (this.xmlDocument == null)
             {
-                xmlDocument = new XmlDocument();
-                xmlDocument.Load(path);
+                this.xmlDocument = new XmlDocument();
+                this.xmlDocument.Load(this.path);
             }
 
             List<string> temp = new List<string>();
 
-            foreach (XmlNode xn in xmlDocument.SelectNodes($"/INI/Section[Name=\"{section}\"]"))
+            foreach (XmlNode xn in this.xmlDocument.SelectNodes($"/INI/Section[Name=\"{section}\"]"))
             {
                 foreach (XmlNode cnd in xn.ChildNodes)
                 {
@@ -209,13 +209,13 @@ namespace WillowTree.Services.DataAccess
         /// <returns></returns>
         public string XmlReadValue(string section, string key)
         {
-            if (xmlDocument == null)
+            if (this.xmlDocument == null)
             {
-                xmlDocument = new XmlDocument();
-                xmlDocument.Load(path);
+                this.xmlDocument = new XmlDocument();
+                this.xmlDocument.Load(this.path);
             }
 
-            foreach (XmlNode xn in xmlDocument.SelectNodes($"/INI/Section[Name=\"{section}\"]"))
+            foreach (XmlNode xn in this.xmlDocument.SelectNodes($"/INI/Section[Name=\"{section}\"]"))
             {
                 XmlNode node = xn[key];
                 if (node != null)
@@ -231,16 +231,16 @@ namespace WillowTree.Services.DataAccess
         {
             bool xmlNeedsUpdate;
 
-            if (File.Exists(xmlName))
+            if (this.File.Exists(xmlName))
             {
                 // If any of the INI files used to create the XML file is newer than
                 // the XML file then the XML file needs to be rebuilt.
-                DateTime xmlWriteTime = File.GetLastWriteTimeUtc(xmlName);
+                DateTime xmlWriteTime = this.File.GetLastWriteTimeUtc(xmlName);
                 xmlNeedsUpdate = false;
 
                 foreach (string iniName in iniNames)
                 {
-                    if (File.GetLastWriteTime(iniName) >= xmlWriteTime)
+                    if (this.File.GetLastWriteTime(iniName) >= xmlWriteTime)
                     {
                         xmlNeedsUpdate = true;
                     }
@@ -342,7 +342,7 @@ namespace WillowTree.Services.DataAccess
                 catch (Exception)
                 {
                     writer.Close();
-                    File.Delete(xmlName);
+                    this.File.Delete(xmlName);
 
                     // Re-throw the exception.  This code does not consume the exception.
                     // It just to makes sure any incomplete XML file is deleted so next

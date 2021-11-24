@@ -33,7 +33,7 @@ namespace WillowTree
 
         public XBoxIDDialog()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
    
         private void button1_Click(object sender, EventArgs e)
@@ -42,17 +42,17 @@ namespace WillowTree
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
-                XBoxIDFilePath.Text = tempOpen.FileName();
+                this.XBoxIDFilePath.Text = tempOpen.FileName();
                 try
                 {
-                    ID = new XBoxUniqueID(tempOpen.FileName());
-                    ProfileBox.Text = ID.ProfileID.ToString("X");
-                    DeviceBox.Text = BitConverter.ToString(ID.DeviceID);
-                    DeviceBox.Text = DeviceBox.Text.Replace("-", "");
+                    this.ID = new XBoxUniqueID(tempOpen.FileName());
+                    this.ProfileBox.Text = this.ID.ProfileID.ToString("X");
+                    this.DeviceBox.Text = BitConverter.ToString(this.ID.DeviceID);
+                    this.DeviceBox.Text = this.DeviceBox.Text.Replace("-", "");
                 }
                 catch
                 {
-                    ID = null;
+                    this.ID = null;
                     MessageBox.Show("The file is not a valid Xbox 360 savegame file.");
                 }
             }
@@ -60,7 +60,7 @@ namespace WillowTree
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (ID != null)
+            if (this.ID != null)
             {
                 this.DialogResult = DialogResult.OK;
             }
@@ -93,8 +93,8 @@ namespace WillowTree
             br = null;
 
             STFSPackage CON = new STFSPackage(new DJsIO(FileName, DJFileMode.Open, true), new X360.Other.LogRecord());
-            ProfileID = CON.Header.ProfileID;
-            DeviceID = CON.Header.DeviceID;
+            this.ProfileID = CON.Header.ProfileID;
+            this.DeviceID = CON.Header.DeviceID;
             CON.CloseIO();
         }
     }

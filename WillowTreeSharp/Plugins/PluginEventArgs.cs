@@ -6,8 +6,8 @@ namespace WillowTree.Plugins
     {
         public PluginEventArgs(WillowTreeMain willowTreeMain, string fileName)
         {
-            FileName = fileName;
-            WillowTreeMain = willowTreeMain;
+            this.FileName = fileName;
+            this.WillowTreeMain = willowTreeMain;
         }
 
         public WillowTreeMain WillowTreeMain { get; }

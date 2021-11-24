@@ -14,7 +14,7 @@ namespace WillowTree.Inventory
         public InventoryList(byte inventoryType)
         {
             this.Items = new Dictionary<string, InventoryEntry>();
-            invType = inventoryType;
+            this.invType = inventoryType;
         }
 
         public delegate void EntryChangeByKeyEventHandler(InventoryList ilist, string key);
@@ -42,25 +42,25 @@ namespace WillowTree.Inventory
         public void Add(InventoryEntry entry)
         {
             entry.Key = GameData.CreateUniqueKey();
-            Items.Add(entry.Key, entry);
-            OnEntryAdd(entry);
+            this.Items.Add(entry.Key, entry);
+            this.OnEntryAdd(entry);
         }
 
         public void AddSilent(InventoryEntry entry)
         {
             entry.Key = GameData.CreateUniqueKey();
-            Items.Add(entry.Key, entry);
+            this.Items.Add(entry.Key, entry);
         }
 
         public void Clear()
         {
-            Items.Clear();
-            OnListReload();
+            this.Items.Clear();
+            this.OnListReload();
         }
 
         public void ClearSilent()
         {
-            Items.Clear();
+            this.Items.Clear();
         }
 
         public void Duplicate(InventoryEntry entry)
@@ -69,8 +69,8 @@ namespace WillowTree.Inventory
             {
                 Key = GameData.CreateUniqueKey()
             };
-            Items.Add(copy.Key, copy);
-            OnEntryAdd(copy);
+            this.Items.Add(copy.Key, copy);
+            this.OnEntryAdd(copy);
         }
 
         public void OnEntryAdd(InventoryEntry entry)
@@ -116,8 +116,8 @@ namespace WillowTree.Inventory
         public void Remove(TreeNodeAdv node)
         {
             InventoryEntry entry = node.GetEntry() as InventoryEntry;
-            Items.Remove(entry.Key);
-            OnEntryRemoveNode(node);
+            this.Items.Remove(entry.Key);
+            this.OnEntryRemoveNode(node);
         }
     }
 }

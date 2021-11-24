@@ -57,7 +57,7 @@ namespace WillowTree.Plugins
         /// </summary>
         public void OnPluginSelected(IPlugin plugin, PluginEventArgs e)
         {
-            if (pluginEventTable.TryGetValue(plugin, out var functions))
+            if (this.pluginEventTable.TryGetValue(plugin, out var functions))
             {
                 functions.PluginSelected?.Invoke(this, e);
             }
@@ -71,7 +71,7 @@ namespace WillowTree.Plugins
         /// </summary>
         public void OnPluginUnselected(IPlugin plugin, PluginEventArgs e)
         {
-            if (pluginEventTable.TryGetValue(plugin, out var functions))
+            if (this.pluginEventTable.TryGetValue(plugin, out var functions))
             {
                 functions.PluginUnselected?.Invoke(this, e);
             }
@@ -79,7 +79,7 @@ namespace WillowTree.Plugins
 
         public void OnPluginCommand(IPlugin plugin, PluginCommandEventArgs e)
         {
-            if (pluginEventTable.TryGetValue(plugin, out var functions))
+            if (this.pluginEventTable.TryGetValue(plugin, out var functions))
             {
                 functions.PluginCommand?.Invoke(this, e);
             }
@@ -104,7 +104,7 @@ namespace WillowTree.Plugins
         public void RegisterPlugin(IPlugin plugin, PluginEvents eventHandlers)
         {
             // Store a list of the event handlers so they can be detached later
-            pluginEventTable.Add(plugin, eventHandlers);
+            this.pluginEventTable.Add(plugin, eventHandlers);
 
             if (eventHandlers.GameLoading != null)
             {
@@ -152,31 +152,31 @@ namespace WillowTree.Plugins
 
         public IPlugin GetPlugin(Type pluginType)
         {
-            return pluginEventTable.Keys.FirstOrDefault(plugin => plugin.GetType() == pluginType);
+            return this.pluginEventTable.Keys.FirstOrDefault(plugin => plugin.GetType() == pluginType);
         }
 
         public void UnregisterPlugin(IPlugin plugin)
         {
             // Retrieve the list of event handlers to detach
-            if (!pluginEventTable.TryGetValue(plugin, out var eventHandlers))
+            if (!this.pluginEventTable.TryGetValue(plugin, out var eventHandlers))
             {
                 return;
             }
 
-            DetachEvents(eventHandlers);
-            pluginEventTable.Remove(plugin);
+            this.DetachEvents(eventHandlers);
+            this.pluginEventTable.Remove(plugin);
             plugin.ReleasePlugin();
         }
 
         public void UnregisterAllPlugins()
         {
-            foreach (KeyValuePair<IPlugin, PluginEvents> kvp in pluginEventTable)
+            foreach (KeyValuePair<IPlugin, PluginEvents> kvp in this.pluginEventTable)
             {
-                DetachEvents(kvp.Value);
+                this.DetachEvents(kvp.Value);
                 kvp.Key.ReleasePlugin();
             }
 
-            pluginEventTable.Clear();
+            this.pluginEventTable.Clear();
         }
     }
 }

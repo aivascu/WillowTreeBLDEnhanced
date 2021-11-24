@@ -19,53 +19,53 @@ namespace WillowTree.Plugins
 
         public UcQuests()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         public void DeleteAllQuests(int index)
         {
-            QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = this.currentWsg.QuestLists[index];
             qt.Quests.Clear();
             qt.TotalQuests = 0;
 
-            QuestTree.BeginUpdate();
-            foreach (TreeNodeAdv child in QuestTree.Root.Children[index].Children.ToArray())
+            this.QuestTree.BeginUpdate();
+            foreach (TreeNodeAdv child in this.QuestTree.Root.Children[index].Children.ToArray())
             {
                 child.Remove();
             }
 
             string startQuest = "Z0_Missions.Missions.M_IntroStateSaver";
-            AddQuestByName(startQuest, index);
+            this.AddQuestByName(startQuest, index);
             qt.CurrentQuest = startQuest;
 
-            QuestTree.EndUpdate();
+            this.QuestTree.EndUpdate();
         }
 
         public void DoQuestList()
         {
-            foreach (string section in questsXml.StListSectionNames())
+            foreach (string section in this.questsXml.StListSectionNames())
             {
-                QuestList.Items.Add(questsXml.XmlReadValue(section, "MissionName"));
+                this.QuestList.Items.Add(this.questsXml.XmlReadValue(section, "MissionName"));
             }
         }
 
         public void DoQuestTree()
         {
-            QuestTree.BeginUpdate();
+            this.QuestTree.BeginUpdate();
 
             // Make a new quest tree or clear the old one
-            if (QuestTree.Model == null)
+            if (this.QuestTree.Model == null)
             {
-                QuestTree.Model = new TreeModel();
+                this.QuestTree.Model = new TreeModel();
             }
             else
             {
-                QuestTree.Clear();
+                this.QuestTree.Clear();
             }
 
-            TreeModel model = QuestTree.Model as TreeModel;
+            TreeModel model = this.QuestTree.Model as TreeModel;
 
-            for (int listIndex = 0; listIndex < currentWsg.NumberOfQuestLists; listIndex++)
+            for (int listIndex = 0; listIndex < this.currentWsg.NumberOfQuestLists; listIndex++)
             {
                 // Create the category node for this playthrough
                 // Quest tree category nodes:
@@ -78,7 +78,7 @@ namespace WillowTree.Plugins
                 };
                 model.Nodes.Add(parent);
 
-                QuestTable qt = currentWsg.QuestLists[listIndex];
+                QuestTable qt = this.currentWsg.QuestLists[listIndex];
                 // Create all the actual quest nodes for this playthrough
                 //     Text = human readable quest name
                 //     Tag = internal quest name
@@ -89,7 +89,7 @@ namespace WillowTree.Plugins
                     ColoredTextNode node = new ColoredTextNode
                     {
                         Tag = nodeName,
-                        Text = questsXml.XmlReadValue(nodeName, "MissionName")
+                        Text = this.questsXml.XmlReadValue(nodeName, "MissionName")
                     };
                     if (node.Text == "")
                     {
@@ -99,7 +99,7 @@ namespace WillowTree.Plugins
                     parent.Nodes.Add(node);
                 }
             }
-            QuestTree.EndUpdate();
+            this.QuestTree.EndUpdate();
         }
 
         public void InitializePlugin(PluginComponentManager pm)
@@ -110,10 +110,10 @@ namespace WillowTree.Plugins
             };
             pm.RegisterPlugin(this, events);
 
-            questsXml = GameData.QuestsXml;
+            this.questsXml = GameData.QuestsXml;
 
-            Enabled = false;
-            DoQuestList();
+            this.Enabled = false;
+            this.DoQuestList();
         }
 
         public void LoadQuests(string filename, int index)
@@ -130,13 +130,13 @@ namespace WillowTree.Plugins
 
             int count = questnodes.Count;
 
-            QuestTable questTable = currentWsg.QuestLists[index];
+            QuestTable questTable = this.currentWsg.QuestLists[index];
             questTable.Quests.Clear();
             questTable.TotalQuests = count;
 
-            QuestTree.BeginUpdate();
+            this.QuestTree.BeginUpdate();
 
-            TreeNodeAdv parent = QuestTree.Root.Children[index];
+            TreeNodeAdv parent = this.QuestTree.Root.Children[index];
 
             // Remove the old entries from the tree view
             foreach (TreeNodeAdv child in parent.Children.ToArray())
@@ -170,14 +170,14 @@ namespace WillowTree.Plugins
                 ColoredTextNode treeNode = new ColoredTextNode
                 {
                     Tag = questEntry.Name,
-                    Text = questsXml.XmlReadValue(questEntry.Name, "MissionName")
+                    Text = this.questsXml.XmlReadValue(questEntry.Name, "MissionName")
                 };
                 if (treeNode.Text == "")
                 {
                     treeNode.Text = $"{$"({treeNode.Tag}"})";
                 }
 
-                QuestTree.Root.Children[index].AddNode(treeNode);
+                this.QuestTree.Root.Children[index].AddNode(treeNode);
             }
 
             // TODO: The current quest is not currently stored in a quest file.
@@ -185,7 +185,7 @@ namespace WillowTree.Plugins
             // when the list is loaded here.
             questTable.CurrentQuest = "";
 
-            QuestTree.EndUpdate();
+            this.QuestTree.EndUpdate();
         }
 
         public void MergeAllFromXmlQuests(string filename, int index)
@@ -204,9 +204,9 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = this.currentWsg.QuestLists[index];
 
-            QuestTree.BeginUpdate();
+            this.QuestTree.BeginUpdate();
             // Copy only the quests that are not duplicates from the XML file
             foreach (XmlNode node in questnodes)
             {
@@ -215,7 +215,7 @@ namespace WillowTree.Plugins
 
                 // Check to see if the quest is already in the list
                 questSearchKey = name;
-                int prevIndex = qt.Quests.FindIndex(QuestSearchByName);
+                int prevIndex = qt.Quests.FindIndex(this.QuestSearchByName);
                 if (prevIndex != -1)
                 {
                     // This quest entry exists in both lists.  If the progress is
@@ -275,20 +275,20 @@ namespace WillowTree.Plugins
                 ColoredTextNode treeNode = new ColoredTextNode
                 {
                     Tag = name,
-                    Text = questsXml.XmlReadValue(name, "MissionName")
+                    Text = this.questsXml.XmlReadValue(name, "MissionName")
                 };
                 if (treeNode.Text == "")
                 {
                     treeNode.Text = $"({name})";
                 }
 
-                QuestTree.Root.Children[index].AddNode(treeNode);
+                this.QuestTree.Root.Children[index].AddNode(treeNode);
             }
-            QuestTree.EndUpdate();
+            this.QuestTree.EndUpdate();
 
             // In case the operation modified the currently selected quest, refresh
             // the quest group panel by signalizing the selection changed event.
-            QuestTree_SelectionChanged(null, null);
+            this.QuestTree_SelectionChanged(null, null);
         }
 
         public void MergeFromSaveQuests(string filename, int index)
@@ -302,9 +302,9 @@ namespace WillowTree.Plugins
             }
 
             QuestTable qtOther = otherSave.QuestLists[index];
-            QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = this.currentWsg.QuestLists[index];
 
-            QuestTree.BeginUpdate();
+            this.QuestTree.BeginUpdate();
             foreach (QuestEntry qe in otherSave.QuestLists[index].Quests)
             {
                 string name = qe.Name;
@@ -312,7 +312,7 @@ namespace WillowTree.Plugins
 
                 // Check to see if the quest is already in the list
                 questSearchKey = name;
-                int prevIndex = qt.Quests.FindIndex(QuestSearchByName);
+                int prevIndex = qt.Quests.FindIndex(this.QuestSearchByName);
                 if (prevIndex != -1)
                 {
                     // This quest entry exists in both lists.  If the progress is
@@ -366,25 +366,25 @@ namespace WillowTree.Plugins
                 ColoredTextNode treeNode = new ColoredTextNode
                 {
                     Tag = qe.Name,
-                    Text = questsXml.XmlReadValue(qe.Name, "MissionName")
+                    Text = this.questsXml.XmlReadValue(qe.Name, "MissionName")
                 };
                 if (treeNode.Text == "")
                 {
                     treeNode.Text = $"{$"({treeNode.Tag}"})";
                 }
 
-                QuestTree.Root.Children[index].AddNode(treeNode);
+                this.QuestTree.Root.Children[index].AddNode(treeNode);
             }
-            QuestTree.EndUpdate();
+            this.QuestTree.EndUpdate();
 
             // In case the operation modified the currently selected quest, refresh
             // the quest group panel by signalizing the selection changed event.
-            QuestTree_SelectionChanged(null, null);
+            this.QuestTree_SelectionChanged(null, null);
         }
 
         public bool MultipleIntroStateSaver(int playthroughIndex)
         {
-            QuestTable questTable = currentWsg.QuestLists[playthroughIndex];
+            QuestTable questTable = this.currentWsg.QuestLists[playthroughIndex];
             int questCount = questTable.TotalQuests;
 
             int totalFound = 0;
@@ -401,16 +401,16 @@ namespace WillowTree.Plugins
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
         {
-            currentWsg = e.WillowTreeMain.SaveData;
-            DoQuestTree();
+            this.currentWsg = e.WillowTreeMain.SaveData;
+            this.DoQuestTree();
 
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index != -1)
             {
-                ActiveQuest.Text = currentWsg.QuestLists[index].CurrentQuest;
+                this.ActiveQuest.Text = this.currentWsg.QuestLists[index].CurrentQuest;
             }
 
-            Enabled = true;
+            this.Enabled = true;
         }
 
         public bool QuestSearchByName(QuestEntry qe)
@@ -420,22 +420,22 @@ namespace WillowTree.Plugins
 
         public void ReleasePlugin()
         {
-            currentWsg = null;
-            questsXml = null;
+            this.currentWsg = null;
+            this.questsXml = null;
         }
 
         private void ActiveQuest_TextChanged(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index != -1)
             {
-                currentWsg.QuestLists[index].CurrentQuest = ActiveQuest.Text;
+                this.currentWsg.QuestLists[index].CurrentQuest = this.ActiveQuest.Text;
             }
         }
 
         private void AddListQuests_Click(object sender, EventArgs e)
         {
-            int index = currentWsg.NumberOfQuestLists;
+            int index = this.currentWsg.NumberOfQuestLists;
 
             // Create an empty quest table
             QuestTable qt = new QuestTable
@@ -446,10 +446,10 @@ namespace WillowTree.Plugins
             };
 
             // Add the new table to the list
-            currentWsg.QuestLists.Add(qt);
-            currentWsg.NumberOfQuestLists++;
+            this.currentWsg.QuestLists.Add(qt);
+            this.currentWsg.NumberOfQuestLists++;
 
-            QuestTree.BeginUpdate();
+            this.QuestTree.BeginUpdate();
 
             //Add the new table to the tree view
             ColoredTextNode categoryNode = new ColoredTextNode
@@ -457,13 +457,13 @@ namespace WillowTree.Plugins
                 Text = $"Playthrough {(index + 1)} Quests",
                 Tag = index.ToString()
             };
-            (QuestTree.Model as TreeModel).Nodes.Add(categoryNode);
+            (this.QuestTree.Model as TreeModel).Nodes.Add(categoryNode);
 
             // Add Fresh Off the Bus (the first quest) to the table
             string startQuest = "Z0_Missions.Missions.M_IntroStateSaver";
-            AddQuestByName(startQuest, index);
+            this.AddQuestByName(startQuest, index);
             qt.CurrentQuest = startQuest;
-            QuestTree.EndUpdate();
+            this.QuestTree.EndUpdate();
         }
 
         private void AddQuestByName(string name, int index)
@@ -486,7 +486,7 @@ namespace WillowTree.Plugins
             for (objectiveCount = 0; ; objectiveCount++)
             {
                 QuestObjective objective;
-                string desc = questsXml.XmlReadValue(qe.Name, $"Objectives{objectiveCount}");
+                string desc = this.questsXml.XmlReadValue(qe.Name, $"Objectives{objectiveCount}");
                 if (desc == "")
                 {
                     break;
@@ -509,7 +509,7 @@ namespace WillowTree.Plugins
             }
 
             // Add the quest entry to the quest list
-            QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = this.currentWsg.QuestLists[index];
             qt.Quests.Add(qe);
             qt.TotalQuests++;
 
@@ -517,36 +517,36 @@ namespace WillowTree.Plugins
             ColoredTextNode treeNode = new ColoredTextNode
             {
                 Tag = name,
-                Text = questsXml.XmlReadValue(name, "MissionName")
+                Text = this.questsXml.XmlReadValue(name, "MissionName")
             };
             if (treeNode.Text == "")
             {
                 treeNode.Text = $"({name})";
             }
 
-            QuestTree.Root.Children[index].AddNode(treeNode);
+            this.QuestTree.Root.Children[index].AddNode(treeNode);
         }
 
         private void ClearQuests_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a quest list first.");
                 return;
             }
 
-            DeleteAllQuests(index);
+            this.DeleteAllQuests(index);
         }
 
         private void DeleteQuest_Click(object sender, EventArgs e)
         {
             TreeNodeAdv nextSelection = null;
 
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
 
             // Get out if it is a category node or doesn't have a valid quest list index.
-            if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
+            if (index == -1 || this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
                 MessageBox.Show("Select one or more quests to delete first.");
                 return;
@@ -557,15 +557,15 @@ namespace WillowTree.Plugins
             // list then give the user a message letting him know he can't
             // remove it.  If he selects it in a group of quests then it will
             // just be silently ignored in the removal loop.
-            if (QuestTree.SelectedNodes.Count == 1 && QuestTree.SelectedNode.GetText() == "Fresh Off The Bus" && !MultipleIntroStateSaver(index))
+            if (this.QuestTree.SelectedNodes.Count == 1 && this.QuestTree.SelectedNode.GetText() == "Fresh Off The Bus" && !this.MultipleIntroStateSaver(index))
             {
                 MessageBox.Show("You must have the default quest.");
                 return;
             }
 
-            foreach (TreeNodeAdv nodeAdv in QuestTree.SelectedNodes.ToArray())
+            foreach (TreeNodeAdv nodeAdv in this.QuestTree.SelectedNodes.ToArray())
             {
-                if (nodeAdv.GetText() == "Fresh Off The Bus" && !MultipleIntroStateSaver(index))
+                if (nodeAdv.GetText() == "Fresh Off The Bus" && !this.MultipleIntroStateSaver(index))
                 {
                     nodeAdv.IsSelected = false;
                     nextSelection = nodeAdv;
@@ -573,25 +573,25 @@ namespace WillowTree.Plugins
                 }
 
                 nextSelection = nodeAdv.NextVisibleNode;
-                DeleteQuestEntry(index, nodeAdv.Index);
+                this.DeleteQuestEntry(index, nodeAdv.Index);
                 nodeAdv.Remove();
             }
             if (nextSelection != null)
             {
-                QuestTree.SelectedNode = nextSelection;
+                this.QuestTree.SelectedNode = nextSelection;
             }
         }
 
         private void DeleteQuestEntry(int listIndex, int entryIndex)
         {
-            QuestTable qt = currentWsg.QuestLists[listIndex];
+            QuestTable qt = this.currentWsg.QuestLists[listIndex];
             qt.TotalQuests--;
             qt.Quests.RemoveAt(entryIndex);
         }
 
         private void ExportSelectedQuests_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a single quest list or select the quests to export first.");
@@ -599,13 +599,13 @@ namespace WillowTree.Plugins
             }
 
             WTSaveFileDialog tempSave = new WTSaveFileDialog("quests",
-                $"{currentWsg.CharacterName}.PT{(index + 1)}.quests");
+                $"{this.currentWsg.CharacterName}.PT{(index + 1)}.quests");
 
             try
             {
                 if (tempSave.ShowDialog() == DialogResult.OK)
                 {
-                    SaveSelectedToXmlQuests(tempSave.FileName(), index);
+                    this.SaveSelectedToXmlQuests(tempSave.FileName(), index);
                     MessageBox.Show($"Quests saved to {tempSave.FileName()}");
                 }
             }
@@ -617,7 +617,7 @@ namespace WillowTree.Plugins
 
         private void ExportToFileQuests_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a playthrough to export first.");
@@ -627,11 +627,11 @@ namespace WillowTree.Plugins
             try
             {
                 WTSaveFileDialog tempExport = new WTSaveFileDialog("quests",
-                    $"{currentWsg.CharacterName}.PT{(index + 1)}.quests");
+                    $"{this.currentWsg.CharacterName}.PT{(index + 1)}.quests");
 
                 if (tempExport.ShowDialog() == DialogResult.OK)
                 {
-                    SaveToXmlQuests(tempExport.FileName(), index);
+                    this.SaveToXmlQuests(tempExport.FileName(), index);
                 }
             }
             catch (Exception ex)
@@ -644,22 +644,22 @@ namespace WillowTree.Plugins
         {
             int index = -1;
 
-            if (QuestTree.SelectedNode == null)
+            if (this.QuestTree.SelectedNode == null)
             {
                 // Do nothing, fall through to return -1 for failure.
             }
-            else if (QuestTree.SelectedNode.Parent != QuestTree.Root)
+            else if (this.QuestTree.SelectedNode.Parent != this.QuestTree.Root)
             {
-                index = Parse.AsInt(QuestTree.SelectedNode.Parent.GetKey(), -1);
+                index = Parse.AsInt(this.QuestTree.SelectedNode.Parent.GetKey(), -1);
             }
             else
             {
                 // This is a category node not a quest.  If there is exactly one
                 // selected then choose it as the location for import, otherwise
                 // fall through and return -1 for failure.
-                if (QuestTree.SelectedNodes.Count == 1)
+                if (this.QuestTree.SelectedNodes.Count == 1)
                 {
-                    index = Parse.AsInt(QuestTree.SelectedNode.GetKey());
+                    index = Parse.AsInt(this.QuestTree.SelectedNode.GetKey());
                 }
             }
             return index;
@@ -667,7 +667,7 @@ namespace WillowTree.Plugins
 
         private void ImportFromFileQuests_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a playthrough to import to first.");
@@ -675,13 +675,13 @@ namespace WillowTree.Plugins
             }
 
             WTOpenFileDialog tempImport = new WTOpenFileDialog("quests",
-                $"{currentWsg.CharacterName}.PT{(index + 1)}.quests");
+                $"{this.currentWsg.CharacterName}.PT{(index + 1)}.quests");
 
             if (tempImport.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    LoadQuests(tempImport.FileName(), index);
+                    this.LoadQuests(tempImport.FileName(), index);
                 }
                 catch (ApplicationException ex)
                 {
@@ -699,7 +699,7 @@ namespace WillowTree.Plugins
 
         private void ImportFromSaveQuests_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a playthrough to import to first.");
@@ -732,12 +732,12 @@ namespace WillowTree.Plugins
                 // list of the other.
 
                 // Replace the old entries in the quest table with the new ones
-                currentWsg.QuestLists[index] = otherSave.QuestLists[index];
+                this.currentWsg.QuestLists[index] = otherSave.QuestLists[index];
 
-                QuestTable qt = currentWsg.QuestLists[index];
+                QuestTable qt = this.currentWsg.QuestLists[index];
 
-                QuestTree.BeginUpdate();
-                TreeNodeAdv parent = QuestTree.Root.Children[index];
+                this.QuestTree.BeginUpdate();
+                TreeNodeAdv parent = this.QuestTree.Root.Children[index];
 
                 // Remove the old entries from the tree view
                 foreach (TreeNodeAdv child in parent.Children.ToArray())
@@ -753,7 +753,7 @@ namespace WillowTree.Plugins
                     ColoredTextNode node = new ColoredTextNode
                     {
                         Tag = nodeName,
-                        Text = questsXml.XmlReadValue(nodeName, "MissionName")
+                        Text = this.questsXml.XmlReadValue(nodeName, "MissionName")
                     };
                     if (node.Text == "")
                     {
@@ -762,13 +762,13 @@ namespace WillowTree.Plugins
 
                     parent.AddNode(node);
                 }
-                QuestTree.EndUpdate();
+                this.QuestTree.EndUpdate();
             }
         }
 
         private void MergeAllFromFileQuests_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a single quest list to import to first.");
@@ -780,7 +780,7 @@ namespace WillowTree.Plugins
             {
                 try
                 {
-                    MergeAllFromXmlQuests(tempOpen.FileName(), index);
+                    this.MergeAllFromXmlQuests(tempOpen.FileName(), index);
                 }
                 catch (ApplicationException ex)
                 {
@@ -798,7 +798,7 @@ namespace WillowTree.Plugins
 
         private void MergeFromSaveQuests_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a single quest list to import to first.");
@@ -813,7 +813,7 @@ namespace WillowTree.Plugins
 
                 try
                 {
-                    MergeFromSaveQuests(tempOpen.FileName(), index);
+                    this.MergeFromSaveQuests(tempOpen.FileName(), index);
                 }
                 catch
                 {
@@ -824,78 +824,78 @@ namespace WillowTree.Plugins
 
         private void Objectives_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
 
             // Do nothing if the quest list index is invalid or it is a
             // category node not a quest node.
-            if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
+            if (index == -1 || this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
                 return;
             }
 
-            if (clicked)
+            if (this.clicked)
             {
-                ObjectiveValue.Value = currentWsg.QuestLists[index].Quests[QuestTree.SelectedNode.Index].Objectives[Objectives.SelectedIndex].Progress;
+                this.ObjectiveValue.Value = this.currentWsg.QuestLists[index].Quests[this.QuestTree.SelectedNode.Index].Objectives[this.Objectives.SelectedIndex].Progress;
             }
         }
 
         private void ObjectiveValue_ValueChanged(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
 
             // Do nothing if the quest list index is invalid or it is a
             // category node not a quest node.
-            if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
+            if (index == -1 || this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
                 return;
             }
 
-            if (Objectives.Items.Count > 0 && clicked)
+            if (this.Objectives.Items.Count > 0 && this.clicked)
             {
-                currentWsg.QuestLists[index].Quests[QuestTree.SelectedNode.Index].Objectives[Objectives.SelectedIndex].Progress = (int)ObjectiveValue.Value;
+                this.currentWsg.QuestLists[index].Quests[this.QuestTree.SelectedNode.Index].Objectives[this.Objectives.SelectedIndex].Progress = (int)this.ObjectiveValue.Value;
             }
         }
 
         private void QuestDLCValue1_ValueChanged(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
-            if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
+            int index = this.GetSelectedQuestList();
+            if (index == -1 || this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
                 return;
             }
 
-            currentWsg.QuestLists[index].Quests[QuestTree.SelectedNode.Index].DlcValue1 = (int)QuestDLCValue1.Value;
+            this.currentWsg.QuestLists[index].Quests[this.QuestTree.SelectedNode.Index].DlcValue1 = (int)this.QuestDLCValue1.Value;
         }
 
         private void QuestDLCValue2_ValueChanged(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
-            if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
+            int index = this.GetSelectedQuestList();
+            if (index == -1 || this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
                 return;
             }
 
-            currentWsg.QuestLists[index].Quests[QuestTree.SelectedNode.Index].DlcValue2 = (int)QuestDLCValue2.Value;
+            this.currentWsg.QuestLists[index].Quests[this.QuestTree.SelectedNode.Index].DlcValue2 = (int)this.QuestDLCValue2.Value;
         }
 
         private void QuestList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
+            int index = this.GetSelectedQuestList();
             if (index == -1)
             {
                 MessageBox.Show("Select a playthrough to add to first.");
                 return;
             }
 
-            int selectedItem = QuestList.SelectedIndex;
-            NewQuest.HideDropDown();
+            int selectedItem = this.QuestList.SelectedIndex;
+            this.NewQuest.HideDropDown();
             try
             {
                 if (selectedItem != -1)
                 {
-                    QuestTable questTable = currentWsg.QuestLists[index];
+                    QuestTable questTable = this.currentWsg.QuestLists[index];
 
-                    List<string> sectionNames = questsXml.StListSectionNames();
+                    List<string> sectionNames = this.questsXml.StListSectionNames();
 
                     QuestEntry questEntry = new QuestEntry();
                     string name = sectionNames[selectedItem];
@@ -912,7 +912,7 @@ namespace WillowTree.Plugins
 
                     int objectiveCount;
 
-                    XmlNode questXmlNode = questsXml.XmlReadNode(name);
+                    XmlNode questXmlNode = this.questsXml.XmlReadNode(name);
                     System.Diagnostics.Debug.Assert(questXmlNode != null);
 
                     for (objectiveCount = 0; ; objectiveCount++)
@@ -947,9 +947,9 @@ namespace WillowTree.Plugins
                         treeNode.Text = $"({name})";
                     }
 
-                    TreeNodeAdv parent = QuestTree.Root.Children[index];
+                    TreeNodeAdv parent = this.QuestTree.Root.Children[index];
                     parent.AddNode(treeNode);
-                    QuestTree.SelectedNode = parent.Children[parent.Children.Count - 1];
+                    this.QuestTree.SelectedNode = parent.Children[parent.Children.Count - 1];
                 }
             }
             catch { }
@@ -957,34 +957,34 @@ namespace WillowTree.Plugins
 
         private void QuestProgress_Click(object sender, EventArgs e)
         {
-            clicked = true;
+            this.clicked = true;
         }
 
         private void QuestProgress_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
-            if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
+            int index = this.GetSelectedQuestList();
+            if (index == -1 || this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
                 return;
             }
 
             try
             {
-                QuestTable qt = currentWsg.QuestLists[index];
-                if (clicked)
+                QuestTable qt = this.currentWsg.QuestLists[index];
+                if (this.clicked)
                 {
-                    QuestEntry qe = qt.Quests[QuestTree.SelectedNode.Index];
+                    QuestEntry qe = qt.Quests[this.QuestTree.SelectedNode.Index];
 
-                    if (qe.Progress == 4 && QuestProgress.SelectedIndex < 3)
+                    if (qe.Progress == 4 && this.QuestProgress.SelectedIndex < 3)
                     {
                         // The quest was marked as turned in before and now will not
                         // be complete.  The objective list has to be re-added since it is
                         // removed when the quest is turned in.
-                        Objectives.Items.Clear();
+                        this.Objectives.Items.Clear();
 
                         List<QuestObjective> objectives = new List<QuestObjective>();
 
-                        XmlNode questXmlNode = questsXml.XmlReadNode(qe.Name);
+                        XmlNode questXmlNode = this.questsXml.XmlReadNode(qe.Name);
 
                         int objectiveCount;
                         for (objectiveCount = 0; ; objectiveCount++)
@@ -1003,32 +1003,32 @@ namespace WillowTree.Plugins
 
                         qe.NumberOfObjectives = objectiveCount;
                         qe.Objectives = objectives.ToArray();
-                        qe.Progress = QuestProgress.SelectedIndex;
+                        qe.Progress = this.QuestProgress.SelectedIndex;
 
                         if (objectiveCount > 0)
                         {
                             for (int objectiveIndex = 0; objectiveIndex < objectiveCount; objectiveIndex++)
                             {
-                                Objectives.Items.Add(qe.Objectives[objectiveIndex].Description);
+                                this.Objectives.Items.Add(qe.Objectives[objectiveIndex].Description);
                             }
                         }
 
                         // Update the UI elements
-                        NumberOfObjectives.Value = objectiveCount;
-                        ObjectiveValue.Value = 0;
+                        this.NumberOfObjectives.Value = objectiveCount;
+                        this.ObjectiveValue.Value = 0;
                     }
-                    else if (qe.Progress != 4 && QuestProgress.SelectedIndex == 3)
+                    else if (qe.Progress != 4 && this.QuestProgress.SelectedIndex == 3)
                     {
                         // The quest was not marked as turned in but now it will be.  Clear the
                         // objective list since turned in quests no longer should have one.
-                        Objectives.Items.Clear();
+                        this.Objectives.Items.Clear();
                         qe.Objectives = Array.Empty<QuestObjective>();
                         qe.Progress = 4;
                         qe.NumberOfObjectives = 0;
                     }
                     else
                     {
-                        qe.Progress = QuestProgress.SelectedIndex;
+                        qe.Progress = this.QuestProgress.SelectedIndex;
                     }
                 }
             }
@@ -1039,86 +1039,86 @@ namespace WillowTree.Plugins
         {
             if (e.KeyCode == Keys.Delete)
             {
-                DeleteQuest_Click(this, EventArgs.Empty);
+                this.DeleteQuest_Click(this, EventArgs.Empty);
             }
         }
 
         private void QuestTree_SelectionChanged(object sender, EventArgs e)
         {
-            clicked = false;
+            this.clicked = false;
 
-            int index = GetSelectedQuestList();
-            UpdateActiveQuestList(index);
+            int index = this.GetSelectedQuestList();
+            this.UpdateActiveQuestList(index);
 
             // If a quest node is not selected reset the UI elements and exit
-            if (index == -1 || QuestTree.SelectedNode.Parent == QuestTree.Root)
+            if (index == -1 || this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
-                UiClearQuestPanel();
+                this.UiClearQuestPanel();
                 return;
             }
 
             try
             {
-                QuestEntry qe = currentWsg.QuestLists[index].Quests[QuestTree.SelectedNode.Index];
+                QuestEntry qe = this.currentWsg.QuestLists[index].Quests[this.QuestTree.SelectedNode.Index];
 
-                SelectedQuestGroup.Text = QuestTree.SelectedNode.GetText();
-                string key = QuestTree.SelectedNode.GetKey();
-                QuestString.Text = key;
+                this.SelectedQuestGroup.Text = this.QuestTree.SelectedNode.GetText();
+                string key = this.QuestTree.SelectedNode.GetKey();
+                this.QuestString.Text = key;
 
                 if (qe.Progress > 2)
                 {
-                    QuestProgress.SelectedIndex = 3;
+                    this.QuestProgress.SelectedIndex = 3;
                 }
                 else
                 {
-                    QuestProgress.SelectedIndex = qe.Progress;
+                    this.QuestProgress.SelectedIndex = qe.Progress;
                 }
 
                 int objectiveCount = qe.NumberOfObjectives;
-                NumberOfObjectives.Value = objectiveCount;
+                this.NumberOfObjectives.Value = objectiveCount;
 
-                XmlNode questData = questsXml.XmlReadNode(key);
-                Objectives.Items.Clear();
+                XmlNode questData = this.questsXml.XmlReadNode(key);
+                this.Objectives.Items.Clear();
                 for (int objectiveIndex = 0; objectiveIndex < objectiveCount; objectiveIndex++)
                 {
-                    Objectives.Items.Add(questData.GetElement($"Objectives{objectiveIndex}", ""));
+                    this.Objectives.Items.Add(questData.GetElement($"Objectives{objectiveIndex}", ""));
                 }
 
-                ObjectiveValue.Value = 0;
-                QuestSummary.Text = questData.GetElement("MissionSummary", "");
-                QuestDescription.Text = questData.GetElement("MissionDescription", "");
-                QuestDLCValue1.Value = qe.DlcValue1;
-                QuestDLCValue2.Value = qe.DlcValue2;
+                this.ObjectiveValue.Value = 0;
+                this.QuestSummary.Text = questData.GetElement("MissionSummary", "");
+                this.QuestDescription.Text = questData.GetElement("MissionDescription", "");
+                this.QuestDLCValue1.Value = qe.DlcValue1;
+                this.QuestDLCValue2.Value = qe.DlcValue2;
             }
             catch
             {
                 // Blank out all the user elements if there is any kind of exception
                 // while trying to set them.
-                UiClearQuestPanel();
+                this.UiClearQuestPanel();
             }
         }
 
         private void RemoveListQuests_Click(object sender, EventArgs e)
         {
-            TreeNodeAdv[] selection = QuestTree.SelectedNodes.ToArray();
+            TreeNodeAdv[] selection = this.QuestTree.SelectedNodes.ToArray();
 
-            QuestTree.BeginUpdate();
+            this.QuestTree.BeginUpdate();
             foreach (TreeNodeAdv nodeAdv in selection)
             {
-                if (nodeAdv.Parent == QuestTree.Root)
+                if (nodeAdv.Parent == this.QuestTree.Root)
                 {
-                    currentWsg.NumberOfQuestLists--;
-                    currentWsg.QuestLists.RemoveAt(nodeAdv.Index);
-                    QuestTree.Root.Children[nodeAdv.Index].Remove();
+                    this.currentWsg.NumberOfQuestLists--;
+                    this.currentWsg.QuestLists.RemoveAt(nodeAdv.Index);
+                    this.QuestTree.Root.Children[nodeAdv.Index].Remove();
                 }
             }
 
             // The indexes will be messed up if a list that is not the last one is
             // removed, so update the tree text, tree indexes, and quest list indices
-            int count = currentWsg.NumberOfQuestLists;
+            int count = this.currentWsg.NumberOfQuestLists;
             for (int index = 0; index < count; index++)
             {
-                TreeNodeAdv nodeAdv = QuestTree.Root.Children[index];
+                TreeNodeAdv nodeAdv = this.QuestTree.Root.Children[index];
 
                 // Adjust the category node's text and tag to reflect its new position
                 ColoredTextNode parent = nodeAdv.Data();
@@ -1126,9 +1126,9 @@ namespace WillowTree.Plugins
                 parent.Tag = index.ToString();
 
                 // Adjust the quest list index to reflect its new position
-                currentWsg.QuestLists[index].Index = index;
+                this.currentWsg.QuestLists[index].Index = index;
             }
-            QuestTree.EndUpdate();
+            this.QuestTree.EndUpdate();
         }
 
         private void SaveSelectedToXmlQuests(string filename, int index)
@@ -1138,13 +1138,13 @@ namespace WillowTree.Plugins
             // There are two valid ways a user can select nodes to save to xml.
             // He can choose exactly one category node or he can choose multiple
             // quest nodes.  Figure out which and create an array of the nodes.
-            if (QuestTree.SelectedNode.Parent == QuestTree.Root && QuestTree.SelectedNodes.Count == 1)
+            if (this.QuestTree.SelectedNode.Parent == this.QuestTree.Root && this.QuestTree.SelectedNodes.Count == 1)
             {
-                selected = QuestTree.Root.Children[index].Children.ToArray();
+                selected = this.QuestTree.Root.Children[index].Children.ToArray();
             }
             else
             {
-                selected = QuestTree.SelectedNodes.ToArray();
+                selected = this.QuestTree.SelectedNodes.ToArray();
             }
 
             XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8)
@@ -1158,14 +1158,14 @@ namespace WillowTree.Plugins
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Quests");
 
-            QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = this.currentWsg.QuestLists[index];
 
             foreach (TreeNodeAdv nodeAdv in selected)
             {
                 string key = nodeAdv.GetKey();
                 questSearchKey = nodeAdv.GetKey();
 
-                int i = qt.Quests.FindIndex(QuestSearchByName);
+                int i = qt.Quests.FindIndex(this.QuestSearchByName);
                 if (i == -1)
                 {
                     continue;
@@ -1205,9 +1205,9 @@ namespace WillowTree.Plugins
             writer.WriteStartElement("WT");
             writer.WriteStartElement("Quests");
 
-            QuestTable qt = currentWsg.QuestLists[index];
+            QuestTable qt = this.currentWsg.QuestLists[index];
 
-            int count = currentWsg.QuestLists[index].TotalQuests;
+            int count = this.currentWsg.QuestLists[index].TotalQuests;
             for (int i = 0; i < count; i++)
             {
                 QuestEntry qe = qt.Quests[i];
@@ -1233,46 +1233,46 @@ namespace WillowTree.Plugins
 
         private void SetActiveQuest_Click(object sender, EventArgs e)
         {
-            int index = GetSelectedQuestList();
-            if (index == -1 || QuestTree.SelectedNodes.Count != 1 ||
-                QuestTree.SelectedNode.Parent == QuestTree.Root)
+            int index = this.GetSelectedQuestList();
+            if (index == -1 || this.QuestTree.SelectedNodes.Count != 1 ||
+                this.QuestTree.SelectedNode.Parent == this.QuestTree.Root)
             {
                 MessageBox.Show("Select a single quest from the quest list first.");
                 return;
             }
 
-            QuestTable qt = currentWsg.QuestLists[index];
-            string currentQuest = QuestTree.SelectedNode.GetKey();
+            QuestTable qt = this.currentWsg.QuestLists[index];
+            string currentQuest = this.QuestTree.SelectedNode.GetKey();
             qt.CurrentQuest = currentQuest;
 
-            ActiveQuest.Text = currentQuest;
+            this.ActiveQuest.Text = currentQuest;
         }
 
         private void UiClearQuestPanel()
         {
-            QuestString.Text = "";
-            Objectives.Items.Clear();
-            NumberOfObjectives.Value = 0;
-            ObjectiveValue.Value = 0;
-            QuestProgress.SelectedIndex = 0;
-            QuestDescription.Text = "";
-            QuestSummary.Text = "";
-            SelectedQuestGroup.Text = "No Quest Selected";
-            QuestDLCValue1.Value = 0;
-            QuestDLCValue2.Value = 0;
+            this.QuestString.Text = "";
+            this.Objectives.Items.Clear();
+            this.NumberOfObjectives.Value = 0;
+            this.ObjectiveValue.Value = 0;
+            this.QuestProgress.SelectedIndex = 0;
+            this.QuestDescription.Text = "";
+            this.QuestSummary.Text = "";
+            this.SelectedQuestGroup.Text = "No Quest Selected";
+            this.QuestDLCValue1.Value = 0;
+            this.QuestDLCValue2.Value = 0;
         }
 
         private void UpdateActiveQuestList(int index)
         {
             if (index == -1)
             {
-                ActivePT1QuestGroup.Text = "No Playthrough Selected";
-                ActiveQuest.Text = "";
+                this.ActivePT1QuestGroup.Text = "No Playthrough Selected";
+                this.ActiveQuest.Text = "";
             }
             else
             {
-                ActivePT1QuestGroup.Text = $"Active Playthrough {(index + 1)} Quest";
-                ActiveQuest.Text = currentWsg.QuestLists[index].CurrentQuest;
+                this.ActivePT1QuestGroup.Text = $"Active Playthrough {(index + 1)} Quest";
+                this.ActiveQuest.Text = this.currentWsg.QuestLists[index].CurrentQuest;
             }
         }
     }

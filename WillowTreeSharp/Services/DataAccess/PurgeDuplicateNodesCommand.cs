@@ -14,7 +14,7 @@ namespace WillowTree.Services.DataAccess
     {
         public PurgeDuplicateNodesCommand(string filePath)
         {
-            FilePath = filePath;
+            this.FilePath = filePath;
         }
 
         public string FilePath { get; }
@@ -31,7 +31,7 @@ namespace WillowTree.Services.DataAccess
 
             XmlDocument xmlrdrdoc = new XmlDocument();
 
-            xmlrdrdoc.Load(FilePath);
+            xmlrdrdoc.Load(this.FilePath);
 
             // get a list of all items
             foreach (XmlNode xn in xmlrdrdoc.SelectNodes("/INI/Section"))
@@ -92,7 +92,7 @@ namespace WillowTree.Services.DataAccess
                 }
             }
 
-            XmlTextWriter writer = new XmlTextWriter(FilePath, new ASCIIEncoding())
+            XmlTextWriter writer = new XmlTextWriter(this.FilePath, new ASCIIEncoding())
             {
                 Formatting = Formatting.Indented,
                 Indentation = 2

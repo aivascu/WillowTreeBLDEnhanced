@@ -6,8 +6,8 @@ namespace WillowTree.Plugins
     {
         public PluginCommandEventArgs(WillowTreeMain willowTreeMain, PluginCommand command)
         {
-            Command = command;
-            WillowTreeMain = willowTreeMain;
+            this.Command = command;
+            this.WillowTreeMain = willowTreeMain;
         }
 
         public WillowTreeMain WillowTreeMain { get; }

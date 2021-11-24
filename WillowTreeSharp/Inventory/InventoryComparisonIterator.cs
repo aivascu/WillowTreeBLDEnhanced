@@ -7,30 +7,30 @@
 
         public InventoryComparisonIterator(InventoryComparer[] comparers)
         {
-            Comparers = comparers;
+            this.Comparers = comparers;
         }
 
         public void NextComparer()
         {
-            ComparerIndex++;
-            if (ComparerIndex >= Comparers.Length)
+            this.ComparerIndex++;
+            if (this.ComparerIndex >= this.Comparers.Length)
             {
-                ComparerIndex = 0;
+                this.ComparerIndex = 0;
             }
         }
 
         public void PreviousComparer()
         {
-            ComparerIndex++;
-            if (ComparerIndex >= Comparers.Length)
+            this.ComparerIndex++;
+            if (this.ComparerIndex >= this.Comparers.Length)
             {
-                ComparerIndex = 0;
+                this.ComparerIndex = 0;
             }
         }
 
         public InventoryComparer CurrentComparer()
         {
-            return Comparers[ComparerIndex];
+            return this.Comparers[this.ComparerIndex];
         }
     }
 }

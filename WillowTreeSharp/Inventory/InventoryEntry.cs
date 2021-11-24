@@ -134,7 +134,7 @@ namespace WillowTree.Inventory
                     }
                 }
                 this.NameParts = nameparts.ToArray();
-                if (NameParts.Length < 4)
+                if (this.NameParts.Length < 4)
                 {
                     throw new FormatException();
                 }
@@ -152,14 +152,14 @@ namespace WillowTree.Inventory
             {
                 if (this.Type == InventoryType.Weapon)
                 {
-                    RecalculateDataWeapon();
+                    this.RecalculateDataWeapon();
                 }
                 else
                 {
-                    RecalculateDataItem();
+                    this.RecalculateDataItem();
                 }
 
-                BuildName();
+                this.BuildName();
             }
         }
 
@@ -191,14 +191,14 @@ namespace WillowTree.Inventory
 
             if (this.Type == InventoryType.Weapon)
             {
-                RecalculateDataWeapon();
+                this.RecalculateDataWeapon();
             }
             else
             {
-                RecalculateDataItem();
+                this.RecalculateDataItem();
             }
 
-            BuildName();
+            this.BuildName();
         }
 
         public InventoryEntry(InventoryEntry copyFrom)
@@ -352,9 +352,9 @@ namespace WillowTree.Inventory
             if ((Title == "") && (Prefix == ""))
             {
                 Title = GameData.GetPartAttribute(this.Parts[1], "ItemName");
-                if (Name == "")
+                if (this.Name == "")
                 {
-                    Name = "Unknown Item";
+                    this.Name = "Unknown Item";
                 }
             }
 
@@ -372,8 +372,8 @@ namespace WillowTree.Inventory
                         ModelName,
                         Prefix,
                         Title,
-                        "(R" + Rarity + ")",
-                        "(L" + EffectiveLevel + ")"
+                        "(R" + this.Rarity + ")",
+                        "(L" + this.EffectiveLevel + ")"
                     };
         }
 
@@ -394,7 +394,7 @@ namespace WillowTree.Inventory
                 int partrarity = GameData.GetPartRarity(this.Parts[i]);
                 // There are several parts that dont use the part rarity that I found
                 // in the data.  This attempts to detect them and deal with them.
-                if ((partrarity == 50) && (i < 10) && (!Parts[i].StartsWith("dlc3")))
+                if ((partrarity == 50) && (i < 10) && (!this.Parts[i].StartsWith("dlc3")))
                 {
                     partrarity = 5;
                 }
@@ -430,8 +430,8 @@ namespace WillowTree.Inventory
                         ModelName,
                         Prefix,
                         Title,
-                        "(R" + Rarity + ")",
-                        "(L" + EffectiveLevel + ")"
+                        "(R" + this.Rarity + ")",
+                        "(L" + this.EffectiveLevel + ")"
                     };
         }
 
@@ -659,7 +659,7 @@ namespace WillowTree.Inventory
             writer.WriteElementString("EffectiveLevel", this.EffectiveLevel.ToString());
             writer.WriteElementString("Category", this.Category);
 
-            int namepartcount = NameParts.Length;
+            int namepartcount = this.NameParts.Length;
             for (int i = 0; i < namepartcount; i++)
             {
                 writer.WriteElementString("NamePart" + (i + 1), this.NameParts[i]);

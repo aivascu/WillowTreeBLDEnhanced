@@ -8,13 +8,13 @@ namespace WillowTree.Inventory
 
         public InventoryComparer(int[] comparisonarray)
         {
-            comparisons = comparisonarray;
+            this.comparisons = comparisonarray;
         }
 
         public override int Compare(InventoryEntry x, InventoryEntry y)
         {
             int result = 0;
-            foreach (int comparison in comparisons)
+            foreach (int comparison in this.comparisons)
             {
                 switch (comparison)
                 {
