@@ -73,8 +73,8 @@ namespace WillowTree.Plugins
             this.groupPanel16 = new WillowTree.CustomControls.WTGroupBox();
             this.labelEchoString = new WillowTree.CustomControls.WTLabel();
             this.EchoString = new WillowTree.CustomControls.WTTextBox();
-            this.EchoDLCValue2 = new WillowTree.CustomControls.WTNumericUpDown();
-            this.EchoDLCValue1 = new WillowTree.CustomControls.WTNumericUpDown();
+            this.EchoDLCValue2 = new StrictNumericUpDown();
+            this.EchoDLCValue1 = new StrictNumericUpDown();
             this.labeEchoDLCValue2 = new WillowTree.CustomControls.WTLabel();
             this.labelEchoDLCValue1 = new WillowTree.CustomControls.WTLabel();
             this.EchoesTab.SuspendLayout();
@@ -388,8 +388,8 @@ namespace WillowTree.Plugins
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem1;
         private CustomControls.WTTreeView EchoTree;
         private CustomControls.WTGroupBox groupPanel16;
-        private CustomControls.WTNumericUpDown EchoDLCValue2;
-        private CustomControls.WTNumericUpDown EchoDLCValue1;
+        private StrictNumericUpDown EchoDLCValue2;
+        private StrictNumericUpDown EchoDLCValue1;
         private CustomControls.WTLabel labeEchoDLCValue2;
         private CustomControls.WTLabel labelEchoDLCValue1;
         private System.Windows.Forms.ToolStripMenuItem actionsStripMenuItem1;

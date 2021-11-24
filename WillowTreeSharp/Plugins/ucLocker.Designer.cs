@@ -95,10 +95,10 @@ namespace WillowTree.Plugins
             this.LevelIndexOverride = new WillowTree.CustomControls.WTSlideSelector();
             this.QualityOverride = new WillowTree.CustomControls.WTSlideSelector();
             this.labelOverrideRemAmmo = new WillowTree.CustomControls.WTLabel();
-            this.RemAmmoOverride = new WillowTree.CustomControls.WTNumericUpDown();
+            this.RemAmmoOverride = new WillowTree.Plugins.StrictNumericUpDown();
             this.OverrideExportSettings = new WillowTree.CustomControls.WTCheckBox();
             this.LockerRemAmmoLabel = new WillowTree.CustomControls.WTLabel();
-            this.RemAmmoLocker = new WillowTree.CustomControls.WTNumericUpDown();
+            this.RemAmmoLocker = new WillowTree.Plugins.StrictNumericUpDown();
             this.PartsLocker = new WillowTree.CustomControls.WTListBox();
             this.PartsLockerLabel = new WillowTree.CustomControls.WTLabel();
             this.DescriptionLockerLabel = new WillowTree.CustomControls.WTLabel();
@@ -786,10 +786,10 @@ namespace WillowTree.Plugins
         private CustomControls.WTSlideSelector LevelIndexOverride;
         private CustomControls.WTSlideSelector QualityOverride;
         private CustomControls.WTLabel labelOverrideRemAmmo;
-        private CustomControls.WTNumericUpDown RemAmmoOverride;
+        private StrictNumericUpDown RemAmmoOverride;
         private CustomControls.WTCheckBox OverrideExportSettings;
         private CustomControls.WTLabel LockerRemAmmoLabel;
-        private CustomControls.WTNumericUpDown RemAmmoLocker;
+        private StrictNumericUpDown RemAmmoLocker;
         private CustomControls.WTListBox PartsLocker;
         private CustomControls.WTLabel PartsLockerLabel;
         private CustomControls.WTLabel DescriptionLockerLabel;

@@ -323,7 +323,7 @@ namespace WillowTree.Plugins
 
                 WTSlideSelector.MinMaxAdvanced(entry.UsesBigLevel, ref LevelIndexLocker);
 
-                Util.SetNumericUpDown(RemAmmoLocker, entry.Quantity);
+                RemAmmoLocker.Value = entry.Quantity;
                 QualityLocker.Value = entry.QualityIndex;
                 LevelIndexLocker.Value = entry.LevelIndex;
                 JunkLocker.Value = entry.IsJunk;

@@ -91,7 +91,7 @@ namespace WillowTree.Plugins
             this.EquippedSlotGear = new WillowTree.CustomControls.WTComboBox();
             this.labelGearQuantity = new WillowTree.CustomControls.WTLabel();
             this.labelGearEquipped = new WillowTree.CustomControls.WTLabel();
-            this.QuantityGear = new WillowTree.CustomControls.WTNumericUpDown();
+            this.QuantityGear = new WillowTree.Plugins.StrictNumericUpDown();
             this.gbPartSelectorGear = new WillowTree.CustomControls.WTGroupBox();
             this.PartInfoGear = new WillowTree.CustomControls.WTTextBox();
             this.PartSelectorGear = new WillowTree.CustomControls.WTTreeView();
@@ -660,7 +660,7 @@ namespace WillowTree.Plugins
         private CustomControls.WTComboBox EquippedSlotGear;
         private CustomControls.WTLabel labelGearQuantity;
         private CustomControls.WTLabel labelGearEquipped;
-        private CustomControls.WTNumericUpDown QuantityGear;
+        private StrictNumericUpDown QuantityGear;
         private CustomControls.WTGroupBox gbPartSelectorGear;
         private CustomControls.WTTextBox PartInfoGear;
         private CustomControls.WTTreeView PartSelectorGear;

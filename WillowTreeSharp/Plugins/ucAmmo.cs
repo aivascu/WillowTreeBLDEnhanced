@@ -98,8 +98,10 @@ namespace WillowTree.Plugins
             TreeNodeAdv selectedNode = AmmoTree.SelectedNode;
             if (selectedNode != null)
             {
-                Util.SetNumericUpDown(AmmoPoolRemaining, (decimal)CurrentWSG.RemainingPools[selectedNode.Index]);
-                Util.SetNumericUpDown(AmmoSDULevel, CurrentWSG.PoolLevels[selectedNode.Index]);
+                //Util.SetNumericUpDown(AmmoPoolRemaining, (decimal)CurrentWSG.RemainingPools[selectedNode.Index]);
+                //Util.SetNumericUpDown(AmmoSDULevel, CurrentWSG.PoolLevels[selectedNode.Index]);
+                AmmoPoolRemaining.Value = (decimal)CurrentWSG.RemainingPools[selectedNode.Index];
+                AmmoSDULevel.Value = CurrentWSG.PoolLevels[selectedNode.Index];
             }              
         }
 
@@ -122,10 +124,10 @@ namespace WillowTree.Plugins
             if (AmmoTree.SelectedNode != null)
             {
                 CurrentWSG.NumberOfPools = CurrentWSG.NumberOfPools - 1;
-                Util.ResizeArraySmaller(ref CurrentWSG.AmmoPools, CurrentWSG.NumberOfPools);
-                Util.ResizeArraySmaller(ref CurrentWSG.ResourcePools, CurrentWSG.NumberOfPools);
-                Util.ResizeArraySmaller(ref CurrentWSG.RemainingPools, CurrentWSG.NumberOfPools);
-                Util.ResizeArraySmaller(ref CurrentWSG.PoolLevels, CurrentWSG.NumberOfPools);
+                ArrayHelper.ResizeArraySmaller(ref CurrentWSG.AmmoPools, CurrentWSG.NumberOfPools);
+                ArrayHelper.ResizeArraySmaller(ref CurrentWSG.ResourcePools, CurrentWSG.NumberOfPools);
+                ArrayHelper.ResizeArraySmaller(ref CurrentWSG.RemainingPools, CurrentWSG.NumberOfPools);
+                ArrayHelper.ResizeArraySmaller(ref CurrentWSG.PoolLevels, CurrentWSG.NumberOfPools);
                 DoAmmoTree();
             }
         }
@@ -139,10 +141,10 @@ namespace WillowTree.Plugins
                 if (New_d_resourcepools != "" && New_d_resources != "")
                 {
                     CurrentWSG.NumberOfPools = CurrentWSG.NumberOfPools + 1;
-                    Util.ResizeArrayLarger(ref CurrentWSG.AmmoPools, CurrentWSG.NumberOfPools);
-                    Util.ResizeArrayLarger(ref CurrentWSG.ResourcePools, CurrentWSG.NumberOfPools);
-                    Util.ResizeArrayLarger(ref CurrentWSG.RemainingPools, CurrentWSG.NumberOfPools);
-                    Util.ResizeArrayLarger(ref CurrentWSG.PoolLevels, CurrentWSG.NumberOfPools);
+                    ArrayHelper.ResizeArrayLarger(ref CurrentWSG.AmmoPools, CurrentWSG.NumberOfPools);
+                    ArrayHelper.ResizeArrayLarger(ref CurrentWSG.ResourcePools, CurrentWSG.NumberOfPools);
+                    ArrayHelper.ResizeArrayLarger(ref CurrentWSG.RemainingPools, CurrentWSG.NumberOfPools);
+                    ArrayHelper.ResizeArrayLarger(ref CurrentWSG.PoolLevels, CurrentWSG.NumberOfPools);
                     CurrentWSG.AmmoPools[CurrentWSG.NumberOfPools - 1] = New_d_resourcepools;
                     CurrentWSG.ResourcePools[CurrentWSG.NumberOfPools - 1] = New_d_resources;
                     DoAmmoTree();

@@ -597,8 +597,7 @@ namespace WillowTree.Plugins
                 return;
 
             if (Clicked == true)
-                Util.SetNumericUpDown(ObjectiveValue, 
-                    CurrentWSG.QuestLists[index].Quests[QuestTree.SelectedNode.Index].Objectives[Objectives.SelectedIndex].Progress);
+                ObjectiveValue.Value = CurrentWSG.QuestLists[index].Quests[QuestTree.SelectedNode.Index].Objectives[Objectives.SelectedIndex].Progress;
         }
 
         private void ObjectiveValue_ValueChanged(object sender, EventArgs e)
@@ -736,8 +735,8 @@ namespace WillowTree.Plugins
                         }
 
                         // Update the UI elements
-                        Util.SetNumericUpDown(NumberOfObjectives, objectiveCount);
-                        Util.SetNumericUpDown(ObjectiveValue, 0);
+                        NumberOfObjectives.Value = objectiveCount;
+                        ObjectiveValue.Value = 0;
                     }
                     else if (qe.Progress != 4 && QuestProgress.SelectedIndex == 3)
                     {
@@ -764,14 +763,14 @@ namespace WillowTree.Plugins
         {
             QuestString.Text = "";
             Objectives.Items.Clear();
-            Util.SetNumericUpDown(NumberOfObjectives, 0);
-            Util.SetNumericUpDown(ObjectiveValue, 0);
+            NumberOfObjectives.Value = 0;
+            ObjectiveValue.Value = 0;
             QuestProgress.SelectedIndex = 0;
             QuestDescription.Text = "";
             QuestSummary.Text = "";
             SelectedQuestGroup.Text = "No Quest Selected";
-            Util.SetNumericUpDown(QuestDLCValue1, 0);
-            Util.SetNumericUpDown(QuestDLCValue2, 0);
+            QuestDLCValue1.Value = 0;
+            QuestDLCValue2.Value = 0;
         }
 
         private void UIClearPlaythrough()
@@ -828,17 +827,17 @@ namespace WillowTree.Plugins
                     QuestProgress.SelectedIndex = qe.Progress;
 
                 int objectiveCount = qe.NumberOfObjectives;
-                Util.SetNumericUpDown(NumberOfObjectives, objectiveCount);
+                NumberOfObjectives.Value = objectiveCount;
 
                 XmlNode questData = QuestsXml.XmlReadNode(key);
                 Objectives.Items.Clear();
                 for (int objectiveIndex = 0; objectiveIndex < objectiveCount; objectiveIndex++)
                     Objectives.Items.Add(questData.GetElement("Objectives" + objectiveIndex, ""));
-                Util.SetNumericUpDown(ObjectiveValue, 0);
+                ObjectiveValue.Value = 0;
                 QuestSummary.Text = questData.GetElement("MissionSummary", "");
                 QuestDescription.Text = questData.GetElement("MissionDescription", "");
-                Util.SetNumericUpDown(QuestDLCValue1, qe.DlcValue1);
-                Util.SetNumericUpDown(QuestDLCValue2, qe.DlcValue2);
+                QuestDLCValue1.Value = qe.DlcValue1;
+                QuestDLCValue2.Value = qe.DlcValue2;
             }
             catch 
             { 

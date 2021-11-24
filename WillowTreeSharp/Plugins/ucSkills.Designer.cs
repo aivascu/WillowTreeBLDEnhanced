@@ -59,9 +59,9 @@ namespace WillowTree.Plugins
             this.importToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupPanel12 = new WillowTree.CustomControls.WTGroupBox();
             this.skillLevelLabel = new WillowTree.CustomControls.WTLabel();
-            this.SkillLevel = new WillowTree.CustomControls.WTNumericUpDown();
+            this.SkillLevel = new WillowTree.Plugins.StrictNumericUpDown();
             this.skillStringLabel = new WillowTree.CustomControls.WTLabel();
-            this.SkillExp = new WillowTree.CustomControls.WTNumericUpDown();
+            this.SkillExp = new WillowTree.Plugins.StrictNumericUpDown();
             this.SkillName = new WillowTree.CustomControls.WTTextBox();
             this.skillExperienceLabel = new WillowTree.CustomControls.WTLabel();
             this.SkillActive = new WillowTree.CustomControls.WTComboBox();
@@ -329,9 +329,9 @@ namespace WillowTree.Plugins
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem3;
         private CustomControls.WTGroupBox groupPanel12;
         private CustomControls.WTLabel skillLevelLabel;
-        private CustomControls.WTNumericUpDown SkillLevel;
+        private StrictNumericUpDown SkillLevel;
         private CustomControls.WTLabel skillStringLabel;
-        private CustomControls.WTNumericUpDown SkillExp;
+        private StrictNumericUpDown SkillExp;
         private CustomControls.WTTextBox SkillName;
         private CustomControls.WTLabel skillExperienceLabel;
         private CustomControls.WTComboBox SkillActive;

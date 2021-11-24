@@ -74,8 +74,8 @@ namespace WillowTree.Plugins
             this.ActivePT1QuestGroup = new WillowTree.CustomControls.WTGroupBox();
             this.ActiveQuest = new WillowTree.CustomControls.WTTextBox();
             this.SelectedQuestGroup = new WillowTree.CustomControls.WTGroupBox();
-            this.QuestDLCValue2 = new WillowTree.CustomControls.WTNumericUpDown();
-            this.QuestDLCValue1 = new WillowTree.CustomControls.WTNumericUpDown();
+            this.QuestDLCValue2 = new WillowTree.Plugins.StrictNumericUpDown();
+            this.QuestDLCValue1 = new WillowTree.Plugins.StrictNumericUpDown();
             this.labeQuestDLCValue2 = new WillowTree.CustomControls.WTLabel();
             this.labelQuestDLCValue1 = new WillowTree.CustomControls.WTLabel();
             this.QuestDescription = new WillowTree.CustomControls.WTTextBox();
@@ -83,8 +83,8 @@ namespace WillowTree.Plugins
             this.labelQuestDescription = new WillowTree.CustomControls.WTLabel();
             this.labelQuestSummary = new WillowTree.CustomControls.WTLabel();
             this.labelQuestObjectiveValue = new WillowTree.CustomControls.WTLabel();
-            this.NumberOfObjectives = new WillowTree.CustomControls.WTNumericUpDown();
-            this.ObjectiveValue = new WillowTree.CustomControls.WTNumericUpDown();
+            this.NumberOfObjectives = new WillowTree.Plugins.StrictNumericUpDown();
+            this.ObjectiveValue = new WillowTree.Plugins.StrictNumericUpDown();
             this.labelQuestObjectives = new WillowTree.CustomControls.WTLabel();
             this.Objectives = new WillowTree.CustomControls.WTComboBox();
             this.labelQuestProgress = new WillowTree.CustomControls.WTLabel();
@@ -622,8 +622,8 @@ namespace WillowTree.Plugins
         private CustomControls.WTLabel labelQuestDescription;
         private CustomControls.WTLabel labelQuestSummary;
         private CustomControls.WTLabel labelQuestObjectiveValue;
-        private CustomControls.WTNumericUpDown NumberOfObjectives;
-        private CustomControls.WTNumericUpDown ObjectiveValue;
+        private StrictNumericUpDown NumberOfObjectives;
+        private StrictNumericUpDown ObjectiveValue;
         private CustomControls.WTLabel labelQuestObjectives;
         private CustomControls.WTComboBox Objectives;
         private CustomControls.WTLabel labelQuestProgress;
@@ -645,8 +645,8 @@ namespace WillowTree.Plugins
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem eraseAllEchoesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setAsActiveQuestToolStripMenuItem;
-        private CustomControls.WTNumericUpDown QuestDLCValue2;
-        private CustomControls.WTNumericUpDown QuestDLCValue1;
+        private StrictNumericUpDown QuestDLCValue2;
+        private StrictNumericUpDown QuestDLCValue1;
         private CustomControls.WTLabel labeQuestDLCValue2;
         private CustomControls.WTLabel labelQuestDLCValue1;
     }

@@ -130,8 +130,8 @@ namespace WillowTree.Plugins
             TreeModel model = new TreeModel();
             SkillTree.Model = model;
 
-            Util.SetNumericUpDown(SkillLevel, 0);
-            Util.SetNumericUpDown(SkillExp, 0);
+            SkillLevel.Value = 0;
+            SkillExp.Value = 0;
             SkillActive.SelectedItem = "No";
             for (int build = 0; build < CurrentWSG.NumberOfSkills; build++)
             {
@@ -207,10 +207,10 @@ namespace WillowTree.Plugins
                         CurrentWSG.LevelOfSkills[Position] = CurrentWSG.LevelOfSkills[Position + 1];
 
                     }
-                    Util.ResizeArraySmaller(ref CurrentWSG.SkillNames, CurrentWSG.NumberOfSkills);
-                    Util.ResizeArraySmaller(ref CurrentWSG.InUse, CurrentWSG.NumberOfSkills);
-                    Util.ResizeArraySmaller(ref CurrentWSG.ExpOfSkills, CurrentWSG.NumberOfSkills);
-                    Util.ResizeArraySmaller(ref CurrentWSG.LevelOfSkills, CurrentWSG.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref CurrentWSG.SkillNames, CurrentWSG.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref CurrentWSG.InUse, CurrentWSG.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref CurrentWSG.ExpOfSkills, CurrentWSG.NumberOfSkills);
+                    ArrayHelper.ResizeArraySmaller(ref CurrentWSG.LevelOfSkills, CurrentWSG.NumberOfSkills);
 
                     CurrentWSG.NumberOfSkills--;
                 }
@@ -323,10 +323,10 @@ namespace WillowTree.Plugins
 
                 // Add enough room for the new skill in each of the skill arrays
                 CurrentWSG.NumberOfSkills = CurrentWSG.NumberOfSkills + 1;
-                Util.ResizeArrayLarger(ref CurrentWSG.SkillNames, CurrentWSG.NumberOfSkills);
-                Util.ResizeArrayLarger(ref CurrentWSG.LevelOfSkills, CurrentWSG.NumberOfSkills);
-                Util.ResizeArrayLarger(ref CurrentWSG.ExpOfSkills, CurrentWSG.NumberOfSkills);
-                Util.ResizeArrayLarger(ref CurrentWSG.InUse, CurrentWSG.NumberOfSkills);
+                ArrayHelper.ResizeArrayLarger(ref CurrentWSG.SkillNames, CurrentWSG.NumberOfSkills);
+                ArrayHelper.ResizeArrayLarger(ref CurrentWSG.LevelOfSkills, CurrentWSG.NumberOfSkills);
+                ArrayHelper.ResizeArrayLarger(ref CurrentWSG.ExpOfSkills, CurrentWSG.NumberOfSkills);
+                ArrayHelper.ResizeArrayLarger(ref CurrentWSG.InUse, CurrentWSG.NumberOfSkills);
 
                 // Set the data for the new skill.
                 int index = CurrentWSG.NumberOfSkills - 1;
@@ -344,8 +344,8 @@ namespace WillowTree.Plugins
             if (SkillTree.SelectedNode == null)
             {
                 SkillName.Text = "";
-                Util.SetNumericUpDown(SkillLevel, 0);
-                Util.SetNumericUpDown(SkillExp, 0);
+                SkillLevel.Value = 0;
+                SkillExp.Value = 0;
                 return;
             }
 
@@ -353,14 +353,14 @@ namespace WillowTree.Plugins
             if (index == -1)
             {
                 SkillName.Text = "";
-                Util.SetNumericUpDown(SkillLevel, 0);
-                Util.SetNumericUpDown(SkillExp, 0);
+                SkillLevel.Value = 0;
+                SkillExp.Value = 0;
             }
             else
             {
                 SkillName.Text = CurrentWSG.SkillNames[index];
-                Util.SetNumericUpDown(SkillLevel, CurrentWSG.LevelOfSkills[index]);
-                Util.SetNumericUpDown(SkillExp, CurrentWSG.ExpOfSkills[index]);
+                SkillLevel.Value = CurrentWSG.LevelOfSkills[index];
+                SkillExp.Value = CurrentWSG.ExpOfSkills[index];
                 if (CurrentWSG.InUse[index] == -1)
                     SkillActive.SelectedItem = "No";
                 else

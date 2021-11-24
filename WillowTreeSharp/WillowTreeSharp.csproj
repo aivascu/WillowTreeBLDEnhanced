@@ -110,7 +110,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Array.cs" />
+    <Compile Include="ArrayHelper.cs" />
+    <Compile Include="Plugins\StrictNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Services\DataAccess\GameData.cs" />
     <Compile Include="Services\DataAccess\GameDataWrapper.cs" />
     <Compile Include="Services\Configuration\GlobalSettingsWrapper.cs" />
@@ -194,7 +197,6 @@
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="StringExtensions.cs" />
-    <Compile Include="Util.cs" />
     <Compile Include="Services\DataAccess\WillowSaveGame.cs" />
     <Compile Include="WillowTreeMain.cs">
       <SubType>Form</SubType>

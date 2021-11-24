@@ -405,7 +405,7 @@ namespace WillowTree.Plugins
 
             WTSlideSelector.MinMaxAdvanced(gear.UsesBigLevel, ref LevelIndexGear);
 
-            Util.SetNumericUpDown(QuantityGear, gear.Quantity);
+            QuantityGear.Value = gear.Quantity;
             QualityGear.Value = gear.QualityIndex;
             EquippedSlotGear.SelectedIndex = gear.EquippedSlot;
             LevelIndexGear.Value = gear.LevelIndex;

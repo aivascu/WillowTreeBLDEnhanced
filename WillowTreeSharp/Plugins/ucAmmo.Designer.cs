@@ -55,8 +55,8 @@ namespace WillowTree.Plugins
             this.deleteToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.AmmoTree = new WillowTree.CustomControls.WTTreeView();
             this.groupPanel15 = new WillowTree.CustomControls.WTGroupBox();
-            this.AmmoSDULevel = new WillowTree.CustomControls.WTNumericUpDown();
-            this.AmmoPoolRemaining = new WillowTree.CustomControls.WTNumericUpDown();
+            this.AmmoSDULevel = new StrictNumericUpDown();
+            this.AmmoPoolRemaining = new StrictNumericUpDown();
             this.labelAmmoSDULevel = new WillowTree.CustomControls.WTLabel();
             this.labelAmmoRemaining = new WillowTree.CustomControls.WTLabel();
             this.AmmoTab.SuspendLayout();
@@ -246,8 +246,8 @@ namespace WillowTree.Plugins
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem2;
         private CustomControls.WTTreeView AmmoTree;
         private CustomControls.WTGroupBox groupPanel15;
-        private CustomControls.WTNumericUpDown AmmoSDULevel;
-        private CustomControls.WTNumericUpDown AmmoPoolRemaining;
+        private StrictNumericUpDown AmmoSDULevel;
+        private StrictNumericUpDown AmmoPoolRemaining;
         private CustomControls.WTLabel labelAmmoSDULevel;
         private CustomControls.WTLabel labelAmmoRemaining;
     }

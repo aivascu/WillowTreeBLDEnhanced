@@ -612,8 +612,8 @@ namespace WillowTree.Plugins
 
         private void UIClearEchoPanel()
         {
-            Util.SetNumericUpDown(EchoDLCValue1, 0);
-            Util.SetNumericUpDown(EchoDLCValue2, 0);
+            EchoDLCValue1.Value = 0;
+            EchoDLCValue2.Value = 0;
             EchoString.Text = "";
         }
 
@@ -630,8 +630,8 @@ namespace WillowTree.Plugins
 
             WillowSaveGame.EchoEntry ee = CurrentWSG.EchoLists[index].Echoes[EchoTree.SelectedNode.Index];
 
-            Util.SetNumericUpDown(EchoDLCValue1, ee.DlcValue1);
-            Util.SetNumericUpDown(EchoDLCValue2, ee.DlcValue2);
+            EchoDLCValue1.Value = ee.DlcValue1;
+            EchoDLCValue2.Value = ee.DlcValue2;
             EchoString.Text = ee.Name;
         }
 

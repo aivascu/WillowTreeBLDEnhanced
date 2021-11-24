@@ -71,15 +71,15 @@ namespace WillowTree.Plugins
             CurrentWSG = e.WTM.SaveData;
 
             CharacterName.Text = CurrentWSG.CharacterName;
-            Util.SetNumericUpDown(Level, CurrentWSG.Level);
+            Level.Value = CurrentWSG.Level;
             if (Level.Value != CurrentWSG.Level)
                 MessageBox.Show("The character's level was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.Level + "\nNew: " + (int)Level.Value);
 
-            Util.SetNumericUpDown(Experience, CurrentWSG.Experience);
+            Experience.Value = CurrentWSG.Experience;
             if (Experience.Value != CurrentWSG.Experience)
                 MessageBox.Show("The character's experience was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.Experience + "\nNew: " + (int)Experience.Value);
 
-            Util.SetNumericUpDown(SkillPoints, CurrentWSG.SkillPoints);
+            SkillPoints.Value = CurrentWSG.SkillPoints;
             if (SkillPoints.Value != CurrentWSG.SkillPoints)
                 MessageBox.Show("The character's skill point count was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.SkillPoints + "\nNew: " + (int)SkillPoints.Value);
 
@@ -91,16 +91,16 @@ namespace WillowTree.Plugins
             // No message when cash is adjusted because it will likely have to be changed on
             // every load for people who exceed the limit.  The spam would be annoying.
             if (CurrentWSG.Cash < 0)
-                Util.SetNumericUpDown(Cash, int.MaxValue);
+                Cash.Value = int.MaxValue;
             else
-                Util.SetNumericUpDown(Cash, CurrentWSG.Cash);
+                Cash.Value = CurrentWSG.Cash;
           
-            Util.SetNumericUpDown(BackpackSpace, CurrentWSG.BackpackSize);
+            BackpackSpace.Value = CurrentWSG.BackpackSize;
             if (BackpackSpace.Value != CurrentWSG.BackpackSize)
                 MessageBox.Show("The character's backpack capacity was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.BackpackSize + "\nNew: " + (int)BackpackSpace.Value);
 
-            Util.SetNumericUpDown(EquipSlots, CurrentWSG.EquipSlots);
-            Util.SetNumericUpDown(SaveNumber, CurrentWSG.SaveNumber);
+            EquipSlots.Value = CurrentWSG.EquipSlots;
+            SaveNumber.Value = CurrentWSG.SaveNumber;
 
             UI_UpdateCurrentLocationComboBox(CurrentWSG.CurrentLocation);
 
@@ -115,12 +115,12 @@ namespace WillowTree.Plugins
             BankSpace.Enabled = CurrentWSG.Dlc.HasSection1;
             if (CurrentWSG.Dlc.HasSection1)
             {
-                Util.SetNumericUpDown(BankSpace, CurrentWSG.Dlc.BankSize);
+                BankSpace.Value = CurrentWSG.Dlc.BankSize;
                 if (BankSpace.Value != CurrentWSG.Dlc.BankSize)
                     MessageBox.Show("The character's bank capacity was outside the acceptable range.  It has been adjusted.\n\nOld: " + CurrentWSG.BackpackSize + "\nNew: " + (int)BackpackSpace.Value);
             }
             else
-                Util.SetNumericUpDown(BankSpace, 0);
+                BankSpace.Value = 0;
 
             DoWindowTitle();
             Application.DoEvents();
@@ -408,7 +408,7 @@ namespace WillowTree.Plugins
                 {
                     CurrentWSG.LocationStrings[Position] = CurrentWSG.LocationStrings[Position + 1];
                 }
-                Util.ResizeArraySmaller(ref CurrentWSG.LocationStrings, CurrentWSG.TotalLocations);
+                ArrayHelper.ResizeArraySmaller(ref CurrentWSG.LocationStrings, CurrentWSG.TotalLocations);
 
                 NextSelection = LocationTree.SelectedNode.NextVisibleNode;
                 LocationTree.SelectedNode.Remove();
@@ -551,7 +551,7 @@ namespace WillowTree.Plugins
             {
                 int SelectedItem = LocationsList.SelectedIndex;
                 CurrentWSG.TotalLocations = CurrentWSG.TotalLocations + 1;
-                Util.ResizeArrayLarger(ref CurrentWSG.LocationStrings, CurrentWSG.TotalLocations);
+                ArrayHelper.ResizeArrayLarger(ref CurrentWSG.LocationStrings, CurrentWSG.TotalLocations);
                 CurrentWSG.LocationStrings[CurrentWSG.TotalLocations - 1] = LocationsXml.stListSectionNames()[SelectedItem];
                 DoLocationTree();
             }
