@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using WillowTreeSharp.Domain;
 using X360.IO;
@@ -1218,7 +1221,7 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        public static WillowSaveGame ReadFile(string path, bool autoRepair)
+        public static WillowSaveGame ReadFile(string path, bool autoRepair = false)
         {
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
@@ -1581,6 +1584,101 @@ namespace WillowTree.Services.DataAccess
 
             // Now that all the raw data has been removed, reset the raw data flag
             saveGame.ContainsRawData = false;
+        }
+
+        public static void WriteToFile(WillowSaveGame saveGame, string filename)
+        {
+            switch (saveGame.Platform)
+            {
+                case "PS3":
+                case "PC":
+                    {
+                        using (var writer = new BinaryWriter(new FileStream(filename, FileMode.Create)))
+                        {
+                            writer.Write(Serialize(saveGame));
+                        }
+
+                        break;
+                    }
+                case "X360":
+                    {
+                        var tempSaveName = $"{filename}.temp";
+                        using (var writer = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                        {
+                            writer.Write(Serialize(saveGame));
+                        }
+
+                        PackageXBoxContainer(saveGame, filename, tempSaveName, 0x1);
+                        File.Delete(tempSaveName);
+                        break;
+                    }
+                case "X360JP":
+                    {
+                        var tempSaveName = $"{filename}.temp";
+                        using (var writer = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                        {
+                            writer.Write(Serialize(saveGame));
+                        }
+
+                        PackageXBoxContainer(saveGame, filename, tempSaveName, 0x2);
+                        File.Delete(tempSaveName);
+                        break;
+                    }
+            }
+        }
+
+        private static void PackageXBoxContainer(WillowSaveGame saveGame, string packageFileName, string saveFileName, int locale)
+        {
+            var package = new CreateSTFS
+            {
+                STFSType = STFSType.Type1,
+                HeaderData =
+                {
+                    ProfileID = saveGame.ProfileId,
+                    DeviceID = saveGame.DeviceId
+                }
+            };
+
+            // WARNING: GetManifestResourceStream is case-sensitive.
+            var wtIcon = Assembly
+                .GetExecutingAssembly()
+                .GetManifestResourceStream("WillowTree.Resources.WT_CON.png");
+
+            if (wtIcon is null)
+            {
+                throw new NoNullAllowedException("wtIcon don't found.");
+            }
+
+            package.HeaderData.ContentImage = Image.FromStream(wtIcon);
+            package.HeaderData.PackageImage = package.HeaderData.ContentImage;
+            package.HeaderData.Title_Display = $"{saveGame.CharacterName} - Level {saveGame.Level} - {saveGame.CurrentLocation}";
+            package.HeaderData.Title_Package = "Borderlands";
+
+            switch (locale)
+            {
+                case 0x1: // US or International version
+                    package.HeaderData.Title_Package = "Borderlands";
+                    package.HeaderData.TitleID = 0x545407E7;
+                    break;
+
+                case 0x2: // JP version
+                    package.HeaderData.Title_Package = "Borderlands (JP)";
+                    package.HeaderData.TitleID = 0x54540866;
+                    break;
+            }
+
+            package.AddFile(saveFileName, "SaveGame.sav");
+
+            var xKvLocation = Path.Combine(Constants.DataPath, "KV.bin");
+            var con = new STFSPackage(
+                package,
+                new RSAParams(xKvLocation),
+                packageFileName,
+                new LogRecord());
+
+            con.FlushPackage(new RSAParams(xKvLocation));
+            con.CloseIO();
+            wtIcon.Close();
         }
     }
 }

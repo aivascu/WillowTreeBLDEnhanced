@@ -295,8 +295,7 @@ namespace WillowTree.Plugins
 
         public void MergeFromSaveQuests(string filename, int index)
         {
-            WillowSaveGame otherSave = new WillowSaveGame();
-            otherSave.LoadWsg(filename);
+            var otherSave = WillowSaveGameBase.ReadFile(filename);
 
             if (otherSave.NumberOfQuestLists - 1 < index)
             {
@@ -712,11 +711,11 @@ namespace WillowTree.Plugins
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
-                WillowSaveGame otherSave = new WillowSaveGame();
+                WillowSaveGame otherSave;
 
                 try
                 {
-                    otherSave.LoadWsg(tempOpen.FileName());
+                    otherSave = WillowSaveGameBase.ReadFile(tempOpen.FileName());
                 }
                 catch { return; }
 

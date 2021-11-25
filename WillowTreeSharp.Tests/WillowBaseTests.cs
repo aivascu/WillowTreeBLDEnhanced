@@ -1,13 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using WillowTree;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WillowTree.Services.DataAccess;
 
 namespace Test
 {
     [TestClass]
-    public class WillowTest
+    public class WillowBaseTests
     {
         private string GetOutputName(string outputDir, string fileName)
         {
@@ -19,7 +18,7 @@ namespace Test
         {
             string path = Directory.GetCurrentDirectory() + @"\ReadTest\Extended";
 
-            DirectoryInfo d = new DirectoryInfo(path);//Assuming Test is your Folder
+            DirectoryInfo d = new DirectoryInfo(path); //Assuming Test is your Folder
             FileInfo[] files = d.GetFiles("*.sav"); //Getting Text files
             var total = files.Length;
             int count = 0;
@@ -29,14 +28,14 @@ namespace Test
             {
                 file.Delete();
             }
+
             foreach (var collection in files)
             {
                 bool success = true;
                 consoleOutput = new ConsoleOutput();
                 try
                 {
-                    var ws = new WillowSaveGame();
-                    ws.LoadWsg(collection.FullName);
+                    var ws = WillowSaveGameBase.ReadFile(collection.FullName, false);
                     count++;
                     consoleOutput.Dispose();
                 }
@@ -49,8 +48,10 @@ namespace Test
                     consoleOutput.Dispose();
                     success = false;
                 }
+
                 Console.WriteLine(collection.Name + @" : " + success);
             }
+
             Console.WriteLine(count + @"/" + total + @"(" + ((float)count / total) * 100f + @"%)");
             Assert.AreEqual(total, count);
         }
@@ -60,7 +61,7 @@ namespace Test
         {
             string path = Directory.GetCurrentDirectory() + @"\ReadTest\Vanilla";
 
-            DirectoryInfo d = new DirectoryInfo(path);//Assuming Test is your Folder
+            DirectoryInfo d = new DirectoryInfo(path); //Assuming Test is your Folder
             FileInfo[] files = d.GetFiles("*.sav"); //Getting Text files
             var total = files.Length;
             int count = 0;
@@ -70,14 +71,14 @@ namespace Test
             {
                 file.Delete();
             }
+
             foreach (var collection in files)
             {
                 bool success = true;
                 consoleOutput = new ConsoleOutput();
                 try
                 {
-                    var ws = new WillowSaveGame();
-                    ws.LoadWsg(collection.FullName);
+                    var ws = WillowSaveGameBase.ReadFile(collection.FullName, false);
                     count++;
                     consoleOutput.Dispose();
                 }
@@ -90,8 +91,10 @@ namespace Test
                     consoleOutput.Dispose();
                     success = false;
                 }
+
                 Console.WriteLine(collection.Name + @" : " + success);
             }
+
             Console.WriteLine(count + @"/" + total + @"(" + ((float)count / total) * 100f + @"%)");
             Assert.AreEqual(total, count);
         }
@@ -101,7 +104,7 @@ namespace Test
         {
             string path = Directory.GetCurrentDirectory() + @"\ReadTest\Extended";
 
-            DirectoryInfo d = new DirectoryInfo(path);//Assuming Test is your Folder
+            DirectoryInfo d = new DirectoryInfo(path); //Assuming Test is your Folder
             FileInfo[] files = d.GetFiles("*.sav"); //Getting Text files
             var total = files.Length;
             int count = 0;
@@ -111,19 +114,18 @@ namespace Test
             {
                 file.Delete();
             }
+
             foreach (var collection in files)
             {
                 bool success = true;
                 consoleOutput = new ConsoleOutput();
                 try
                 {
-                    var ws = new WillowSaveGame();
-
-                    ws.LoadWsg(collection.FullName);
+                    var ws = WillowSaveGameBase.ReadFile(collection.FullName, false);
                     var output = outputDir.FullName + @"\" + collection.Name;
-                    ws.SaveWsg(output);
-                    //FileAssert.AreEqual(collection.FullName, output);
-                    ws.LoadWsg(output);
+                    WillowSaveGameBase.WriteToFile(ws, output);
+
+                    ws = WillowSaveGameBase.ReadFile(output, false);
                     count++;
                     consoleOutput.Dispose();
                 }
@@ -136,8 +138,10 @@ namespace Test
                     consoleOutput.Dispose();
                     success = false;
                 }
+
                 Console.WriteLine(collection.Name + @" : " + success);
             }
+
             Console.WriteLine(count + @"/" + total + @"(" + ((float)count / total) * 100f + @"%)");
             Assert.AreEqual(total, count);
         }

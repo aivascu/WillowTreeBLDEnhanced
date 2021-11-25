@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="ConsoleOutput.cs" />
     <Compile Include="FileAssert.cs" />
-    <Compile Include="WillowTest.cs" />
+    <Compile Include="WillowBaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

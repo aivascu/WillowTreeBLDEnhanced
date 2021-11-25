@@ -218,15 +218,14 @@ namespace WillowTree.Plugins
         }
         public void MergeFromSaveEchoes(string filename, int index)
         {
-            WillowSaveGame OtherSave = new WillowSaveGame();
-            OtherSave.LoadWsg(filename);
+            var otherSave = WillowSaveGameBase.ReadFile(filename);
 
-            if (OtherSave.NumberOfEchoLists - 1 < index)
+            if (otherSave.NumberOfEchoLists - 1 < index)
             {
                 return;
             }
 
-            EchoTable etOther = OtherSave.EchoLists[index];
+            EchoTable etOther = otherSave.EchoLists[index];
             EchoTable et = this.CurrentWSG.EchoLists[index];
 
             this.EchoTree.BeginUpdate();
@@ -452,22 +451,22 @@ namespace WillowTree.Plugins
 
             if (tempOpen.ShowDialog() == DialogResult.OK)
             {
-                WillowSaveGame OtherSave = new WillowSaveGame();
+                WillowSaveGame otherSave;
 
                 try
                 {
-                    OtherSave.LoadWsg(tempOpen.FileName());
+                    otherSave = WillowSaveGameBase.ReadFile(tempOpen.FileName());
                 }
                 catch { MessageBox.Show("Couldn't open the other save file."); return; }
 
-                if (OtherSave.NumberOfEchoLists - 1 < index)
+                if (otherSave.NumberOfEchoLists - 1 < index)
                 {
                     MessageBox.Show("The echo list does not exist in the other savegame file.");
                     return;
                 }
 
                 // Replace the old entries in the echo table with the new ones
-                this.CurrentWSG.EchoLists[index] = OtherSave.EchoLists[index];
+                this.CurrentWSG.EchoLists[index] = otherSave.EchoLists[index];
 
                 EchoTable et = this.CurrentWSG.EchoLists[index];
 

@@ -213,11 +213,11 @@ namespace WillowTree.Plugins
                 return;
             }
 
-            WillowSaveGame otherSave = new WillowSaveGame();
+            WillowSaveGame otherSave;
 
             try
             {
-                otherSave.LoadWsg(tempOpen.FileName());
+                otherSave = WillowSaveGameBase.ReadFile(tempOpen.FileName());
             }
             catch
             {
@@ -354,8 +354,7 @@ namespace WillowTree.Plugins
 
         private void MergeFromSaveLocations(string filename)
         {
-            WillowSaveGame otherSave = new WillowSaveGame();
-            otherSave.LoadWsg(filename);
+            var otherSave = WillowSaveGameBase.ReadFile(filename);
 
             if (otherSave.LocationStrings.Length == 0)
             {
