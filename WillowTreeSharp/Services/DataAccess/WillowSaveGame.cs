@@ -998,9 +998,6 @@ namespace WillowTree.Services.DataAccess
     {
         protected int[] values = new int[0x6];
 
-        public ReadStringsFunction ReadStrings { get; set; }
-        public ReadValuesFunction ReadValues { get; set; } = WillowSaveGameBase.ReadObjectValues;
-
         protected WillowObject()
         {
         }
@@ -1086,11 +1083,6 @@ namespace WillowTree.Services.DataAccess
 
     public class Weapon : WillowObject
     {
-        public Weapon()
-        {
-            this.ReadStrings = WillowSaveGameBase.ReadWeaponStrings;
-        }
-
         public int Ammo
         {
             get => this.values[0];
@@ -1100,11 +1092,6 @@ namespace WillowTree.Services.DataAccess
 
     public class Item : WillowObject
     {
-        public Item()
-        {
-            this.ReadStrings = WillowSaveGameBase.ReadItemStrings;
-        }
-
         public int Quantity
         {
             get => this.values[0x0];
