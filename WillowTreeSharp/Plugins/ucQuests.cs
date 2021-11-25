@@ -1,4 +1,4 @@
-﻿using Aga.Controls.Tree;
+using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System.Xml;
 using WillowTree.Controls;
 using WillowTree.Services.DataAccess;
+using WillowTreeSharp;
+using WillowTreeSharp.Domain;
 
 namespace WillowTree.Plugins
 {

@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using WillowTreeSharp;
+using WillowTreeSharp.Domain;
 using X360.IO;
 using X360.Other;
 using X360.STFS;
@@ -994,121 +996,7 @@ namespace WillowTree.Services.DataAccess
         }
     }
 
-    public abstract class WillowObject
-    {
-        protected int[] values = new int[0x6];
 
-        protected WillowObject()
-        {
-        }
-
-        public List<string> Strings { get; set; } = new List<string>();
-
-        public void SetValues(List<int> values)
-        {
-            this.values = values.ToArray();
-        }
-
-        public List<int> GetValues()
-        {
-            return this.values.ToList();
-        }
-
-        public int Quality
-        {
-            get => this.values[0x1];
-            set => this.values[0x1] = value;
-        }
-
-        public int EquippedSlot
-        {
-            get => this.values[0x2];
-            set => this.values[0x2] = value;
-        }
-
-        public int Level
-        {
-            get => this.values[0x3];
-            set => this.values[0x3] = value;
-        }
-
-        public int Junk
-        {
-            get => this.values[0x4];
-            set => this.values[0x4] = value;
-        }
-
-        public int Locked
-        {
-            get => this.values[0x5];
-            set => this.values[0x5] = value;
-        }
-    }
-
-    public class AmmoPool
-    {
-        public AmmoPool(string resource, string name, float remaining, int level)
-        {
-            this.Resource = resource;
-            this.Name = name;
-            this.Remaining = remaining;
-            this.Level = level;
-        }
-
-        public string Resource { get; private set; }
-        public string Name { get; private set; }
-        public float Remaining { get; private set; }
-        public int Level { get; private set; }
-    }
-
-    public class Location
-    {
-        public Location(string id)
-        {
-            this.Id = id;
-        }
-
-        public string Id { get; }
-
-        public static implicit operator string(Location location)
-        {
-            return location.Id;
-        }
-        
-        public static implicit operator Location(string value)
-        {
-            return new Location(value);
-        }
-    }
-
-    public class Weapon : WillowObject
-    {
-        public int Ammo
-        {
-            get => this.values[0];
-            set => this.values[0] = value;
-        }
-    }
-
-    public class Item : WillowObject
-    {
-        public int Quantity
-        {
-            get => this.values[0x0];
-            set => this.values[0x0] = value;
-        }
-    }
-
-    public sealed class BankEntry : WillowObject
-    {
-        public byte TypeId { get; set; }
-
-        public int Quantity
-        {
-            get => this.values[0x0];
-            set => this.values[0x0] = value;
-        }
-    }
 
     public interface IObjectReader
     {
@@ -1141,88 +1029,4 @@ namespace WillowTree.Services.DataAccess
 
     public delegate List<string> ReadStringsFunction(BinaryReader reader, ByteOrder bo);
 
-    public struct QuestObjective
-    {
-        public int Progress;
-        public string Description;
-    }
-
-    public struct ChallengeDataEntry
-    {
-        public short Id;
-        public byte TypeId;
-        public int Value;
-    }
-
-    public class QuestTable
-    {
-        public List<QuestEntry> Quests;
-        public int Index;
-        public string CurrentQuest;
-        public int TotalQuests;
-    }
-
-    public class QuestEntry
-    {
-        public string Name;
-        public int Progress;
-        public int DlcValue1;
-        public int DlcValue2;
-        public int NumberOfObjectives;
-        public QuestObjective[] Objectives;
-    }
-
-    public class EchoTable
-    {
-        public int Index;
-        public int TotalEchoes;
-        public List<EchoEntry> Echoes;
-    };
-
-    public class EchoEntry
-    {
-        public string Name;
-        public int DlcValue1;
-        public int DlcValue2;
-    }
-
-    public class DlcData
-    {
-        public bool HasSection1;
-        public bool HasSection2;
-        public bool HasSection3;
-        public bool HasSection4;
-
-        public List<DlcSection> DataSections;
-
-        public int DlcSize;
-
-        // DLC Section 1 Data (bank data)
-        public byte DlcUnknown1; // Read only flag. Always resets to 1 in ver 1.41.  Probably CanAccessBank.
-
-        public int BankSize;
-        public List<BankEntry> BankInventory = new List<BankEntry>();
-
-        // DLC Section 2 Data (don't know)
-        public int DlcUnknown2; // All four of these are boolean flags.
-
-        public int DlcUnknown3; // If you set them to any value except 0
-        public int DlcUnknown4; // the game will rewrite them as 1.
-        public int SkipDlc2Intro; //
-
-        // DLC Section 3 Data (related to the level cap.  removing this section will delevel your character to 50)
-        public byte DlcUnknown5; // Read only flag. Always resets to 1 in ver 1.41.  Probably CanExceedLevel50
-
-        // DLC Section 4 Data (DLC backpack)
-        public byte SecondaryPackEnabled; // Read only flag. Always resets to 1 in ver 1.41.
-
-        public int NumberOfWeapons;
-    }
-
-    public class DlcSection
-    {
-        public int Id;
-        public byte[] RawData;
-        public byte[] BaseData; // used temporarily in SaveWSG to store the base data for a section as a byte array
-    }
 }

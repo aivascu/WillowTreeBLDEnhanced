@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -8,6 +8,8 @@ using WillowTree.Controls;
 using WillowTree.Inventory;
 using WillowTree.Plugins;
 using WillowTree.Services.DataAccess;
+using WillowTreeSharp;
+using WillowTreeSharp.Domain;
 
 namespace WillowTree
 {
