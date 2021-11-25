@@ -419,14 +419,14 @@ namespace WillowTree.Services.DataAccess
             writer.Write(value);
         }
 
-        public static void ReadOldFooter(WillowSaveGame.BankEntry entry, BinaryReader reader, ByteOrder endian)
+        public static void ReadOldFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
         {
             var footer = reader.ReadBytes(0xA);
             entry.EquipedSlot = footer[0x8];
             entry.Quantity = entry.TypeId == 0x1 ? ReadInt32(reader, endian) : reader.ReadByte();
         }
 
-        public static void ReadNewFooter(WillowSaveGame.BankEntry entry, BinaryReader reader, ByteOrder endian)
+        public static void ReadNewFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
         {
             var footer = reader.ReadBytes(0xC);
             entry.EquipedSlot = footer[0x8];
@@ -444,7 +444,7 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        public static void RepairItem(BinaryReader reader, ByteOrder endian, WillowSaveGame.BankEntry entry, int offset)
+        public static void RepairItem(BinaryReader reader, ByteOrder endian, BankEntry entry, int offset)
         {
             reader.BaseStream.Position -= offset + (entry.TypeId == 0x1 ? 0x10 : 0xB);
             ReadOldFooter(entry, reader, endian);

@@ -598,7 +598,8 @@ namespace WillowTree.Services.DataAccess
                             BankValuesCount = ExportValuesCount;
                             for (var i = 0x0; i < bankEntriesCount; i++)
                             {
-                                var bankEntry = CreateBankEntry(dlcDataReader, this.EndianWsg, Dlc.BankInventory);
+                                var previous = this.Dlc.BankInventory.LastOrDefault();
+                                var bankEntry = CreateBankEntry(dlcDataReader, this.EndianWsg, previous);
                                 this.Dlc.BankInventory.Add(bankEntry);
                             }
 
@@ -1208,174 +1209,10 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        public sealed class BankEntry : WillowObject
-        {
-            public byte TypeId { get; set; }
-
-            public int Quantity
-            {
-                get => this.values[0x0];
-                set => this.values[0x0] = value;
-            }
-
-            public byte[] Serialize(ByteOrder endian)
-            {
-                var bytes = new List<byte>();
-                if (this.TypeId != 0x1 && this.TypeId != 0x2)
-                {
-                    throw new FormatException($"Bank entry to be written has an invalid Type ID.  TypeId = {this.TypeId}");
-                }
-
-                bytes.Add(this.TypeId);
-                var count = 0x0;
-                foreach (var component in this.Strings)
-                {
-                    if (component == "None")
-                    {
-                        bytes.AddRange(new byte[0x19]);
-                        continue;
-                    }
-
-                    bytes.Add(0x20);
-                    var subComponentArray = component.Split('.');
-                    bytes.AddRange(new byte[(0x6 - subComponentArray.Length) * 0x4]);
-                    foreach (var subComponent in subComponentArray)
-                    {
-                        bytes.AddRange(GetBytesFromString(subComponent, endian));
-                    }
-
-                    if (count == 0x2)
-                    {
-                        bytes.AddRange(GetBytesFromInt((ushort)this.Quality + (ushort)this.Level * (uint)0x10000, endian));
-                    }
-
-                    count++;
-                }
-
-                bytes.AddRange(new byte[0x8]);
-                bytes.Add((byte)this.EquipedSlot);
-                bytes.Add(0x1);
-                if (ExportValuesCount > 0x4)
-                {
-                    bytes.Add((byte)this.Junk);
-                    bytes.Add((byte)this.Locked);
-                }
-
-                if (this.TypeId == 0x1)
-                {
-                    bytes.AddRange(GetBytesFromInt(this.Quantity, endian));
-                }
-                else
-                {
-                    if (ExportValuesCount > 0x4)
-                    {
-                        bytes.Add((byte)this.Locked);
-                    }
-                    else
-                    {
-                        bytes.Add((byte)this.Quantity);
-                    }
-                }
-
-                return bytes.ToArray();
-            }
-
-            private void DeserializePart(BinaryReader reader, ByteOrder endian, out string part, int index)
-            {
-                var mask = reader.ReadByte();
-                if (mask == 0x0)
-                {
-                    part = "None";
-                    ReadBytes(reader, 0x18, endian);
-                    return;
-                }
-
-                var padding = SearchForString(reader, endian);
-                var partName = "";
-                for (var i = 0x0; i < (padding.Length == 0x8 ? 0x4 : 0x3); i++)
-                {
-                    var tmp = ReadString(reader, endian);
-                    if (i != 0x0)
-                    {
-                        partName += $".{tmp}";
-                    }
-                    else
-                    {
-                        partName += tmp;
-                    }
-                }
-
-                part = partName;
-                if (index == 0x2)
-                {
-                    var temp = (uint)ReadInt32(reader, endian);
-                    this.Quality = (short)(temp % 0x10000);
-                    this.Level = (short)(temp / 0x10000);
-                }
-            }
-
-            public void Deserialize(BinaryReader reader, ByteOrder endian, BankEntry previous)
-            {
-                this.TypeId = reader.ReadByte();
-                if (this.TypeId != 0x1 && this.TypeId != 0x2)
-                {
-                    //Try to repair broken item
-                    if (previous != null)
-                    {
-                        RepairItem(reader, endian, previous, 0x1);
-                        this.TypeId = reader.ReadByte();
-                        Console.WriteLine($"{this.TypeId} {reader.ReadByte()}");
-                        reader.BaseStream.Position--;
-                        if (this.TypeId != 0x1 && this.TypeId != 0x2)
-                        {
-                            reader.BaseStream.Position -= 0x1 + (previous.TypeId == 0x1 ? 0x4 : 0x1);
-                            SearchNextItem(reader, endian);
-                            this.TypeId = reader.ReadByte();
-                        }
-                        else
-                        {
-                            BankValuesCount = 0x4;
-                        }
-                    }
-                }
-
-                this.Strings = new List<string>();
-                this.Strings.AddRange(new string[this.TypeId == 0x1 ? 0xE : 0x9]);
-                for (var index = 0; index < this.Strings.Count; index++)
-                {
-                    this.DeserializePart(reader, endian, out var part, index);
-                    this.Strings[index] = part;
-                }
-
-                if (BankValuesCount > 0x4)
-                {
-                    ReadNewFooter(this, reader, endian);
-                }
-                else
-                {
-                    ReadOldFooter(this, reader, endian);
-                }
-            }
-        }
-
-        private BankEntry CreateBankEntry(BinaryReader reader)
+        private static BankEntry CreateBankEntry(BinaryReader reader, ByteOrder byteOrder, BankEntry previous)
         {
             //Create new entry
             var entry = new BankEntry();
-            var previous = this.Dlc.BankInventory.Count == 0x0
-                ? null
-                : this.Dlc.BankInventory[this.Dlc.BankInventory.Count - 0x1];
-            Deserialize(entry, reader, this.EndianWsg, previous);
-            return entry;
-        }
-
-        private static BankEntry CreateBankEntry(BinaryReader reader, ByteOrder byteOrder, IReadOnlyList<BankEntry> bankInventory)
-        {
-            //Create new entry
-            var entry = new BankEntry();
-            var previous = bankInventory.Count == 0
-                ? null
-                : bankInventory[bankInventory.Count - 1];
             Deserialize(entry, reader, byteOrder, previous);
             return entry;
         }
@@ -1479,37 +1316,37 @@ namespace WillowTree.Services.DataAccess
         public static void Deserialize(BankEntry entry, BinaryReader reader, ByteOrder endian, BankEntry previous)
         {
             entry.TypeId = reader.ReadByte();
-            if (entry.TypeId != 0x1 && entry.TypeId != 0x2)
+            if (entry.TypeId != 1 && entry.TypeId != 2)
             {
                 //Try to repair broken item
                 if (previous != null)
                 {
-                    RepairItem(reader, endian, previous, 0x1);
+                    RepairItem(reader, endian, previous, 1);
                     entry.TypeId = reader.ReadByte();
                     Console.WriteLine($"{entry.TypeId} {reader.ReadByte()}");
                     reader.BaseStream.Position--;
-                    if (entry.TypeId != 0x1 && entry.TypeId != 0x2)
+                    if (entry.TypeId != 1 && entry.TypeId != 2)
                     {
-                        reader.BaseStream.Position -= 0x1 + (previous.TypeId == 0x1 ? 0x4 : 0x1);
+                        reader.BaseStream.Position -= 1 + (previous.TypeId == 1 ? 4 : 1);
                         SearchNextItem(reader, endian);
                         entry.TypeId = reader.ReadByte();
                     }
                     else
                     {
-                        BankValuesCount = 0x4;
+                        BankValuesCount = 4;
                     }
                 }
             }
 
             entry.Strings = new List<string>();
-            entry.Strings.AddRange(new string[entry.TypeId == 0x1 ? 0xE : 0x9]);
+            entry.Strings.AddRange(new string[entry.TypeId == 1 ? 14 : 9]);
             for (var index = 0; index < entry.Strings.Count; index++)
             {
                 DeserializePart(entry, reader, endian, out var part, index);
                 entry.Strings[index] = part;
             }
 
-            if (BankValuesCount > 0x4)
+            if (BankValuesCount > 4)
             {
                 ReadNewFooter(entry, reader, endian);
             }
@@ -1518,7 +1355,17 @@ namespace WillowTree.Services.DataAccess
                 ReadOldFooter(entry, reader, endian);
             }
         }
+    }
 
+    public sealed class BankEntry : WillowSaveGame.WillowObject
+    {
+        public byte TypeId { get; set; }
+
+        public int Quantity
+        {
+            get => this.values[0x0];
+            set => this.values[0x0] = value;
+        }
     }
 
     public delegate List<int> ReadValuesFunction(BinaryReader reader, ByteOrder bo, int revisionNumber);
@@ -1585,7 +1432,7 @@ namespace WillowTree.Services.DataAccess
         public byte DlcUnknown1; // Read only flag. Always resets to 1 in ver 1.41.  Probably CanAccessBank.
 
         public int BankSize;
-        public List<WillowSaveGame.BankEntry> BankInventory = new List<WillowSaveGame.BankEntry>();
+        public List<BankEntry> BankInventory = new List<BankEntry>();
 
         // DLC Section 2 Data (don't know)
         public int DlcUnknown2; // All four of these are boolean flags.

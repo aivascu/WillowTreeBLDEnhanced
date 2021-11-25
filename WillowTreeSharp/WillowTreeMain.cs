@@ -133,7 +133,7 @@ namespace WillowTree
             objs = null;
         }
 
-        private void ConvertListForEditing(InventoryList itmList, ref List<WillowSaveGame.BankEntry> itmBank)
+        private void ConvertListForEditing(InventoryList itmList, ref List<BankEntry> itmBank)
         {
             // Populate itmList with items created from the WillowSaveGame data lists
             itmList.ClearSilent();
@@ -347,16 +347,16 @@ namespace WillowTree
             // will have to be recreated.
         }
 
-        private void RepopulateListForSaving(InventoryList itmList, ref List<WillowSaveGame.BankEntry> itmBank)
+        private void RepopulateListForSaving(InventoryList itmList, ref List<BankEntry> itmBank)
         {
-            itmBank = new List<WillowSaveGame.BankEntry>();
-            WillowSaveGame.BankEntry itm;
+            itmBank = new List<BankEntry>();
+            BankEntry itm;
 
             // Build the lists of string and value data needed by WillowSaveGame to store the
             // inventory from the data that is in itmList.
             foreach (InventoryEntry item in itmList.Items.Values)
             {
-                itm = new WillowSaveGame.BankEntry();
+                itm = new BankEntry();
 
                 if (item.Type == InventoryType.Item)
                 {
