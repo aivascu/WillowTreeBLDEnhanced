@@ -88,7 +88,7 @@ namespace WillowTree.Services.DataAccess
         public int ChallengeDataLength;
         public short ChallengeDataEntries;
 
-        private List<ChallengeDataEntry> challenges;
+        public List<ChallengeDataEntry> challenges;
 
         public byte[] ChallengeData;
         public int TotalLocations;
@@ -293,9 +293,9 @@ namespace WillowTree.Services.DataAccess
                 case "PS3":
                 case "PC":
                     {
-                        using (var save = new BinaryWriter(new FileStream(filename, FileMode.Create)))
+                        using (var writer = new BinaryWriter(new FileStream(filename, FileMode.Create)))
                         {
-                            save.Write(this.WriteWsg());
+                            writer.Write(Serialize(this));
                         }
 
                         break;
@@ -303,9 +303,9 @@ namespace WillowTree.Services.DataAccess
                 case "X360":
                     {
                         var tempSaveName = $"{filename}.temp";
-                        using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                        using (var writer = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
                         {
-                            save.Write(this.WriteWsg());
+                            writer.Write(Serialize(this));
                         }
 
                         this.BuildXboxPackage(filename, tempSaveName, 0x1);
@@ -315,9 +315,9 @@ namespace WillowTree.Services.DataAccess
                 case "X360JP":
                     {
                         var tempSaveName = $"{filename}.temp";
-                        using (var save = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
+                        using (var writer = new BinaryWriter(new FileStream(tempSaveName, FileMode.Create)))
                         {
-                            save.Write(this.WriteWsg());
+                            writer.Write(Serialize(this));
                         }
 
                         this.BuildXboxPackage(filename, tempSaveName, 0x2);
@@ -653,288 +653,6 @@ namespace WillowTree.Services.DataAccess
 
             // Now that all the raw data has been removed, reset the raw data flag
             this.ContainsRawData = false;
-        }
-
-        /// <summary>
-        /// Save the current data to a WSG as a byte[]
-        /// </summary>
-        public byte[] WriteWsg()
-        {
-            var outStream = new MemoryStream();
-            var writer = new BinaryWriter(outStream);
-
-            this.SplitInventoryIntoPacks();
-
-            writer.Write(Encoding.ASCII.GetBytes(this.MagicHeader));
-            Write(writer, this.VersionNumber, this.EndianWsg);
-            writer.Write(Encoding.ASCII.GetBytes(this.Plyr));
-            Write(writer, this.RevisionNumber, this.EndianWsg);
-            Write(writer, this.Class, this.EndianWsg);
-            Write(writer, this.Level, this.EndianWsg);
-            Write(writer, this.Experience, this.EndianWsg);
-            Write(writer, this.SkillPoints, this.EndianWsg);
-            Write(writer, this.Unknown1, this.EndianWsg);
-            Write(writer, this.Cash, this.EndianWsg);
-            Write(writer, this.FinishedPlaythrough1, this.EndianWsg);
-            Write(writer, this.NumberOfSkills, this.EndianWsg);
-
-            for (var progress = 0x0; progress < this.NumberOfSkills; progress++) //Write Skills
-            {
-                Write(writer, this.SkillNames[progress], this.EndianWsg);
-                Write(writer, this.LevelOfSkills[progress], this.EndianWsg);
-                Write(writer, this.ExpOfSkills[progress], this.EndianWsg);
-                Write(writer, this.InUse[progress], this.EndianWsg);
-            }
-
-            Write(writer, this.Vehi1Color, this.EndianWsg);
-            Write(writer, this.Vehi2Color, this.EndianWsg);
-            Write(writer, this.Vehi1Type, this.EndianWsg);
-            Write(writer, this.Vehi2Type, this.EndianWsg);
-            Write(writer, this.NumberOfPools, this.EndianWsg);
-
-            for (var progress = 0x0; progress < this.NumberOfPools; progress++) //Write Ammo Pools
-            {
-                Write(writer, this.ResourcePools[progress], this.EndianWsg);
-                Write(writer, this.AmmoPools[progress], this.EndianWsg);
-                Write(writer, this.RemainingPools[progress], this.EndianWsg);
-                Write(writer, this.PoolLevels[progress], this.EndianWsg);
-            }
-
-            WriteObjects(writer, this.Items1, this.EndianWsg, this.RevisionNumber); //Write Items
-
-            Write(writer, this.BackpackSize, this.EndianWsg);
-            Write(writer, this.EquipSlots, this.EndianWsg);
-
-            WriteObjects(writer, this.Weapons1, this.EndianWsg, this.RevisionNumber); //Write Weapons
-
-            var count = (short)this.challenges.Count;
-            Write(writer, count * 0x7 + 0xA, this.EndianWsg);
-            Write(writer, this.ChallengeDataBlockId, this.EndianWsg);
-            Write(writer, count * 0x7 + 0x2, this.EndianWsg);
-            Write(writer, count, this.EndianWsg);
-            foreach (var challenge in this.challenges)
-            {
-                Write(writer, challenge.Id, this.EndianWsg);
-                writer.Write(challenge.TypeId);
-                Write(writer, challenge.Value, this.EndianWsg);
-            }
-
-            Write(writer, this.TotalLocations, this.EndianWsg);
-
-            for (var progress = 0x0; progress < this.TotalLocations; progress++) //Write Locations
-            {
-                Write(writer, this.LocationStrings[progress], this.EndianWsg);
-            }
-
-            Write(writer, this.CurrentLocation, this.EndianWsg);
-            Write(writer, this.SaveInfo1To5[0x0], this.EndianWsg);
-            Write(writer, this.SaveInfo1To5[0x1], this.EndianWsg);
-            Write(writer, this.SaveInfo1To5[0x2], this.EndianWsg);
-            Write(writer, this.SaveInfo1To5[0x3], this.EndianWsg);
-            Write(writer, this.SaveInfo1To5[0x4], this.EndianWsg);
-            Write(writer, this.SaveNumber, this.EndianWsg);
-            Write(writer, this.SaveInfo7To10[0x0], this.EndianWsg);
-            Write(writer, this.SaveInfo7To10[0x1], this.EndianWsg);
-            Write(writer, this.NumberOfQuestLists, this.EndianWsg);
-
-            for (var listIndex = 0x0; listIndex < this.NumberOfQuestLists; listIndex++)
-            {
-                var qt = this.QuestLists[listIndex];
-                Write(writer, qt.Index, this.EndianWsg);
-                Write(writer, qt.CurrentQuest, this.EndianWsg);
-                Write(writer, qt.TotalQuests, this.EndianWsg);
-
-                var questCount = qt.TotalQuests;
-                for (var questIndex = 0x0; questIndex < questCount; questIndex++) //Write Playthrough 1 Quests
-                {
-                    var qe = qt.Quests[questIndex];
-                    Write(writer, qe.Name, this.EndianWsg);
-                    Write(writer, qe.Progress, this.EndianWsg);
-                    Write(writer, qe.DlcValue1, this.EndianWsg);
-                    Write(writer, qe.DlcValue2, this.EndianWsg);
-
-                    var objectiveCount = qe.NumberOfObjectives;
-                    Write(writer, objectiveCount, this.EndianWsg);
-
-                    for (var i = 0x0; i < objectiveCount; i++)
-                    {
-                        Write(writer, qe.Objectives[i].Description, this.EndianWsg);
-                        Write(writer, qe.Objectives[i].Progress, this.EndianWsg);
-                    }
-                }
-            }
-
-            Write(writer, this.TotalPlayTime, this.EndianWsg);
-            Write(writer, this.LastPlayedDate, this.EndianWsg);
-            Write(writer, this.CharacterName, this.EndianWsg);
-            Write(writer, this.Color1, this.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
-            Write(writer, this.Color2, this.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
-            Write(writer, this.Color3, this.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
-            Write(writer, this.Head, this.EndianWsg);
-
-            if (this.RevisionNumber >= EnhancedVersion)
-            {
-                Write(writer, this.Unknown2);
-            }
-
-            var numberOfPromoCodesUsed = this.PromoCodesUsed.Count;
-            Write(writer, numberOfPromoCodesUsed, this.EndianWsg);
-            for (var i = 0x0; i < numberOfPromoCodesUsed; i++)
-            {
-                Write(writer, this.PromoCodesUsed[i], this.EndianWsg);
-            }
-
-            var numberOfPromoCodesRequiringNotification = this.PromoCodesRequiringNotification.Count;
-            Write(writer, numberOfPromoCodesRequiringNotification, this.EndianWsg);
-            for (var i = 0x0; i < numberOfPromoCodesRequiringNotification; i++)
-            {
-                Write(writer, this.PromoCodesRequiringNotification[i], this.EndianWsg);
-            }
-
-            Write(writer, this.NumberOfEchoLists, this.EndianWsg);
-            for (var listIndex = 0x0; listIndex < this.NumberOfEchoLists; listIndex++)
-            {
-                var et = this.EchoLists[listIndex];
-                Write(writer, et.Index, this.EndianWsg);
-                Write(writer, et.TotalEchoes, this.EndianWsg);
-
-                for (var echoIndex = 0x0; echoIndex < et.TotalEchoes; echoIndex++) //Write Locations
-                {
-                    var ee = et.Echoes[echoIndex];
-                    Write(writer, ee.Name, this.EndianWsg);
-                    Write(writer, ee.DlcValue1, this.EndianWsg);
-                    Write(writer, ee.DlcValue2, this.EndianWsg);
-                }
-            }
-
-            this.Dlc.DlcSize = 0x0;
-            // This loop writes the base data for each section into byte[]
-            // BaseData so its size can be obtained and it can easily be
-            // written to the output stream as a single block.  Calculate
-            // DLC.DLC_Size as it goes since that has to be written before
-            // the blocks are written to the output stream.
-            foreach (var section in this.Dlc.DataSections)
-            {
-                var tempStream = new MemoryStream();
-                var memoryWriter = new BinaryWriter(tempStream);
-                switch (section.Id)
-                {
-                    case Section1Id:
-                        memoryWriter.Write(this.Dlc.DlcUnknown1);
-                        Write(memoryWriter, this.Dlc.BankSize, this.EndianWsg);
-                        Write(memoryWriter, this.Dlc.BankInventory.Count, this.EndianWsg);
-                        for (var i = 0x0; i < this.Dlc.BankInventory.Count; i++)
-                        {
-                            var bankEntry = this.Dlc.BankInventory[i];
-                            var bankEntryBytes = Serialize(bankEntry, this.EndianWsg);
-                            Write(memoryWriter, bankEntryBytes);
-                        }
-
-                        break;
-
-                    case Section2Id:
-                        Write(memoryWriter, this.Dlc.DlcUnknown2, this.EndianWsg);
-                        Write(memoryWriter, this.Dlc.DlcUnknown3, this.EndianWsg);
-                        Write(memoryWriter, this.Dlc.DlcUnknown4, this.EndianWsg);
-                        Write(memoryWriter, this.Dlc.SkipDlc2Intro, this.EndianWsg);
-                        break;
-
-                    case Section3Id:
-                        memoryWriter.Write(this.Dlc.DlcUnknown5);
-                        break;
-
-                    case Section4Id:
-                        memoryWriter.Write(this.Dlc.SecondaryPackEnabled);
-                        // The DLC backpack items
-                        WriteObjects(memoryWriter, this.Items2, this.EndianWsg, this.RevisionNumber);
-                        // The DLC backpack weapons
-                        WriteObjects(memoryWriter, this.Weapons2, this.EndianWsg, this.RevisionNumber);
-                        break;
-                }
-
-                section.BaseData = tempStream.ToArray();
-                this.Dlc.DlcSize +=
-                    section.BaseData.Length + section.RawData.Length + 0x8; // 8 = 4 bytes for id, 4 bytes for length
-            }
-
-            // Now its time to actually write all the data sections to the output stream
-            Write(writer, this.Dlc.DlcSize, this.EndianWsg);
-            foreach (var section in this.Dlc.DataSections)
-            {
-                Write(writer, section.Id, this.EndianWsg);
-                var sectionLength = section.BaseData.Length + section.RawData.Length;
-                Write(writer, sectionLength, this.EndianWsg);
-                writer.Write(section.BaseData);
-                writer.Write(section.RawData);
-                section.BaseData = null; // BaseData isn't needed anymore.  Free it.
-            }
-
-            if (this.RevisionNumber >= EnhancedVersion)
-            {
-                //Past end padding
-                Write(writer, this.Unknown3);
-            }
-
-            // Clear the temporary lists used to split primary and DLC pack data
-            this.Items1 = null;
-            this.Items2 = null;
-            this.Weapons1 = null;
-            this.Weapons2 = null;
-            return outStream.ToArray();
-        }
-
-        ///<summary>
-        /// Split the weapon and item lists into two parts: one for the primary pack and one for DLC backpack
-        /// </summary>
-        public void SplitInventoryIntoPacks()
-        {
-            this.Items1 = new List<Item>();
-            this.Items2 = new List<Item>();
-            this.Weapons1 = new List<Weapon>();
-            this.Weapons2 = new List<Weapon>();
-            // Split items and weapons into two lists each so they can be put into the
-            // DLC backpack or regular backpack area as needed.  Any item with a level
-            // override and special dlc items go in the DLC backpack.  All others go
-            // in the regular inventory.
-            if (!this.Dlc.HasSection4 || this.Dlc.SecondaryPackEnabled == 0)
-            {
-                // no secondary pack so put it all in primary pack
-                foreach (var item in this.Items)
-                {
-                    this.Items1.Add(item);
-                }
-
-                foreach (var weapon in this.Weapons)
-                {
-                    this.Weapons1.Add(weapon);
-                }
-
-                return;
-            }
-
-            foreach (var item in this.Items)
-            {
-                if (item.Level == 0 && item.Strings[0].Substring(0, 3) != "dlc")
-                {
-                    this.Items1.Add(item);
-                }
-                else
-                {
-                    this.Items2.Add(item);
-                }
-            }
-
-            foreach (var weapon in this.Weapons)
-            {
-                if (weapon.Level == 0 && weapon.Strings[0].Substring(0, 3) != "dlc")
-                {
-                    this.Weapons1.Add(weapon);
-                }
-                else
-                {
-                    this.Weapons2.Add(weapon);
-                }
-            }
         }
     }
 }

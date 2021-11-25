@@ -875,5 +875,284 @@ namespace WillowTree.Services.DataAccess
             };
             return objective;
         }
+
+        public static byte[] Serialize(WillowSaveGame saveGame)
+        {
+            var outStream = new MemoryStream();
+            var writer = new BinaryWriter(outStream);
+
+            SplitInventoryIntoPacks(saveGame);
+
+            writer.Write(Encoding.ASCII.GetBytes(saveGame.MagicHeader));
+            Write(writer, saveGame.VersionNumber, saveGame.EndianWsg);
+            writer.Write(Encoding.ASCII.GetBytes(saveGame.Plyr));
+            Write(writer, saveGame.RevisionNumber, saveGame.EndianWsg);
+            Write(writer, saveGame.Class, saveGame.EndianWsg);
+            Write(writer, saveGame.Level, saveGame.EndianWsg);
+            Write(writer, saveGame.Experience, saveGame.EndianWsg);
+            Write(writer, saveGame.SkillPoints, saveGame.EndianWsg);
+            Write(writer, saveGame.Unknown1, saveGame.EndianWsg);
+            Write(writer, saveGame.Cash, saveGame.EndianWsg);
+            Write(writer, saveGame.FinishedPlaythrough1, saveGame.EndianWsg);
+            Write(writer, saveGame.NumberOfSkills, saveGame.EndianWsg);
+
+            for (var progress = 0; progress < saveGame.NumberOfSkills; progress++) //Write Skills
+            {
+                Write(writer, saveGame.SkillNames[progress], saveGame.EndianWsg);
+                Write(writer, saveGame.LevelOfSkills[progress], saveGame.EndianWsg);
+                Write(writer, saveGame.ExpOfSkills[progress], saveGame.EndianWsg);
+                Write(writer, saveGame.InUse[progress], saveGame.EndianWsg);
+            }
+
+            Write(writer, saveGame.Vehi1Color, saveGame.EndianWsg);
+            Write(writer, saveGame.Vehi2Color, saveGame.EndianWsg);
+            Write(writer, saveGame.Vehi1Type, saveGame.EndianWsg);
+            Write(writer, saveGame.Vehi2Type, saveGame.EndianWsg);
+            Write(writer, saveGame.NumberOfPools, saveGame.EndianWsg);
+
+            for (var progress = 0x0; progress < saveGame.NumberOfPools; progress++) //Write Ammo Pools
+            {
+                Write(writer, saveGame.ResourcePools[progress], saveGame.EndianWsg);
+                Write(writer, saveGame.AmmoPools[progress], saveGame.EndianWsg);
+                Write(writer, saveGame.RemainingPools[progress], saveGame.EndianWsg);
+                Write(writer, saveGame.PoolLevels[progress], saveGame.EndianWsg);
+            }
+
+            WriteObjects(writer, saveGame.Items1, saveGame.EndianWsg, saveGame.RevisionNumber); //Write Items
+
+            Write(writer, saveGame.BackpackSize, saveGame.EndianWsg);
+            Write(writer, saveGame.EquipSlots, saveGame.EndianWsg);
+
+            WriteObjects(writer, saveGame.Weapons1, saveGame.EndianWsg, saveGame.RevisionNumber); //Write Weapons
+
+            var count = (short)saveGame.challenges.Count;
+            Write(writer, count * 0x7 + 0xA, saveGame.EndianWsg);
+            Write(writer, saveGame.ChallengeDataBlockId, saveGame.EndianWsg);
+            Write(writer, count * 0x7 + 0x2, saveGame.EndianWsg);
+            Write(writer, count, saveGame.EndianWsg);
+            foreach (var challenge in saveGame.challenges)
+            {
+                Write(writer, challenge.Id, saveGame.EndianWsg);
+                writer.Write(challenge.TypeId);
+                Write(writer, challenge.Value, saveGame.EndianWsg);
+            }
+
+            Write(writer, saveGame.TotalLocations, saveGame.EndianWsg);
+
+            for (var progress = 0x0; progress < saveGame.TotalLocations; progress++) //Write Locations
+            {
+                Write(writer, saveGame.LocationStrings[progress], saveGame.EndianWsg);
+            }
+
+            Write(writer, saveGame.CurrentLocation, saveGame.EndianWsg);
+            Write(writer, saveGame.SaveInfo1To5[0x0], saveGame.EndianWsg);
+            Write(writer, saveGame.SaveInfo1To5[0x1], saveGame.EndianWsg);
+            Write(writer, saveGame.SaveInfo1To5[0x2], saveGame.EndianWsg);
+            Write(writer, saveGame.SaveInfo1To5[0x3], saveGame.EndianWsg);
+            Write(writer, saveGame.SaveInfo1To5[0x4], saveGame.EndianWsg);
+            Write(writer, saveGame.SaveNumber, saveGame.EndianWsg);
+            Write(writer, saveGame.SaveInfo7To10[0x0], saveGame.EndianWsg);
+            Write(writer, saveGame.SaveInfo7To10[0x1], saveGame.EndianWsg);
+            Write(writer, saveGame.NumberOfQuestLists, saveGame.EndianWsg);
+
+            for (var listIndex = 0x0; listIndex < saveGame.NumberOfQuestLists; listIndex++)
+            {
+                var qt = saveGame.QuestLists[listIndex];
+                Write(writer, qt.Index, saveGame.EndianWsg);
+                Write(writer, qt.CurrentQuest, saveGame.EndianWsg);
+                Write(writer, qt.TotalQuests, saveGame.EndianWsg);
+
+                var questCount = qt.TotalQuests;
+                for (var questIndex = 0x0; questIndex < questCount; questIndex++) //Write Playthrough 1 Quests
+                {
+                    var qe = qt.Quests[questIndex];
+                    Write(writer, qe.Name, saveGame.EndianWsg);
+                    Write(writer, qe.Progress, saveGame.EndianWsg);
+                    Write(writer, qe.DlcValue1, saveGame.EndianWsg);
+                    Write(writer, qe.DlcValue2, saveGame.EndianWsg);
+
+                    var objectiveCount = qe.NumberOfObjectives;
+                    Write(writer, objectiveCount, saveGame.EndianWsg);
+
+                    for (var i = 0x0; i < objectiveCount; i++)
+                    {
+                        Write(writer, qe.Objectives[i].Description, saveGame.EndianWsg);
+                        Write(writer, qe.Objectives[i].Progress, saveGame.EndianWsg);
+                    }
+                }
+            }
+
+            Write(writer, saveGame.TotalPlayTime, saveGame.EndianWsg);
+            Write(writer, saveGame.LastPlayedDate, saveGame.EndianWsg);
+            Write(writer, saveGame.CharacterName, saveGame.EndianWsg);
+            Write(writer, saveGame.Color1, saveGame.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
+            Write(writer, saveGame.Color2, saveGame.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
+            Write(writer, saveGame.Color3, saveGame.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
+            Write(writer, saveGame.Head, saveGame.EndianWsg);
+
+            if (saveGame.RevisionNumber >= EnhancedVersion)
+            {
+                Write(writer, saveGame.Unknown2);
+            }
+
+            var numberOfPromoCodesUsed = saveGame.PromoCodesUsed.Count;
+            Write(writer, numberOfPromoCodesUsed, saveGame.EndianWsg);
+            for (var i = 0x0; i < numberOfPromoCodesUsed; i++)
+            {
+                Write(writer, saveGame.PromoCodesUsed[i], saveGame.EndianWsg);
+            }
+
+            var numberOfPromoCodesRequiringNotification = saveGame.PromoCodesRequiringNotification.Count;
+            Write(writer, numberOfPromoCodesRequiringNotification, saveGame.EndianWsg);
+            for (var i = 0x0; i < numberOfPromoCodesRequiringNotification; i++)
+            {
+                Write(writer, saveGame.PromoCodesRequiringNotification[i], saveGame.EndianWsg);
+            }
+
+            Write(writer, saveGame.NumberOfEchoLists, saveGame.EndianWsg);
+            for (var listIndex = 0x0; listIndex < saveGame.NumberOfEchoLists; listIndex++)
+            {
+                var et = saveGame.EchoLists[listIndex];
+                Write(writer, et.Index, saveGame.EndianWsg);
+                Write(writer, et.TotalEchoes, saveGame.EndianWsg);
+
+                for (var echoIndex = 0x0; echoIndex < et.TotalEchoes; echoIndex++) //Write Locations
+                {
+                    var ee = et.Echoes[echoIndex];
+                    Write(writer, ee.Name, saveGame.EndianWsg);
+                    Write(writer, ee.DlcValue1, saveGame.EndianWsg);
+                    Write(writer, ee.DlcValue2, saveGame.EndianWsg);
+                }
+            }
+
+            saveGame.Dlc.DlcSize = 0x0;
+            // This loop writes the base data for each section into byte[]
+            // BaseData so its size can be obtained and it can easily be
+            // written to the output stream as a single block.  Calculate
+            // DLC.DLC_Size as it goes since that has to be written before
+            // the blocks are written to the output stream.
+            foreach (var section in saveGame.Dlc.DataSections)
+            {
+                var tempStream = new MemoryStream();
+                var memoryWriter = new BinaryWriter(tempStream);
+                switch (section.Id)
+                {
+                    case Section1Id:
+                        memoryWriter.Write(saveGame.Dlc.DlcUnknown1);
+                        Write(memoryWriter, saveGame.Dlc.BankSize, saveGame.EndianWsg);
+                        Write(memoryWriter, saveGame.Dlc.BankInventory.Count, saveGame.EndianWsg);
+                        for (var i = 0x0; i < saveGame.Dlc.BankInventory.Count; i++)
+                        {
+                            var bankEntry = saveGame.Dlc.BankInventory[i];
+                            var bankEntryBytes = Serialize(bankEntry, saveGame.EndianWsg);
+                            Write(memoryWriter, bankEntryBytes);
+                        }
+
+                        break;
+
+                    case Section2Id:
+                        Write(memoryWriter, saveGame.Dlc.DlcUnknown2, saveGame.EndianWsg);
+                        Write(memoryWriter, saveGame.Dlc.DlcUnknown3, saveGame.EndianWsg);
+                        Write(memoryWriter, saveGame.Dlc.DlcUnknown4, saveGame.EndianWsg);
+                        Write(memoryWriter, saveGame.Dlc.SkipDlc2Intro, saveGame.EndianWsg);
+                        break;
+
+                    case Section3Id:
+                        memoryWriter.Write(saveGame.Dlc.DlcUnknown5);
+                        break;
+
+                    case Section4Id:
+                        memoryWriter.Write(saveGame.Dlc.SecondaryPackEnabled);
+                        // The DLC backpack items
+                        WriteObjects(memoryWriter, saveGame.Items2, saveGame.EndianWsg, saveGame.RevisionNumber);
+                        // The DLC backpack weapons
+                        WriteObjects(memoryWriter, saveGame.Weapons2, saveGame.EndianWsg, saveGame.RevisionNumber);
+                        break;
+                }
+
+                section.BaseData = tempStream.ToArray();
+                saveGame.Dlc.DlcSize +=
+                    section.BaseData.Length + section.RawData.Length + 0x8; // 8 = 4 bytes for id, 4 bytes for length
+            }
+
+            // Now its time to actually write all the data sections to the output stream
+            Write(writer, saveGame.Dlc.DlcSize, saveGame.EndianWsg);
+            foreach (var section in saveGame.Dlc.DataSections)
+            {
+                Write(writer, section.Id, saveGame.EndianWsg);
+                var sectionLength = section.BaseData.Length + section.RawData.Length;
+                Write(writer, sectionLength, saveGame.EndianWsg);
+                writer.Write(section.BaseData);
+                writer.Write(section.RawData);
+                section.BaseData = null; // BaseData isn't needed anymore.  Free it.
+            }
+
+            if (saveGame.RevisionNumber >= EnhancedVersion)
+            {
+                //Past end padding
+                Write(writer, saveGame.Unknown3);
+            }
+
+            // Clear the temporary lists used to split primary and DLC pack data
+            saveGame.Items1 = null;
+            saveGame.Items2 = null;
+            saveGame.Weapons1 = null;
+            saveGame.Weapons2 = null;
+            return outStream.ToArray();
+        }
+
+        ///<summary>
+        /// Split the weapon and item lists into two parts: one for the primary pack and one for DLC backpack
+        /// </summary>
+        public static void SplitInventoryIntoPacks(WillowSaveGame saveGame)
+        {
+            saveGame.Items1 = new List<Item>();
+            saveGame.Items2 = new List<Item>();
+            saveGame.Weapons1 = new List<Weapon>();
+            saveGame.Weapons2 = new List<Weapon>();
+            // Split items and weapons into two lists each so they can be put into the
+            // DLC backpack or regular backpack area as needed.  Any item with a level
+            // override and special dlc items go in the DLC backpack.  All others go
+            // in the regular inventory.
+            if (!saveGame.Dlc.HasSection4 || saveGame.Dlc.SecondaryPackEnabled == 0)
+            {
+                // no secondary pack so put it all in primary pack
+                foreach (var item in saveGame.Items)
+                {
+                    saveGame.Items1.Add(item);
+                }
+
+                foreach (var weapon in saveGame.Weapons)
+                {
+                    saveGame.Weapons1.Add(weapon);
+                }
+
+                return;
+            }
+
+            foreach (var item in saveGame.Items)
+            {
+                if (item.Level == 0 && item.Strings[0].Substring(0, 3) != "dlc")
+                {
+                    saveGame.Items1.Add(item);
+                }
+                else
+                {
+                    saveGame.Items2.Add(item);
+                }
+            }
+
+            foreach (var weapon in saveGame.Weapons)
+            {
+                if (weapon.Level == 0 && weapon.Strings[0].Substring(0, 3) != "dlc")
+                {
+                    saveGame.Weapons1.Add(weapon);
+                }
+                else
+                {
+                    saveGame.Weapons2.Add(weapon);
+                }
+            }
+        }
     }
 }
