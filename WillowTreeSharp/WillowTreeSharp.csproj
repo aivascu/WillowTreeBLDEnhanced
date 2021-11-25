@@ -465,6 +465,10 @@
       <Project>{fe2326a6-b36c-4adc-92d1-ec3ffea21e93}</Project>
       <Name>WillowTreeSharp.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WillowTreeSharp.Serialization\WillowTreeSharp.Serialization.csproj">
+      <Project>{68243f21-2706-421b-a193-5d7ac570615a}</Project>
+      <Name>WillowTreeSharp.Serialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NLog.Config">
