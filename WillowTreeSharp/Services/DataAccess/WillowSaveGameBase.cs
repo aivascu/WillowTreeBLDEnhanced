@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using WillowTreeSharp.Domain;
+using X360.IO;
+using X360.Other;
+using X360.STFS;
 
 namespace WillowTree.Services.DataAccess
 {
@@ -1170,6 +1173,379 @@ namespace WillowTree.Services.DataAccess
                 item.SetValues(values);
                 yield return item;
             }
+        }
+
+        ///<summary>Extracts a WSG from a CON (Xbox 360 Container File).</summary>
+        public static MemoryStream ReadXBoxSection(Stream stream, out XBoxId xboxId)
+        {
+            var reader = new BinaryReader(stream);
+            var fileInMemory = reader.ReadBytes((int)stream.Length);
+            if (fileInMemory.Length != stream.Length)
+            {
+                throw new EndOfStreamException();
+            }
+
+            try
+            {
+                var con = new STFSPackage(new DJsIO(fileInMemory, true), new LogRecord());
+                
+                var profileId = con.Header.ProfileID;
+                var deviceId = con.Header.DeviceID;
+                xboxId = new XBoxId(profileId, deviceId);
+
+                return new MemoryStream(con.GetFile("SaveGame.sav").GetTempIO(true).ReadStream(), false);
+            }
+            catch
+            {
+                try
+                {
+                    var manual = new DJsIO(fileInMemory, true);
+                    manual.ReadBytes(0x371);
+                    var profileId = manual.ReadInt64();
+                    manual.ReadBytes(0x84);
+                    var deviceId = manual.ReadBytes(0x14);
+                    manual.ReadBytes(0xBC23);
+                    var size = manual.ReadInt32();
+                    manual.ReadBytes(0xFC8);
+                    xboxId = new XBoxId(profileId, deviceId);
+                    return new MemoryStream(manual.ReadBytes(size), false);
+                }
+                catch
+                {
+                    xboxId = new XBoxId(0, Array.Empty<byte>());
+                    return null;
+                }
+            }
+        }
+
+        public static WillowSaveGame ReadFile(string path, bool autoRepair)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var platform = ReadPlatform(fileStream);
+
+                fileStream.Seek(0, SeekOrigin.Begin);
+
+                switch (platform)
+                {
+                    case "X360":
+                    case "X360JP":
+                        using (var x360FileStream = ReadXBoxSection(fileStream, out var xboxId))
+                        {
+                            var save = ReadSave(x360FileStream, platform, path, autoRepair);
+                            save.DeviceId = xboxId.DeviceId;
+                            save.ProfileId = xboxId.ProfileId;
+                            return save;
+                        }
+
+                    case "PS3":
+                    case "PC":
+                        return ReadSave(fileStream, platform, path, autoRepair);
+
+                    default:
+                        throw new FileFormatException($"Input file is not a WSG (platform is {platform}).");
+                }
+            }
+        }
+
+        public static WillowSaveGame ReadSave(Stream fileStream, string platform, string path, bool autoRepair)
+        {
+            var saveGame = new WillowSaveGame
+            {
+                Platform = platform,
+                OpenedWsg = path,
+                AutoRepair = autoRepair
+            };
+            var testReader = new BinaryReader(fileStream, Encoding.ASCII);
+
+            saveGame.ContainsRawData = false;
+            saveGame.RequiredRepair = false;
+            saveGame.MagicHeader = new string(testReader.ReadChars(0x3));
+            saveGame.VersionNumber = testReader.ReadInt32();
+
+            switch (saveGame.VersionNumber)
+            {
+                case 0x2:
+                    saveGame.EndianWsg = ByteOrder.LittleEndian;
+                    break;
+
+                case 0x02000000:
+                    saveGame.VersionNumber = 0x2;
+                    saveGame.EndianWsg = ByteOrder.BigEndian;
+                    break;
+
+                default:
+                    throw new FileFormatException(
+                        $"WSG version number does match any known version ({saveGame.VersionNumber}).");
+            }
+
+            saveGame.Plyr = new string(testReader.ReadChars(0x4));
+            if (!string.Equals(saveGame.Plyr, "PLYR", StringComparison.Ordinal))
+            {
+                throw new FileFormatException("Player header does not match expected value.");
+            }
+
+            saveGame.RevisionNumber = ReadInt32(testReader, saveGame.EndianWsg);
+            WillowSaveGame.ExportValuesCount = saveGame.RevisionNumber < EnhancedVersion ? 0x4 : 0x6;
+            saveGame.Class = ReadString(testReader, saveGame.EndianWsg);
+            saveGame.Level = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.Experience = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SkillPoints = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.Unknown1 = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.Cash = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.FinishedPlaythrough1 = ReadInt32(testReader, saveGame.EndianWsg);
+
+            var skills = ReadSkills(testReader, saveGame.EndianWsg).ToList();
+
+            saveGame.SkillNames = new string[skills.Count];
+            saveGame.LevelOfSkills = new int[skills.Count];
+            saveGame.ExpOfSkills = new int[skills.Count];
+            saveGame.InUse = new int[skills.Count];
+
+            for (var index = 0; index < skills.Count; index++)
+            {
+                var skill = skills[index];
+                saveGame.SkillNames[index] = skill.Name;
+                saveGame.LevelOfSkills[index] = skill.Level;
+                saveGame.ExpOfSkills[index] = skill.Experience;
+                saveGame.InUse[index] = skill.InUse;
+            }
+            saveGame.NumberOfSkills = skills.Count;
+
+            saveGame.Vehi1Color = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.Vehi2Color = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.Vehi1Type = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.Vehi2Type = ReadInt32(testReader, saveGame.EndianWsg);
+
+            var pools = ReadAmmoPools(testReader, saveGame.EndianWsg).ToArray();
+            saveGame.ResourcePools = new string[pools.Length];
+            saveGame.AmmoPools = new string[pools.Length];
+            saveGame.RemainingPools = new float[pools.Length];
+            saveGame.PoolLevels = new int[pools.Length];
+
+            for (var ammoPoolIndex = 0; ammoPoolIndex < pools.Length; ammoPoolIndex++)
+            {
+                saveGame.ResourcePools[ammoPoolIndex] = pools[ammoPoolIndex].Resource;
+                saveGame.AmmoPools[ammoPoolIndex] = pools[ammoPoolIndex].Name;
+                saveGame.RemainingPools[ammoPoolIndex] = pools[ammoPoolIndex].Remaining;
+                saveGame.PoolLevels[ammoPoolIndex] = pools[ammoPoolIndex].Level;
+            }
+
+            saveGame.NumberOfPools = pools.Length;
+            Console.WriteLine("====== ENTER ITEM ======");
+            var itemCount = ReadInt32(testReader, saveGame.EndianWsg);
+            var items = ReadObjects<Item>(testReader, itemCount, saveGame.EndianWsg, saveGame.RevisionNumber, new ItemsReader());
+            saveGame.Items.AddRange(items);
+            Console.WriteLine("====== EXIT ITEM ======");
+            saveGame.BackpackSize = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.EquipSlots = ReadInt32(testReader, saveGame.EndianWsg);
+            Console.WriteLine("====== ENTER WEAPON ======");
+            var weaponCount = ReadInt32(testReader, saveGame.EndianWsg);
+            var weapons = ReadObjects<Weapon>(testReader, weaponCount, saveGame.EndianWsg, saveGame.RevisionNumber, new WeaponsReader());
+            saveGame.Weapons.AddRange(weapons);
+            Console.WriteLine("====== EXIT WEAPON ======");
+
+            saveGame.ChallengeDataBlockLength = ReadInt32(testReader, saveGame.EndianWsg);
+            var challengeDataBlock = testReader.ReadBytes(saveGame.ChallengeDataBlockLength);
+            if (challengeDataBlock.Length != saveGame.ChallengeDataBlockLength)
+            {
+                throw new EndOfStreamException();
+            }
+
+            using (var challengeReader = new BinaryReader(new MemoryStream(challengeDataBlock, false), Encoding.ASCII))
+            {
+                saveGame.ChallengeDataBlockId = ReadInt32(challengeReader, saveGame.EndianWsg);
+                saveGame.ChallengeDataLength = ReadInt32(challengeReader, saveGame.EndianWsg);
+                saveGame.ChallengeDataEntries = ReadInt16(challengeReader, saveGame.EndianWsg);
+                saveGame.challenges = new List<ChallengeDataEntry>();
+                for (var i = 0; i < saveGame.ChallengeDataEntries; i++)
+                {
+                    ChallengeDataEntry challenge;
+                    challenge.Id = ReadInt16(challengeReader, saveGame.EndianWsg);
+                    challenge.TypeId = challengeReader.ReadByte();
+                    challenge.Value = ReadInt32(challengeReader, saveGame.EndianWsg);
+                    saveGame.challenges.Add(challenge);
+                }
+            }
+
+            saveGame.LocationStrings = ReadLocations(testReader, saveGame.EndianWsg).ToArray();
+            saveGame.TotalLocations = saveGame.LocationStrings.Length;
+            saveGame.CurrentLocation = ReadString(testReader, saveGame.EndianWsg);
+            saveGame.SaveInfo1To5[0x0] = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SaveInfo1To5[0x1] = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SaveInfo1To5[0x2] = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SaveInfo1To5[0x3] = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SaveInfo1To5[0x4] = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SaveNumber = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SaveInfo7To10[0x0] = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.SaveInfo7To10[0x1] = ReadInt32(testReader, saveGame.EndianWsg);
+
+            saveGame.QuestLists = ReadQuestTables(testReader, saveGame.EndianWsg).ToList();
+            saveGame.NumberOfQuestLists = saveGame.QuestLists.Count;
+
+            saveGame.TotalPlayTime = ReadInt32(testReader, saveGame.EndianWsg);
+            saveGame.LastPlayedDate = ReadString(testReader, saveGame.EndianWsg); //YYYYMMDDHHMMSS
+            saveGame.CharacterName = ReadString(testReader, saveGame.EndianWsg);
+            saveGame.Color1 = ReadInt32(testReader, saveGame.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
+            saveGame.Color2 = ReadInt32(testReader, saveGame.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
+            saveGame.Color3 = ReadInt32(testReader, saveGame.EndianWsg); //ABGR Big (X360, PS3), RGBA Little (PC)
+            saveGame.Head = ReadInt32(testReader, saveGame.EndianWsg);
+
+            if (saveGame.RevisionNumber >= EnhancedVersion)
+            {
+                saveGame.Unknown2 = ReadBytes(testReader, 0x55, saveGame.EndianWsg);
+            }
+
+            saveGame.PromoCodesUsed = ReadListInt32(testReader, saveGame.EndianWsg);
+            saveGame.PromoCodesRequiringNotification = ReadListInt32(testReader, saveGame.EndianWsg);
+            saveGame.EchoLists = ReadEchoTables(testReader, saveGame.EndianWsg).ToList();
+            saveGame.NumberOfEchoLists = saveGame.EchoLists.Count;
+
+            saveGame.Dlc.DataSections = new List<DlcSection>();
+            saveGame.Dlc.DlcSize = ReadInt32(testReader, saveGame.EndianWsg);
+            var dlcDataBlock = testReader.ReadBytes(saveGame.Dlc.DlcSize);
+            if (dlcDataBlock.Length != saveGame.Dlc.DlcSize)
+            {
+                throw new EndOfStreamException();
+            }
+
+            using (var dlcDataReader = new BinaryReader(new MemoryStream(dlcDataBlock, false), Encoding.ASCII))
+            {
+                var remainingBytes = saveGame.Dlc.DlcSize;
+                while (remainingBytes > 0x0)
+                {
+                    var section = new DlcSection
+                    {
+                        Id = ReadInt32(dlcDataReader, saveGame.EndianWsg)
+                    };
+                    var sectionLength = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                    long sectionStartPos = (int)dlcDataReader.BaseStream.Position;
+                    switch (section.Id)
+                    {
+                        case Section1Id: // 0x43211234
+                            saveGame.Dlc.HasSection1 = true;
+                            saveGame.Dlc.DlcUnknown1 = dlcDataReader.ReadByte();
+                            saveGame.Dlc.BankSize = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                            var bankEntriesCount = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                            saveGame.Dlc.BankInventory = new List<BankEntry>();
+                            Console.WriteLine("====== ENTER BANK ======");
+                            WillowSaveGame.BankValuesCount = WillowSaveGame.ExportValuesCount;
+                            for (var i = 0x0; i < bankEntriesCount; i++)
+                            {
+                                var previous = saveGame.Dlc.BankInventory.LastOrDefault();
+                                var bankEntry = CreateBankEntry(dlcDataReader, saveGame.EndianWsg, previous);
+                                saveGame.Dlc.BankInventory.Add(bankEntry);
+                            }
+
+                            Console.WriteLine("====== EXIT BANK ======");
+                            break;
+
+                        case Section2Id: // 0x02151984
+                            saveGame.Dlc.HasSection2 = true;
+                            saveGame.Dlc.DlcUnknown2 = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                            saveGame.Dlc.DlcUnknown3 = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                            saveGame.Dlc.DlcUnknown4 = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                            saveGame.Dlc.SkipDlc2Intro = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                            break;
+
+                        case Section3Id: // 0x32235947
+                            saveGame.Dlc.HasSection3 = true;
+                            saveGame.Dlc.DlcUnknown5 = dlcDataReader.ReadByte();
+                            break;
+
+                        case Section4Id: // 0x234ba901
+                            saveGame.Dlc.HasSection4 = true;
+                            saveGame.Dlc.SecondaryPackEnabled = dlcDataReader.ReadByte();
+
+                            try
+                            {
+                                Console.WriteLine("====== ENTER DLC ITEM ======");
+                                var dlcItemsCount = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                                var dlcItems = ReadObjects<Item>(dlcDataReader, dlcItemsCount, saveGame.EndianWsg, saveGame.RevisionNumber, new ItemsReader());
+                                saveGame.Items.AddRange(dlcItems);
+                                Console.WriteLine("====== EXIT DLC ITEM ======");
+                            }
+                            catch
+                            {
+                                // The data was invalid so the processing ran into an exception.
+                                // See if the user wants to ignore the invalid data and just try
+                                // to recover partial data.  If not, just re-throw the exception.
+                                if (!saveGame.AutoRepair)
+                                {
+                                    throw;
+                                }
+
+                                // Set the flag to indicate that repair was required to load the savegame
+                                saveGame.RequiredRepair = true;
+
+                                // If the data is invalid here, the whole DLC weapon list is invalid so
+                                // set its length to 0 and be done
+                                saveGame.Dlc.NumberOfWeapons = 0x0;
+
+                                // Skip to the end of the section to discard any raw data that is left over
+                                dlcDataReader.BaseStream.Position = sectionStartPos + sectionLength;
+                            }
+
+                            try
+                            {
+                                Console.WriteLine("====== ENTER DLC WEAPON ======");
+                                var dlcWeaponsCount = ReadInt32(dlcDataReader, saveGame.EndianWsg);
+                                var dlcWeapons = ReadObjects<Weapon>(dlcDataReader, dlcWeaponsCount, saveGame.EndianWsg,
+                                    saveGame.RevisionNumber, new WeaponsReader());
+                                saveGame.Weapons.AddRange(dlcWeapons);
+                                Console.WriteLine("====== EXIT DLC WEAPON ======");
+                            }
+                            catch
+                            {
+                                // The data was invalid so the processing ran into an exception.
+                                // See if the user wants to ignore the invalid data and just try
+                                // to recover partial data.  If not, just re-throw the exception.
+                                if (!saveGame.AutoRepair)
+                                {
+                                    throw;
+                                }
+
+                                // Set the flag to indicate that repair was required to load the savegame
+                                saveGame.RequiredRepair = true;
+
+                                // Skip to the end of the section to discard any raw data that is left over
+                                dlcDataReader.BaseStream.Position = sectionStartPos + sectionLength;
+                            }
+                            break;
+                    }
+
+                    // I don't pretend to know if any of the DLC sections will ever expand
+                    // and store more data.  RawData stores any extra data at the end of
+                    // the known data in any section and stores the entirety of sections
+                    // with unknown ids in a buffer in its raw byte order dependent form.
+                    var rawDataCount = sectionLength - (int)(dlcDataReader.BaseStream.Position - sectionStartPos);
+
+                    section.RawData = dlcDataReader.ReadBytes(rawDataCount);
+                    if (rawDataCount > 0)
+                    {
+                        saveGame.ContainsRawData = true;
+                    }
+
+                    remainingBytes -= sectionLength + 0x8;
+                    saveGame.Dlc.DataSections.Add(section);
+                }
+
+                if (saveGame.RevisionNumber < EnhancedVersion)
+                {
+                    return saveGame;
+                }
+
+                //Padding at the end of file, don't know exactly why
+                var temp = new List<byte>();
+                while (!IsEndOfFile(testReader))
+                {
+                    temp.Add(testReader.ReadByte());
+                }
+
+                saveGame.Unknown3 = temp.ToArray();
+            }
+
+            return saveGame;
         }
     }
 }
