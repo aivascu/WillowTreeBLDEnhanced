@@ -119,7 +119,7 @@ namespace WillowTree
             this.SetUiTreeStyles(this.settings.UseColor);
         }
 
-        private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowSaveGame.WillowObject
+        private void ConvertListForEditing<T>(InventoryList itmList, ref List<T> objs) where T : WillowObject
         {
             // Populate itmList with items created from the WillowSaveGame data lists
             itmList.ClearSilent();
@@ -141,7 +141,7 @@ namespace WillowTree
             {
                 List<int> itmBankValues = new List<int>()
                 {
-                    itmBank[i].Quantity, itmBank[i].Quality, itmBank[i].EquipedSlot, itmBank[i].Level, itmBank[i].Junk,
+                    itmBank[i].Quantity, itmBank[i].Quality, itmBank[i].EquippedSlot, itmBank[i].Level, itmBank[i].Junk,
                     itmBank[i].Locked
                 };
 
@@ -324,7 +324,7 @@ namespace WillowTree
         }
 
         private void RepopulateListForSaving<T>(InventoryList itmList, ref List<T> objs)
-            where T : WillowSaveGame.WillowObject, new()
+            where T : WillowObject, new()
         {
             objs = new List<T>();
             foreach (InventoryEntry item in itmList.Items.Values)
@@ -380,7 +380,7 @@ namespace WillowTree
 
                 itm.Quantity = values[0]; //Quantity;
                 itm.Quality = (short)values[1]; //QualityIndex;
-                itm.EquipedSlot = (byte)values[2]; //Equipped;
+                itm.EquippedSlot = (byte)values[2]; //Equipped;
                 itm.Level = (short)values[3]; //LevelIndex;
                 itm.Junk = (byte)values[4];
                 itm.Locked = (byte)values[5];

@@ -71,88 +71,6 @@ namespace WillowTree.Services.DataAccess
 
         //Delegate for read String and Value
 
-        public abstract class WillowObject
-        {
-            protected int[] values = new int[0x6];
-
-            public ReadStringsFunction ReadStrings { get; set; }
-            public ReadValuesFunction ReadValues { get; set; } = ReadObjectValues;
-
-            protected WillowObject()
-            {
-            }
-
-            public List<string> Strings { get; set; } = new List<string>();
-
-            public void SetValues(List<int> values)
-            {
-                this.values = values.ToArray();
-            }
-
-            public List<int> GetValues()
-            {
-                return this.values.ToList();
-            }
-
-            public int Quality
-            {
-                get => this.values[0x1];
-                set => this.values[0x1] = value;
-            }
-
-            public int EquipedSlot
-            {
-                get => this.values[0x2];
-                set => this.values[0x2] = value;
-            }
-
-            public int Level
-            {
-                get => this.values[0x3];
-                set => this.values[0x3] = value;
-            }
-
-            public int Junk
-            {
-                get => this.values[0x4];
-                set => this.values[0x4] = value;
-            }
-
-            public int Locked
-            {
-                get => this.values[0x5];
-                set => this.values[0x5] = value;
-            }
-        }
-
-        public class Item : WillowObject
-        {
-            public Item()
-            {
-                this.ReadStrings = ReadItemStrings;
-            }
-
-            public int Quantity
-            {
-                get => this.values[0x0];
-                set => this.values[0x0] = value;
-            }
-        }
-
-        public class Weapon : WillowObject
-        {
-            public Weapon()
-            {
-                this.ReadStrings = ReadWeaponStrings;
-            }
-
-            public int Ammo
-            {
-                get => this.values[0];
-                set => this.values[0] = value;
-            }
-        }
-
         //Item Arrays
         public List<Item> Items = new List<Item>();
 
@@ -353,7 +271,7 @@ namespace WillowTree.Services.DataAccess
             wtIcon.Close();
         }
 
-        private static List<int> ReadObjectValues(BinaryReader reader, ByteOrder byteOrder, int revisionNumber)
+        public static List<int> ReadObjectValues(BinaryReader reader, ByteOrder byteOrder, int revisionNumber)
         {
             var ammoQuantityCount = ReadInt32(reader, byteOrder);
             var tempLevelQuality = (uint)ReadInt32(reader, byteOrder);
@@ -1252,7 +1170,7 @@ namespace WillowTree.Services.DataAccess
             }
 
             bytes.AddRange(new byte[0x8]);
-            bytes.Add((byte)entry.EquipedSlot);
+            bytes.Add((byte)entry.EquippedSlot);
             bytes.Add(0x1);
             if (ExportValuesCount > 0x4)
             {
@@ -1357,7 +1275,89 @@ namespace WillowTree.Services.DataAccess
         }
     }
 
-    public sealed class BankEntry : WillowSaveGame.WillowObject
+    public abstract class WillowObject
+    {
+        protected int[] values = new int[0x6];
+
+        public ReadStringsFunction ReadStrings { get; set; }
+        public ReadValuesFunction ReadValues { get; set; } = WillowSaveGame.ReadObjectValues;
+
+        protected WillowObject()
+        {
+        }
+
+        public List<string> Strings { get; set; } = new List<string>();
+
+        public void SetValues(List<int> values)
+        {
+            this.values = values.ToArray();
+        }
+
+        public List<int> GetValues()
+        {
+            return this.values.ToList();
+        }
+
+        public int Quality
+        {
+            get => this.values[0x1];
+            set => this.values[0x1] = value;
+        }
+
+        public int EquippedSlot
+        {
+            get => this.values[0x2];
+            set => this.values[0x2] = value;
+        }
+
+        public int Level
+        {
+            get => this.values[0x3];
+            set => this.values[0x3] = value;
+        }
+
+        public int Junk
+        {
+            get => this.values[0x4];
+            set => this.values[0x4] = value;
+        }
+
+        public int Locked
+        {
+            get => this.values[0x5];
+            set => this.values[0x5] = value;
+        }
+    }
+
+    public class Weapon : WillowObject
+    {
+        public Weapon()
+        {
+            this.ReadStrings = WillowSaveGameBase.ReadWeaponStrings;
+        }
+
+        public int Ammo
+        {
+            get => this.values[0];
+            set => this.values[0] = value;
+        }
+    }
+
+    public class Item : WillowObject
+    {
+        public Item()
+        {
+            this.ReadStrings = WillowSaveGameBase.ReadItemStrings;
+        }
+
+        public int Quantity
+        {
+            get => this.values[0x0];
+            set => this.values[0x0] = value;
+        }
+    }
+
+    public sealed class BankEntry : WillowObject
     {
         public byte TypeId { get; set; }
 

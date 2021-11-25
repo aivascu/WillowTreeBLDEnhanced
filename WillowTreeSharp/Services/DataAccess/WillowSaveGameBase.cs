@@ -323,7 +323,7 @@ namespace WillowTree.Services.DataAccess
             return bytes.ToArray();
         }
 
-        protected static List<string> ReadItemStrings(BinaryReader reader, ByteOrder byteOrder)
+        public static List<string> ReadItemStrings(BinaryReader reader, ByteOrder byteOrder)
         {
             List<string> strings = new List<string>();
             for (int index = 0; index < 9; index++)
@@ -334,7 +334,7 @@ namespace WillowTree.Services.DataAccess
             return strings;
         }
 
-        protected static List<string> ReadWeaponStrings(BinaryReader reader, ByteOrder bo)
+        public static List<string> ReadWeaponStrings(BinaryReader reader, ByteOrder bo)
         {
             List<string> strings = new List<string>();
             for (int index = 0; index < 14; index++)
@@ -422,14 +422,14 @@ namespace WillowTree.Services.DataAccess
         public static void ReadOldFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
         {
             var footer = reader.ReadBytes(0xA);
-            entry.EquipedSlot = footer[0x8];
+            entry.EquippedSlot = footer[0x8];
             entry.Quantity = entry.TypeId == 0x1 ? ReadInt32(reader, endian) : reader.ReadByte();
         }
 
         public static void ReadNewFooter(BankEntry entry, BinaryReader reader, ByteOrder endian)
         {
             var footer = reader.ReadBytes(0xC);
-            entry.EquipedSlot = footer[0x8];
+            entry.EquippedSlot = footer[0x8];
             if (entry.TypeId == 0x1)
             {
                 entry.Quantity = ReadInt32(reader, endian); //Ammo
