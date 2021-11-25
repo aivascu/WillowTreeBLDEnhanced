@@ -35,6 +35,7 @@ namespace WillowTree
                     new FileWrapper(fileSystem),
                     new DirectoryWrapper(fileSystem),
                     new GameDataWrapper(),
+                    new InventoryDataWrapper(),
                     new GlobalSettingsWrapper(),
                     new XmlCacheWrapper(),
                     new MessageBoxWrapper(),

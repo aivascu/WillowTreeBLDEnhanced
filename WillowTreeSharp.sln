@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp.Domain", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp.Serialization", "WillowTreeSharp.Serialization\WillowTreeSharp.Serialization.csproj", "{68243F21-2706-421B-A193-5D7AC570615A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillowTreeSharp.GameDataProviders", "WillowTreeSharp.GameDataProviders\WillowTreeSharp.GameDataProviders.csproj", "{78F8995A-4C1A-4F1D-9E77-7B41D84A1152}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{68243F21-2706-421B-A193-5D7AC570615A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68243F21-2706-421B-A193-5D7AC570615A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68243F21-2706-421B-A193-5D7AC570615A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78F8995A-4C1A-4F1D-9E77-7B41D84A1152}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F8995A-4C1A-4F1D-9E77-7B41D84A1152}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F8995A-4C1A-4F1D-9E77-7B41D84A1152}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F8995A-4C1A-4F1D-9E77-7B41D84A1152}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

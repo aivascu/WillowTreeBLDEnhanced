@@ -35,11 +35,6 @@ namespace WillowTree.Services.DataAccess
         public static XmlFile SkillsAllXml { get; } = new XmlFile(skillFiles, XmlPath + "gd_skills.xml");
         public static XmlFile PartNamesXml { get; } = new XmlFile(DataPath + "partnames.ini");
 
-        public static InventoryList WeaponList { get; } = new InventoryList(InventoryType.Weapon);
-        public static InventoryList ItemList { get; } = new InventoryList(InventoryType.Item);
-        public static InventoryList BankList { get; } = new InventoryList(InventoryType.Any);
-        public static InventoryList LockerList { get; } = new InventoryList(InventoryType.Any);
-
         public static int[] XPChart { get; } = new int[71];
 
         public static void SetXPchart()
@@ -313,12 +308,11 @@ namespace WillowTree.Services.DataAccess
             }
         }
 
-        public static string WeaponInfo(InventoryEntry invEntry)
+        public static string WeaponInfo(string[] parts, int qualityIndex, int levelIndex)
         {
             string weaponInfo;
-            string[] parts = invEntry.Parts.ToArray<string>();
 
-            int damage = GetWeaponDamage(parts, invEntry.QualityIndex, invEntry.LevelIndex);
+            int damage = GetWeaponDamage(parts, qualityIndex, levelIndex);
             weaponInfo = $"Expected Damage: {damage}";
 
             double statvalue = GetExtraStats(parts, "TechLevelIncrease");

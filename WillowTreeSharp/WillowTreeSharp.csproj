@@ -122,10 +122,7 @@
     <Compile Include="Plugins\PluginEventArgs.cs" />
     <Compile Include="Plugins\PluginEvents.cs" />
     <Compile Include="Services\DataAccess\Constants.cs" />
-    <Compile Include="Services\DataAccess\GameData.cs" />
-    <Compile Include="Services\DataAccess\GameDataWrapper.cs" />
     <Compile Include="Services\Configuration\GlobalSettingsWrapper.cs" />
-    <Compile Include="Services\DataAccess\IGameData.cs" />
     <Compile Include="Services\Configuration\IGlobalSettings.cs" />
     <Compile Include="Inventory\InventoryComparer.cs" />
     <Compile Include="Inventory\InventoryComparers.cs" />
@@ -192,10 +189,17 @@
     </Compile>
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="Common\StringExtensions.cs" />
+    <Compile Include="Services\DataAccess\GameData.cs" />
+    <Compile Include="Services\DataAccess\GameDataWrapper.cs" />
+    <Compile Include="Services\DataAccess\IGameData.cs" />
+    <Compile Include="Services\DataAccess\IInventoryData.cs" />
+    <Compile Include="Services\DataAccess\InventoryData.cs" />
+    <Compile Include="Services\DataAccess\InventoryDataWrapper.cs" />
     <Compile Include="Services\DataAccess\IXmlCache.cs" />
     <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
     <Compile Include="Services\DataAccess\XmlCache.cs" />
     <Compile Include="Services\DataAccess\XmlCacheWrapper.cs" />
+    <Compile Include="Services\DataAccess\XmlFile.cs" />
     <Compile Include="Services\DataAccess\XmlNodeExtensions.cs" />
     <Compile Include="WillowTreeMain.cs">
       <SubType>Form</SubType>
@@ -213,7 +217,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DataAccess\XmlFile.cs" />
     <Content Include="COPYING.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -458,6 +461,10 @@
     <ProjectReference Include="..\WillowTreeSharp.Domain\WillowTreeSharp.Domain.csproj">
       <Project>{fe2326a6-b36c-4adc-92d1-ec3ffea21e93}</Project>
       <Name>WillowTreeSharp.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WillowTreeSharp.GameDataProviders\WillowTreeSharp.GameDataProviders.csproj">
+      <Project>{78f8995a-4c1a-4f1d-9e77-7b41d84a1152}</Project>
+      <Name>WillowTreeSharp.GameDataProviders</Name>
     </ProjectReference>
     <ProjectReference Include="..\WillowTreeSharp.Serialization\WillowTreeSharp.Serialization.csproj">
       <Project>{68243f21-2706-421b-a193-5d7ac570615a}</Project>

@@ -54,7 +54,7 @@ namespace WillowTree.Plugins
             this.ImportAllFromItems.Enabled = false;
             this.ImportAllFromWeapons.Enabled = false;
 
-            this.lockerTl = new InventoryTreeList(this.LockerTree, GameData.LockerList);
+            this.lockerTl = new InventoryTreeList(this.LockerTree, InventoryData.LockerList);
 
             string lockerFilename = GameData.OpenedLockerFilename();
             if (!File.Exists(lockerFilename))
@@ -157,11 +157,11 @@ namespace WillowTree.Plugins
                     InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
                     {
-                        GameData.WeaponList.Add(entry);
+                        InventoryData.WeaponList.Add(entry);
                     }
                     else if (entry.Type == InventoryType.Item)
                     {
-                        GameData.ItemList.Add(entry);
+                        InventoryData.ItemList.Add(entry);
                     }
 
                     this.lockerTl.Remove(node, false);
@@ -178,11 +178,11 @@ namespace WillowTree.Plugins
                     InventoryEntry entry = node.GetEntry() as InventoryEntry;
                     if (entry.Type == InventoryType.Weapon)
                     {
-                        GameData.WeaponList.Duplicate(entry);
+                        InventoryData.WeaponList.Duplicate(entry);
                     }
                     else if (entry.Type == InventoryType.Item)
                     {
-                        GameData.ItemList.Duplicate(entry);
+                        InventoryData.ItemList.Duplicate(entry);
                     }
                 }
             }
@@ -190,7 +190,7 @@ namespace WillowTree.Plugins
 
         private void CopyBank_Click(object sender, EventArgs e)
         {
-            this.lockerTl.CopySelected(GameData.BankList, false);
+            this.lockerTl.CopySelected(InventoryData.BankList, false);
         }
 
         private void ClearAllLocker_Click(object sender, EventArgs e)
@@ -324,7 +324,7 @@ namespace WillowTree.Plugins
         private void ImportAllFromItemsLocker_Click(object sender, EventArgs e)
         {
             this.LockerTree.BeginUpdate();
-            foreach (InventoryEntry item in GameData.ItemList.Items.Values)
+            foreach (InventoryEntry item in InventoryData.ItemList.Items.Values)
             {
                 this.lockerTl.Duplicate(item);
             }
@@ -336,7 +336,7 @@ namespace WillowTree.Plugins
         private void ImportAllFromWeaponsLocker_Click(object sender, EventArgs e)
         {
             this.LockerTree.BeginUpdate();
-            foreach (InventoryEntry weapon in GameData.WeaponList.Items.Values)
+            foreach (InventoryEntry weapon in InventoryData.WeaponList.Items.Values)
             {
                 this.lockerTl.Duplicate(weapon);
             }

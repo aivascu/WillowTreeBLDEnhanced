@@ -23,11 +23,13 @@ namespace WillowTree
         private readonly IGameData gameData;
         private readonly IGlobalSettings settings;
         private readonly AppThemes themes;
+        private readonly IInventoryData inventoryData;
 
         public WillowTreeMain(
             IFile file,
             IDirectory directory,
             IGameData gameData,
+            IInventoryData inventoryData,
             IGlobalSettings settings,
             IXmlCache xmlCache,
             IMessageBox messageBox,
@@ -37,6 +39,7 @@ namespace WillowTree
             this.file = file;
             this.directory = directory;
             this.gameData = gameData;
+            this.inventoryData = inventoryData;
             this.settings = settings;
             this.pluginManager = pluginManager;
             this.themes = themes;
@@ -67,13 +70,13 @@ namespace WillowTree
             this.SelectFormat.Enabled = false;
 
             this.CreatePluginAsTab("General", new ucGeneral(this.gameData, this.settings));
-            this.CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.settings, xmlCache, this.file));
-            this.CreatePluginAsTab("Items", new ucGears(this.gameData, this.settings, xmlCache, this.file));
+            this.CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.inventoryData, this.settings, xmlCache, this.file));
+            this.CreatePluginAsTab("Items", new ucGears(this.gameData, this.inventoryData, this.settings, xmlCache, this.file));
             this.CreatePluginAsTab("Skills", new UcSkills(this.gameData));
             this.CreatePluginAsTab("Quest", new UcQuests());
             this.CreatePluginAsTab("Ammo Pools", new UcAmmo());
             this.CreatePluginAsTab("Echo Logs", new ucEchoes());
-            this.CreatePluginAsTab("Bank", new ucGears(this.gameData, this.settings, xmlCache, this.file));
+            this.CreatePluginAsTab("Bank", new ucGears(this.gameData, this.inventoryData, this.settings, xmlCache, this.file));
             this.CreatePluginAsTab("Locker", new ucLocker());
             this.CreatePluginAsTab("About", new UcAbout());
 
@@ -261,9 +264,9 @@ namespace WillowTree
                 }
             }
 
-            this.ConvertListForEditing(this.gameData.WeaponList, ref this.currentWsg.Weapons);
-            this.ConvertListForEditing(this.gameData.ItemList, ref this.currentWsg.Items);
-            this.ConvertListForEditing(this.gameData.BankList, ref this.currentWsg.Dlc.BankInventory);
+            this.ConvertListForEditing(this.inventoryData.WeaponList, ref this.currentWsg.Weapons);
+            this.ConvertListForEditing(this.inventoryData.ItemList, ref this.currentWsg.Items);
+            this.ConvertListForEditing(this.inventoryData.BankList, ref this.currentWsg.Dlc.BankInventory);
 
             this.pluginManager.OnGameLoaded(new PluginEventArgs(this, fileName));
 
@@ -444,9 +447,9 @@ namespace WillowTree
 
             // Convert the weapons and items data from WeaponList/ItemList into
             // the format used by WillowSaveGame.
-            this.RepopulateListForSaving(this.gameData.WeaponList, ref this.currentWsg.Weapons);
-            this.RepopulateListForSaving(this.gameData.ItemList, ref this.currentWsg.Items);
-            this.RepopulateListForSaving(this.gameData.BankList, ref this.currentWsg.Dlc.BankInventory);
+            this.RepopulateListForSaving(this.inventoryData.WeaponList, ref this.currentWsg.Weapons);
+            this.RepopulateListForSaving(this.inventoryData.ItemList, ref this.currentWsg.Items);
+            this.RepopulateListForSaving(this.inventoryData.BankList, ref this.currentWsg.Dlc.BankInventory);
             WillowSaveGameSerializer.WriteToFile(this.currentWsg, filename);
             this.currentWsg.OpenedWsg = filename;
 
@@ -464,10 +467,10 @@ namespace WillowTree
         {
             var theme = useColor ? this.themes.treeViewTheme1 : null;
 
-            this.gameData.ItemList.OnTreeThemeChanged(theme);
-            this.gameData.WeaponList.OnTreeThemeChanged(theme);
-            this.gameData.BankList.OnTreeThemeChanged(theme);
-            this.gameData.LockerList.OnTreeThemeChanged(theme);
+            this.inventoryData.ItemList.OnTreeThemeChanged(theme);
+            this.inventoryData.WeaponList.OnTreeThemeChanged(theme);
+            this.inventoryData.BankList.OnTreeThemeChanged(theme);
+            this.inventoryData.LockerList.OnTreeThemeChanged(theme);
         }
 
         private void showEffectiveLevelsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -538,10 +541,10 @@ namespace WillowTree
 
         private void UpdateNames()
         {
-            this.gameData.WeaponList.OnNameFormatChanged();
-            this.gameData.ItemList.OnNameFormatChanged();
-            this.gameData.BankList.OnNameFormatChanged();
-            this.gameData.LockerList.OnNameFormatChanged();
+            this.inventoryData.WeaponList.OnNameFormatChanged();
+            this.inventoryData.ItemList.OnNameFormatChanged();
+            this.inventoryData.BankList.OnNameFormatChanged();
+            this.inventoryData.LockerList.OnNameFormatChanged();
         }
 
         private void WillowTreeMain_FormClosing(object sender, EventArgs e)

@@ -17,6 +17,7 @@ namespace WillowTree.Plugins
 {
     public partial class ucGears : UserControl, IPlugin
     {
+        private readonly IInventoryData inventoryData;
         private PluginComponentManager pluginManager;
         private Font HighlightFont;
         private WillowSaveGame CurrentWSG;
@@ -27,8 +28,9 @@ namespace WillowTree.Plugins
         private string gearFileName;
         private int gearVisibleLine;
 
-        public ucGears(IGameData gameData, IGlobalSettings settings, IXmlCache xmlCache, IFile file)
+        public ucGears(IGameData gameData, IInventoryData inventoryData, IGlobalSettings settings, IXmlCache xmlCache, IFile file)
         {
+            this.inventoryData = inventoryData;
             this.GameData = gameData;
             this.GlobalSettings = settings;
             this.XmlCache = xmlCache;
@@ -55,19 +57,19 @@ namespace WillowTree.Plugins
             switch (this.Text)
             {
                 case "Weapons":
-                    this.GearTL = new InventoryTreeList(this.GearTree, this.GameData.WeaponList);
+                    this.GearTL = new InventoryTreeList(this.GearTree, this.inventoryData.WeaponList);
                     this.gbGear.Text = "Weapon Backpack";
                     this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
 
                 case "Items":
-                    this.GearTL = new InventoryTreeList(this.GearTree, this.GameData.ItemList);
+                    this.GearTL = new InventoryTreeList(this.GearTree, this.inventoryData.ItemList);
                     this.gbGear.Text = "Item Backpack";
                     this.copyToBackpackToolStripMenuItem.Visible = false;
                     break;
 
                 case "Bank":
-                    this.GearTL = new InventoryTreeList(this.GearTree, this.GameData.BankList);
+                    this.GearTL = new InventoryTreeList(this.GearTree, this.inventoryData.BankList);
                     this.gbGear.Text = "Bank";
                     this.copyToBankToolStripMenuItem.Visible = false;
                     break;
@@ -223,12 +225,12 @@ namespace WillowTree.Plugins
 
         private void MoveGear_Click(object sender, EventArgs e)
         {
-            this.GearTL.CopySelected(this.GameData.LockerList, true);
+            this.GearTL.CopySelected(this.inventoryData.LockerList, true);
         }
 
         private void CopyLocker_Click(object sender, EventArgs e)
         {
-            this.GearTL.CopySelected(this.GameData.LockerList, false);
+            this.GearTL.CopySelected(this.inventoryData.LockerList, false);
         }
 
         private void CopyBackpack_Click(object sender, EventArgs e)
@@ -242,18 +244,18 @@ namespace WillowTree.Plugins
             {
                 if (entry.Type == InventoryType.Weapon)
                 {
-                    this.GameData.WeaponList.Duplicate(entry);
+                    this.inventoryData.WeaponList.Duplicate(entry);
                 }
                 else if (entry.Type == InventoryType.Item)
                 {
-                    this.GameData.ItemList.Duplicate(entry);
+                    this.inventoryData.ItemList.Duplicate(entry);
                 }
             }
         }
 
         private void CopyBank_Click(object sender, EventArgs e)
         {
-            this.GearTL.CopySelected(this.GameData.BankList, false);
+            this.GearTL.CopySelected(this.inventoryData.BankList, false);
         }
 
         private void ClearAllGear_Click(object sender, EventArgs e)
@@ -711,7 +713,7 @@ namespace WillowTree.Plugins
 
             if (this.GearTree.SelectedNode?.GetEntry() is InventoryEntry entry && entry.Type == InventoryType.Weapon)
             {
-                this.txtGearInformation.Text = this.GameData.WeaponInfo(entry);
+                this.txtGearInformation.Text = this.GameData.WeaponInfo(entry.Parts.ToArray(), entry.QualityIndex, entry.LevelIndex);
             }
         }
 
