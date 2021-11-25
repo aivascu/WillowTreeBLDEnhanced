@@ -459,6 +459,10 @@
       <Project>{9cac0af9-f039-4f22-963d-52eb5bab7f55}</Project>
       <Name>WillowTreeSharp.Controls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WillowTreeSharp.Domain\WillowTreeSharp.Domain.csproj">
+      <Project>{fe2326a6-b36c-4adc-92d1-ec3ffea21e93}</Project>
+      <Name>WillowTreeSharp.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NLog.Config">
