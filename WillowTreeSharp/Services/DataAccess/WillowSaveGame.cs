@@ -16,7 +16,6 @@ namespace WillowTree.Services.DataAccess
     {
         #region Members
 
-        private static readonly int EnhancedVersion = 0x27;
         public ByteOrder EndianWsg;
 
         public string Platform;
@@ -807,44 +806,6 @@ namespace WillowTree.Services.DataAccess
             this.ContainsRawData = false;
         }
 
-        private void WriteValues(BinaryWriter writer, IReadOnlyList<int> values)
-        {
-            Write(writer, values[0x0], this.EndianWsg);
-            var tempLevelQuality = (ushort)values[0x1] + (ushort)values[0x3] * (uint)0x10000;
-            Write(writer, (int)tempLevelQuality, this.EndianWsg);
-            Write(writer, values[0x2], this.EndianWsg);
-            if (this.RevisionNumber < EnhancedVersion)
-            {
-                return;
-            }
-
-            Write(writer, values[0x4], this.EndianWsg);
-            Write(writer, values[0x5], this.EndianWsg);
-        }
-
-        private void WriteStrings(BinaryWriter writer, List<string> strings)
-        {
-            foreach (var s in strings)
-            {
-                Write(writer, s, this.EndianWsg);
-            }
-        }
-
-        private void WriteObject<T>(BinaryWriter writer, T obj) where T : WillowObject
-        {
-            this.WriteStrings(writer, obj.Strings);
-            this.WriteValues(writer, obj.GetValues());
-        }
-
-        private void WriteObjects<T>(BinaryWriter writer, List<T> objects) where T : WillowObject
-        {
-            Write(writer, objects.Count, this.EndianWsg);
-            foreach (var obj in objects)
-            {
-                this.WriteObject(writer, obj);
-            }
-        }
-
         /// <summary>
         /// Save the current data to a WSG as a byte[]
         /// </summary>
@@ -890,12 +851,12 @@ namespace WillowTree.Services.DataAccess
                 Write(writer, this.PoolLevels[progress], this.EndianWsg);
             }
 
-            this.WriteObjects(writer, this.Items1); //Write Items
+            WriteObjects(writer, this.Items1, this.EndianWsg, this.RevisionNumber); //Write Items
 
             Write(writer, this.BackpackSize, this.EndianWsg);
             Write(writer, this.EquipSlots, this.EndianWsg);
 
-            this.WriteObjects(writer, this.Weapons1); //Write Weapons
+            WriteObjects(writer, this.Weapons1, this.EndianWsg, this.RevisionNumber); //Write Weapons
 
             var count = (short)this._challenges.Count;
             Write(writer, count * 0x7 + 0xA, this.EndianWsg);
@@ -1036,9 +997,9 @@ namespace WillowTree.Services.DataAccess
                     case Section4Id:
                         memoryWriter.Write(this.Dlc.SecondaryPackEnabled);
                         // The DLC backpack items
-                        this.WriteObjects(memoryWriter, this.Items2);
+                        WriteObjects(memoryWriter, this.Items2, this.EndianWsg, this.RevisionNumber);
                         // The DLC backpack weapons
-                        this.WriteObjects(memoryWriter, this.Weapons2);
+                        WriteObjects(memoryWriter, this.Weapons2, this.EndianWsg, this.RevisionNumber);
                         break;
                 }
 

@@ -14,6 +14,7 @@ namespace WillowTree.Services.DataAccess
         public const int Section2Id = 0x02151984;
         public const int Section3Id = 0x32235947;
         public const int Section4Id = 0x234BA901;
+        protected const int EnhancedVersion = 0x27;
 
         protected static byte[] ReadBytes(BinaryReader reader, int fieldSize, ByteOrder byteOrder)
         {
@@ -626,6 +627,44 @@ namespace WillowTree.Services.DataAccess
             else
             {
                 ReadOldFooter(entry, reader, endian);
+            }
+        }
+
+        private static void WriteValues(BinaryWriter writer, IReadOnlyList<int> values, ByteOrder endianWsg, int revisionNumber)
+        {
+            Write(writer, values[0x0], endianWsg);
+            var tempLevelQuality = (ushort)values[0x1] + (ushort)values[0x3] * (uint)0x10000;
+            Write(writer, (int)tempLevelQuality, endianWsg);
+            Write(writer, values[0x2], endianWsg);
+            if (revisionNumber < EnhancedVersion)
+            {
+                return;
+            }
+
+            Write(writer, values[0x4], endianWsg);
+            Write(writer, values[0x5], endianWsg);
+        }
+
+        private static void WriteStrings(BinaryWriter writer, List<string> strings, ByteOrder endianWsg)
+        {
+            foreach (var s in strings)
+            {
+                Write(writer, s, endianWsg);
+            }
+        }
+
+        protected static void WriteObject<T>(BinaryWriter writer, T obj, ByteOrder endianWsg, int revisionNumber) where T : WillowObject
+        {
+            WriteStrings(writer, obj.Strings, endianWsg);
+            WriteValues(writer, obj.GetValues(), endianWsg, revisionNumber);
+        }
+
+        protected static void WriteObjects<T>(BinaryWriter writer, List<T> objects, ByteOrder endianWsg, int revisionNumber) where T : WillowObject
+        {
+            Write(writer, objects.Count, endianWsg);
+            foreach (var obj in objects)
+            {
+                WriteObject(writer, obj, endianWsg, revisionNumber);
             }
         }
     }
