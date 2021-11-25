@@ -1191,7 +1191,7 @@ namespace WillowTree.Services.DataAccess
             try
             {
                 var con = new STFSPackage(new DJsIO(fileInMemory, true), new LogRecord());
-                
+
                 var profileId = con.Header.ProfileID;
                 var deviceId = con.Header.DeviceID;
                 xboxId = new XBoxId(profileId, deviceId);
@@ -1669,16 +1669,26 @@ namespace WillowTree.Services.DataAccess
 
             package.AddFile(saveFileName, "SaveGame.sav");
 
-            var xKvLocation = Path.Combine(Constants.DataPath, "KV.bin");
             var con = new STFSPackage(
                 package,
-                new RSAParams(xKvLocation),
+                new RSAParams(kvFilePath),
                 packageFileName,
                 new LogRecord());
 
-            con.FlushPackage(new RSAParams(xKvLocation));
+            con.FlushPackage(new RSAParams(kvFilePath));
             con.CloseIO();
             wtIcon.Close();
+        }
+
+        private static string kvFilePath = string.Empty;
+
+        public static void SetKVFilePath(string path)
+        {
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("Unable to find KV.bin");
+            }
+            kvFilePath = path;
         }
     }
 }

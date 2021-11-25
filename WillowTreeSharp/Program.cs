@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using System;
 using System.Threading;
 using System.Windows.Forms;
@@ -6,6 +6,7 @@ using System.IO.Abstractions;
 using WillowTree.Plugins;
 using WillowTree.Services.DataAccess;
 using WillowTree.Controls;
+using System.IO;
 
 namespace WillowTree
 {
@@ -25,6 +26,8 @@ namespace WillowTree
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+
+                WillowSaveGameSerializer.SetKVFilePath(Path.Combine(Constants.DataPath, "KV.bin"));
 
 
                 FileSystem fileSystem = new FileSystem();
