@@ -246,11 +246,7 @@ namespace WillowTree
 
             this.pluginManager.OnGameLoading(new PluginEventArgs(this, fileName));
             Application.DoEvents();
-            this.currentWsg = new WillowSaveGame
-            {
-                AutoRepair = true
-            };
-            this.currentWsg.LoadWsg(fileName);
+            this.currentWsg = WillowSaveGameBase.ReadFile(fileName, true);
 
             if (this.currentWsg.RequiredRepair)
             {
@@ -536,7 +532,7 @@ namespace WillowTree
                 return false;
             }
 
-            this.currentWsg.DiscardRawData();
+            WillowSaveGameBase.DiscardRawData(this.currentWsg);
             return true;
         }
 

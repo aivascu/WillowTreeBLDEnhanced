@@ -223,8 +223,8 @@ namespace WillowTree.Services.DataAccess
                 STFSType = STFSType.Type1,
                 HeaderData =
                 {
-                    ProfileID = ProfileId,
-                    DeviceID = DeviceId
+                    ProfileID = this.ProfileId,
+                    DeviceID = this.DeviceId
                 }
             };
 
@@ -602,41 +602,6 @@ namespace WillowTree.Services.DataAccess
 
                 this.Unknown3 = temp.ToArray();
             }
-        }
-
-        public void DiscardRawData()
-        {
-            // Make a list of all the known data sections to compare against.
-            var knownSectionIds = new List<int>
-            {
-                Section1Id,
-                Section2Id,
-                Section3Id,
-                Section4Id,
-            };
-
-            // Traverse the list of data sections from end to beginning because when
-            // an item gets deleted it does not affect the index of the ones before it,
-            // but it does change the index of the ones after it.
-            for (var i = this.Dlc.DataSections.Count - 1; i >= 0; i--)
-            {
-                var section = this.Dlc.DataSections[i];
-
-                if (knownSectionIds.Contains(section.Id))
-                {
-                    // clear the raw data in this DLC data section
-                    section.RawData = Array.Empty<byte>();
-                }
-                else
-                {
-                    // if the section id is not recognized remove it completely
-                    section.RawData = null;
-                    this.Dlc.DataSections.RemoveAt(i);
-                }
-            }
-
-            // Now that all the raw data has been removed, reset the raw data flag
-            this.ContainsRawData = false;
         }
     }
 }

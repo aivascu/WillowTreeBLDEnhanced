@@ -1547,5 +1547,40 @@ namespace WillowTree.Services.DataAccess
 
             return saveGame;
         }
+
+        public static void DiscardRawData(WillowSaveGame saveGame)
+        {
+            // Make a list of all the known data sections to compare against.
+            var knownSectionIds = new List<int>
+            {
+                Section1Id,
+                Section2Id,
+                Section3Id,
+                Section4Id,
+            };
+
+            // Traverse the list of data sections from end to beginning because when
+            // an item gets deleted it does not affect the index of the ones before it,
+            // but it does change the index of the ones after it.
+            for (var i = saveGame.Dlc.DataSections.Count - 1; i >= 0; i--)
+            {
+                var section = saveGame.Dlc.DataSections[i];
+
+                if (knownSectionIds.Contains(section.Id))
+                {
+                    // clear the raw data in this DLC data section
+                    section.RawData = Array.Empty<byte>();
+                }
+                else
+                {
+                    // if the section id is not recognized remove it completely
+                    section.RawData = null;
+                    saveGame.Dlc.DataSections.RemoveAt(i);
+                }
+            }
+
+            // Now that all the raw data has been removed, reset the raw data flag
+            saveGame.ContainsRawData = false;
+        }
     }
 }
