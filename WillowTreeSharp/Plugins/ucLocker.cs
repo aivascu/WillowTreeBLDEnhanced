@@ -9,6 +9,7 @@ using WillowTree.Controls;
 using WillowTree.CustomControls;
 using WillowTree.Inventory;
 using WillowTree.Services.DataAccess;
+using WillowTreeSharp.Domain;
 
 namespace WillowTree.Plugins
 {

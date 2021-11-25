@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using WillowTreeSharp.Domain;
 
-namespace WillowTree.Services.DataAccess
+namespace WillowTreeSharp.Domain
 {
     public class WillowSaveGame
     {
@@ -46,7 +45,12 @@ namespace WillowTree.Services.DataAccess
         public int Vehi1Color;
 
         public int Vehi2Color;
-        public int Vehi1Type; // 0 = rocket, 1 = machine gun
+
+        /// <summary>
+        /// 0 = rocket, 1 = machine gun
+        /// </summary>
+        public int Vehi1Type;
+
         public int Vehi2Type;
 
         //Ammo Pool Arrays

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using WillowTree.Controls;
 using WillowTree.Services.DataAccess;
+using WillowTreeSharp.Domain;
 
 namespace WillowTree.Plugins
 {

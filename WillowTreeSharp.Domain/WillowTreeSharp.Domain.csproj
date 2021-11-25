@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AmmoPool.cs" />
     <Compile Include="BankEntry.cs" />
+    <Compile Include="ByteOrder.cs" />
     <Compile Include="ChallengeDataEntry.cs" />
     <Compile Include="DlcData.cs" />
     <Compile Include="DlcSection.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="QuestObjective.cs" />
     <Compile Include="QuestTable.cs" />
     <Compile Include="Weapon.cs" />
+    <Compile Include="WillowSaveGame.cs" />
     <Compile Include="XBoxId.cs" />
   </ItemGroup>
   <ItemGroup />

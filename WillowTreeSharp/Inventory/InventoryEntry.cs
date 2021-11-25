@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using WillowTree.Services.DataAccess;
+using WillowTreeSharp.Domain;
 
 namespace WillowTree.Inventory
 {

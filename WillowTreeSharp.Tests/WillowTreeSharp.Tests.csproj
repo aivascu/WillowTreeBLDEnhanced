@@ -48,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WillowTreeSharp.Domain\WillowTreeSharp.Domain.csproj">
+      <Project>{fe2326a6-b36c-4adc-92d1-ec3ffea21e93}</Project>
+      <Name>WillowTreeSharp.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WillowTreeSharp\WillowTreeSharp.csproj">
       <Project>{d15e6a8f-e4cd-4e0c-a953-abe3320d98da}</Project>
       <Name>WillowTreeSharp</Name>

@@ -121,7 +121,6 @@
     <Compile Include="Plugins\PluginCommandEventArgs.cs" />
     <Compile Include="Plugins\PluginEventArgs.cs" />
     <Compile Include="Plugins\PluginEvents.cs" />
-    <Compile Include="Services\DataAccess\ByteOrder.cs" />
     <Compile Include="Services\DataAccess\Constants.cs" />
     <Compile Include="Services\DataAccess\GameData.cs" />
     <Compile Include="Services\DataAccess\GameDataWrapper.cs" />
@@ -200,7 +199,6 @@
     <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
     <Compile Include="Services\DataAccess\SaveEncoding.cs" />
     <Compile Include="Services\DataAccess\WeaponsReader.cs" />
-    <Compile Include="Services\DataAccess\WillowSaveGame.cs" />
     <Compile Include="Services\DataAccess\WillowSaveGameBase.cs" />
     <Compile Include="Services\DataAccess\XmlCache.cs" />
     <Compile Include="Services\DataAccess\XmlCacheWrapper.cs" />
