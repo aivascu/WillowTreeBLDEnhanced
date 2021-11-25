@@ -18,7 +18,7 @@ namespace WillowTree.Services.DataAccess
 
         protected static byte[] ReadBytes(BinaryReader reader, int fieldSize, ByteOrder byteOrder)
         {
-            byte[] bytes = reader.ReadBytes(fieldSize);
+            var bytes = reader.ReadBytes(fieldSize);
             if (bytes.Length != fieldSize)
             {
                 throw new EndOfStreamException();
