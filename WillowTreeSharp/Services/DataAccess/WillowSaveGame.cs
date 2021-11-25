@@ -598,7 +598,8 @@ namespace WillowTree.Services.DataAccess
                             BankValuesCount = ExportValuesCount;
                             for (var i = 0x0; i < bankEntriesCount; i++)
                             {
-                                this.Dlc.BankInventory.Add(this.CreateBankEntry(dlcDataReader));
+                                var bankEntry = CreateBankEntry(dlcDataReader, this.EndianWsg, Dlc.BankInventory);
+                                this.Dlc.BankInventory.Add(bankEntry);
                             }
 
                             Console.WriteLine(@"====== EXIT BANK ======");
@@ -1095,7 +1096,9 @@ namespace WillowTree.Services.DataAccess
                         Write(memoryWriter, this.Dlc.BankInventory.Count, this.EndianWsg);
                         for (var i = 0x0; i < this.Dlc.BankInventory.Count; i++)
                         {
-                            Write(memoryWriter, this.Dlc.BankInventory[i].Serialize(this.EndianWsg));
+                            var bankEntry = this.Dlc.BankInventory[i];
+                            var bankEntryBytes = Serialize(bankEntry, this.EndianWsg);
+                            Write(memoryWriter, bankEntryBytes);
                         }
 
                         break;
@@ -1362,9 +1365,160 @@ namespace WillowTree.Services.DataAccess
             var previous = this.Dlc.BankInventory.Count == 0x0
                 ? null
                 : this.Dlc.BankInventory[this.Dlc.BankInventory.Count - 0x1];
-            entry.Deserialize(reader, this.EndianWsg, previous);
+            Deserialize(entry, reader, this.EndianWsg, previous);
             return entry;
         }
+
+        private static BankEntry CreateBankEntry(BinaryReader reader, ByteOrder byteOrder, IReadOnlyList<BankEntry> bankInventory)
+        {
+            //Create new entry
+            var entry = new BankEntry();
+            var previous = bankInventory.Count == 0
+                ? null
+                : bankInventory[bankInventory.Count - 1];
+            Deserialize(entry, reader, byteOrder, previous);
+            return entry;
+        }
+
+        public static byte[] Serialize(BankEntry entry, ByteOrder endian)
+        {
+            var bytes = new List<byte>();
+            if (entry.TypeId != 0x1 && entry.TypeId != 0x2)
+            {
+                throw new FormatException($"Bank entry to be written has an invalid Type ID.  TypeId = {entry.TypeId}");
+            }
+
+            bytes.Add(entry.TypeId);
+            var count = 0x0;
+            foreach (var component in entry.Strings)
+            {
+                if (component == "None")
+                {
+                    bytes.AddRange(new byte[0x19]);
+                    continue;
+                }
+
+                bytes.Add(0x20);
+                var subComponentArray = component.Split('.');
+                bytes.AddRange(new byte[(0x6 - subComponentArray.Length) * 0x4]);
+                foreach (var subComponent in subComponentArray)
+                {
+                    bytes.AddRange(GetBytesFromString(subComponent, endian));
+                }
+
+                if (count == 0x2)
+                {
+                    bytes.AddRange(GetBytesFromInt((ushort)entry.Quality + (ushort)entry.Level * (uint)0x10000, endian));
+                }
+
+                count++;
+            }
+
+            bytes.AddRange(new byte[0x8]);
+            bytes.Add((byte)entry.EquipedSlot);
+            bytes.Add(0x1);
+            if (ExportValuesCount > 0x4)
+            {
+                bytes.Add((byte)entry.Junk);
+                bytes.Add((byte)entry.Locked);
+            }
+
+            if (entry.TypeId == 0x1)
+            {
+                bytes.AddRange(GetBytesFromInt(entry.Quantity, endian));
+            }
+            else
+            {
+                if (ExportValuesCount > 0x4)
+                {
+                    bytes.Add((byte)entry.Locked);
+                }
+                else
+                {
+                    bytes.Add((byte)entry.Quantity);
+                }
+            }
+
+            return bytes.ToArray();
+        }
+
+        private static void DeserializePart(BankEntry entry, BinaryReader reader, ByteOrder endian, out string part, int index)
+        {
+            var mask = reader.ReadByte();
+            if (mask == 0x0)
+            {
+                part = "None";
+                ReadBytes(reader, 0x18, endian);
+                return;
+            }
+
+            var padding = SearchForString(reader, endian);
+            var partName = "";
+            for (var i = 0x0; i < (padding.Length == 0x8 ? 0x4 : 0x3); i++)
+            {
+                var tmp = ReadString(reader, endian);
+                if (i != 0x0)
+                {
+                    partName += $".{tmp}";
+                }
+                else
+                {
+                    partName += tmp;
+                }
+            }
+
+            part = partName;
+            if (index == 0x2)
+            {
+                var temp = (uint)ReadInt32(reader, endian);
+                entry.Quality = (short)(temp % 0x10000);
+                entry.Level = (short)(temp / 0x10000);
+            }
+        }
+
+        public static void Deserialize(BankEntry entry, BinaryReader reader, ByteOrder endian, BankEntry previous)
+        {
+            entry.TypeId = reader.ReadByte();
+            if (entry.TypeId != 0x1 && entry.TypeId != 0x2)
+            {
+                //Try to repair broken item
+                if (previous != null)
+                {
+                    RepairItem(reader, endian, previous, 0x1);
+                    entry.TypeId = reader.ReadByte();
+                    Console.WriteLine($"{entry.TypeId} {reader.ReadByte()}");
+                    reader.BaseStream.Position--;
+                    if (entry.TypeId != 0x1 && entry.TypeId != 0x2)
+                    {
+                        reader.BaseStream.Position -= 0x1 + (previous.TypeId == 0x1 ? 0x4 : 0x1);
+                        SearchNextItem(reader, endian);
+                        entry.TypeId = reader.ReadByte();
+                    }
+                    else
+                    {
+                        BankValuesCount = 0x4;
+                    }
+                }
+            }
+
+            entry.Strings = new List<string>();
+            entry.Strings.AddRange(new string[entry.TypeId == 0x1 ? 0xE : 0x9]);
+            for (var index = 0; index < entry.Strings.Count; index++)
+            {
+                DeserializePart(entry, reader, endian, out var part, index);
+                entry.Strings[index] = part;
+            }
+
+            if (BankValuesCount > 0x4)
+            {
+                ReadNewFooter(entry, reader, endian);
+            }
+            else
+            {
+                ReadOldFooter(entry, reader, endian);
+            }
+        }
+
     }
 
     public delegate List<int> ReadValuesFunction(BinaryReader reader, ByteOrder bo, int revisionNumber);
