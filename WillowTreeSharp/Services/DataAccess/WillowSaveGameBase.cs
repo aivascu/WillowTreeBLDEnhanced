@@ -759,5 +759,18 @@ namespace WillowTree.Services.DataAccess
                 yield return ReadString(reader, byteOrder);
             }
         }
+
+        protected static IEnumerable<AmmoPool> ReadAmmoPools(BinaryReader reader, ByteOrder byteOrder)
+        {
+            var poolsCount = ReadInt32(reader, byteOrder);
+            for (var i = 0; i < poolsCount; i++)
+            {
+                var resource = ReadString(reader, byteOrder);
+                var name = ReadString(reader, byteOrder);
+                var remaining = ReadSingle(reader, byteOrder);
+                var level = ReadInt32(reader, byteOrder);
+                yield return new AmmoPool(resource, name, remaining, level);
+            }
+        }
     }
 }

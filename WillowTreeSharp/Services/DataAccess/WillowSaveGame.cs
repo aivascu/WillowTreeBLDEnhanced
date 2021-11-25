@@ -375,7 +375,22 @@ namespace WillowTree.Services.DataAccess
             this.Vehi2Color = ReadInt32(testReader, this.EndianWsg);
             this.Vehi1Type = ReadInt32(testReader, this.EndianWsg);
             this.Vehi2Type = ReadInt32(testReader, this.EndianWsg);
-            this.NumberOfPools = this.ReadAmmo(testReader, this.EndianWsg);
+
+            var pools = ReadAmmoPools(testReader, this.EndianWsg).ToArray();
+            this.ResourcePools = new string[pools.Length];
+            this.AmmoPools = new string[pools.Length];
+            this.RemainingPools = new float[pools.Length];
+            this.PoolLevels = new int[pools.Length];
+
+            for (var ammoPoolIndex = 0; ammoPoolIndex < pools.Length; ammoPoolIndex++)
+            {
+                this.ResourcePools[ammoPoolIndex] = pools[ammoPoolIndex].Resource;
+                this.AmmoPools[ammoPoolIndex] = pools[ammoPoolIndex].Name;
+                this.RemainingPools[ammoPoolIndex] = pools[ammoPoolIndex].Remaining;
+                this.PoolLevels[ammoPoolIndex] = pools[ammoPoolIndex].Level;
+            }
+
+            this.NumberOfPools = pools.Length;
             Console.WriteLine(@"====== ENTER ITEM ======");
             this.ReadObjects(testReader, ref this.Items, ReadInt32(testReader, this.EndianWsg));
             Console.WriteLine(@"====== EXIT ITEM ======");
@@ -654,31 +669,6 @@ namespace WillowTree.Services.DataAccess
             this.InUse = tempInUse;
 
             return skillsCount;
-        }
-
-        private int ReadAmmo(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var poolsCount = ReadInt32(reader, endianWsg);
-
-            var tempResourcePools = new string[poolsCount];
-            var tempAmmoPools = new string[poolsCount];
-            var tempRemainingPools = new float[poolsCount];
-            var tempPoolLevels = new int[poolsCount];
-
-            for (var progress = 0x0; progress < poolsCount; progress++)
-            {
-                tempResourcePools[progress] = ReadString(reader, endianWsg);
-                tempAmmoPools[progress] = ReadString(reader, endianWsg);
-                tempRemainingPools[progress] = ReadSingle(reader, endianWsg);
-                tempPoolLevels[progress] = ReadInt32(reader, endianWsg);
-            }
-
-            this.ResourcePools = tempResourcePools;
-            this.AmmoPools = tempAmmoPools;
-            this.RemainingPools = tempRemainingPools;
-            this.PoolLevels = tempPoolLevels;
-
-            return poolsCount;
         }
 
         public void DiscardRawData()
@@ -1051,6 +1041,22 @@ namespace WillowTree.Services.DataAccess
             get => this.values[0x5];
             set => this.values[0x5] = value;
         }
+    }
+
+    public class AmmoPool
+    {
+        public AmmoPool(string resource, string name, float remaining, int level)
+        {
+            this.Resource = resource;
+            this.Name = name;
+            this.Remaining = remaining;
+            this.Level = level;
+        }
+
+        public string Resource { get; private set; }
+        public string Name { get; private set; }
+        public float Remaining { get; private set; }
+        public int Level { get; private set; }
     }
 
     public class Location
