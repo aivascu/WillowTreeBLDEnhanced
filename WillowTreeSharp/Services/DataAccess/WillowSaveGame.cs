@@ -435,7 +435,8 @@ namespace WillowTree.Services.DataAccess
 
             this.PromoCodesUsed = ReadListInt32(testReader, this.EndianWsg);
             this.PromoCodesRequiringNotification = ReadListInt32(testReader, this.EndianWsg);
-            this.NumberOfEchoLists = this.ReadEchoes(testReader, this.EndianWsg);
+            this.EchoLists = ReadEchoTables(testReader, this.EndianWsg).ToList();
+            this.NumberOfEchoLists = this.EchoLists.Count;
 
             this.Dlc.DataSections = new List<DlcSection>();
             this.Dlc.DlcSize = ReadInt32(testReader, this.EndianWsg);
@@ -577,37 +578,6 @@ namespace WillowTree.Services.DataAccess
 
                 this.Unknown3 = temp.ToArray();
             }
-        }
-
-        private int ReadEchoes(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var echoListCount = ReadInt32(reader, endianWsg);
-
-            this.EchoLists.Clear();
-            for (var i = 0; i < echoListCount; i++)
-            {
-                var echoTable = new EchoTable
-                {
-                    Index = ReadInt32(reader, endianWsg),
-                    TotalEchoes = ReadInt32(reader, endianWsg),
-                    Echoes = new List<EchoEntry>()
-                };
-
-                for (var echoIndex = 0x0; echoIndex < echoTable.TotalEchoes; echoIndex++)
-                {
-                    var echoEntry = new EchoEntry
-                    {
-                        Name = ReadString(reader, endianWsg),
-                        DlcValue1 = ReadInt32(reader, endianWsg),
-                        DlcValue2 = ReadInt32(reader, endianWsg)
-                    };
-                    echoTable.Echoes.Add(echoEntry);
-                }
-
-                this.EchoLists.Add(echoTable);
-            }
-
-            return echoListCount;
         }
 
         private int ReadQuests(BinaryReader reader, ByteOrder endianWsg)

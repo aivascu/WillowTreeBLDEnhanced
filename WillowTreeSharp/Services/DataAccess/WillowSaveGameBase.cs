@@ -714,5 +714,43 @@ namespace WillowTree.Services.DataAccess
 
             return values;
         }
+
+        protected static IEnumerable<EchoTable> ReadEchoTables(BinaryReader reader, ByteOrder endianWsg)
+        {
+            var echoListCount = ReadInt32(reader, endianWsg);
+            for (var i = 0; i < echoListCount; i++)
+            {
+                yield return ReadEchoTable(reader, endianWsg);
+            }
+        }
+
+        private static EchoTable ReadEchoTable(BinaryReader reader, ByteOrder endianWsg)
+        {
+            var echoTable = new EchoTable
+            {
+                Index = ReadInt32(reader, endianWsg),
+                TotalEchoes = ReadInt32(reader, endianWsg),
+                Echoes = new List<EchoEntry>()
+            };
+
+            for (var echoIndex = 0x0; echoIndex < echoTable.TotalEchoes; echoIndex++)
+            {
+                var echoEntry = ReadEchoEntry(reader, endianWsg);
+                echoTable.Echoes.Add(echoEntry);
+            }
+
+            return echoTable;
+        }
+
+        private static EchoEntry ReadEchoEntry(BinaryReader reader, ByteOrder endianWsg)
+        {
+            var echoEntry = new EchoEntry
+            {
+                Name = ReadString(reader, endianWsg),
+                DlcValue1 = ReadInt32(reader, endianWsg),
+                DlcValue2 = ReadInt32(reader, endianWsg)
+            };
+            return echoEntry;
+        }
     }
 }
