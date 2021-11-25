@@ -1024,9 +1024,4 @@ namespace WillowTree.Services.DataAccess
         public virtual IEnumerable<int> ReadValues(BinaryReader reader, ByteOrder byteOrder, int revision)
             => WillowSaveGameBase.ReadObjectValues(reader, byteOrder, revision);
     }
-
-    public delegate List<int> ReadValuesFunction(BinaryReader reader, ByteOrder bo, int revisionNumber);
-
-    public delegate List<string> ReadStringsFunction(BinaryReader reader, ByteOrder bo);
-
 }
