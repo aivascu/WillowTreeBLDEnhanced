@@ -485,7 +485,6 @@ namespace WillowTree.Services.DataAccess
 
         protected static BankEntry CreateBankEntry(BinaryReader reader, ByteOrder byteOrder, BankEntry previous)
         {
-            //Create new entry
             var entry = new BankEntry();
             Deserialize(entry, reader, byteOrder, previous);
             return entry;
@@ -733,7 +732,7 @@ namespace WillowTree.Services.DataAccess
                 Echoes = new List<EchoEntry>()
             };
 
-            for (var echoIndex = 0x0; echoIndex < echoTable.TotalEchoes; echoIndex++)
+            for (var echoIndex = 0; echoIndex < echoTable.TotalEchoes; echoIndex++)
             {
                 var echoEntry = ReadEchoEntry(reader, endianWsg);
                 echoTable.Echoes.Add(echoEntry);
@@ -744,13 +743,21 @@ namespace WillowTree.Services.DataAccess
 
         private static EchoEntry ReadEchoEntry(BinaryReader reader, ByteOrder endianWsg)
         {
-            var echoEntry = new EchoEntry
+            return new EchoEntry
             {
                 Name = ReadString(reader, endianWsg),
                 DlcValue1 = ReadInt32(reader, endianWsg),
                 DlcValue2 = ReadInt32(reader, endianWsg)
             };
-            return echoEntry;
+        }
+
+        protected static IEnumerable<string> ReadLocations(BinaryReader reader, ByteOrder byteOrder)
+        {
+            var locationCount = ReadInt32(reader, byteOrder);
+            for (var i = 0; i < locationCount; i++)
+            {
+                yield return ReadString(reader, byteOrder);
+            }
         }
     }
 }

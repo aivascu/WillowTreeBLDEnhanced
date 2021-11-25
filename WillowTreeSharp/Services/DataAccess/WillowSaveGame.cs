@@ -408,7 +408,8 @@ namespace WillowTree.Services.DataAccess
                 }
             }
 
-            this.TotalLocations = this.ReadLocations(testReader, this.EndianWsg);
+            this.LocationStrings = ReadLocations(testReader, this.EndianWsg).ToArray();
+            this.TotalLocations = this.LocationStrings.Length;
             this.CurrentLocation = ReadString(testReader, this.EndianWsg);
             this.SaveInfo1To5[0x0] = ReadInt32(testReader, this.EndianWsg);
             this.SaveInfo1To5[0x1] = ReadInt32(testReader, this.EndianWsg);
@@ -680,20 +681,6 @@ namespace WillowTree.Services.DataAccess
             return poolsCount;
         }
 
-        private int ReadLocations(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var locationCount = ReadInt32(reader, endianWsg);
-            var tempLocationStrings = new string[locationCount];
-
-            for (var progress = 0x0; progress < locationCount; progress++)
-            {
-                tempLocationStrings[progress] = ReadString(reader, endianWsg);
-            }
-
-            this.LocationStrings = tempLocationStrings;
-            return locationCount;
-        }
-
         public void DiscardRawData()
         {
             // Make a list of all the known data sections to compare against.
@@ -708,7 +695,7 @@ namespace WillowTree.Services.DataAccess
             // Traverse the list of data sections from end to beginning because when
             // an item gets deleted it does not affect the index of the ones before it,
             // but it does change the index of the ones after it.
-            for (var i = this.Dlc.DataSections.Count - 0x1; i >= 0x0; i--)
+            for (var i = this.Dlc.DataSections.Count - 1; i >= 0; i--)
             {
                 var section = this.Dlc.DataSections[i];
 
@@ -1063,6 +1050,26 @@ namespace WillowTree.Services.DataAccess
         {
             get => this.values[0x5];
             set => this.values[0x5] = value;
+        }
+    }
+
+    public class Location
+    {
+        public Location(string id)
+        {
+            this.Id = id;
+        }
+
+        public string Id { get; }
+
+        public static implicit operator string(Location location)
+        {
+            return location.Id;
+        }
+        
+        public static implicit operator Location(string value)
+        {
+            return new Location(value);
         }
     }
 
