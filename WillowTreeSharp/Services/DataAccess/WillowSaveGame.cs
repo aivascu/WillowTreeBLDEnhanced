@@ -368,7 +368,24 @@ namespace WillowTree.Services.DataAccess
             this.Unknown1 = ReadInt32(testReader, this.EndianWsg);
             this.Cash = ReadInt32(testReader, this.EndianWsg);
             this.FinishedPlaythrough1 = ReadInt32(testReader, this.EndianWsg);
-            this.NumberOfSkills = this.ReadSkills(testReader, this.EndianWsg);
+
+            var skills = ReadSkills(testReader, this.EndianWsg).ToList();
+            
+            this.SkillNames = new string[skills.Count];
+            this.LevelOfSkills = new int[skills.Count];
+            this.ExpOfSkills = new int[skills.Count];
+            this.InUse = new int[skills.Count];
+
+            for (var index = 0; index < skills.Count; index++)
+            {
+                var skill = skills[index];
+                this.SkillNames[index] = skill.Name;
+                this.LevelOfSkills[index] = skill.Level;
+                this.ExpOfSkills[index] = skill.Experience;
+                this.InUse[index] = skill.InUse;
+            }
+            this.NumberOfSkills = skills.Count;
+
             this.Vehi1Color = ReadInt32(testReader, this.EndianWsg);
             this.Vehi2Color = ReadInt32(testReader, this.EndianWsg);
             this.Vehi1Type = ReadInt32(testReader, this.EndianWsg);
@@ -649,31 +666,6 @@ namespace WillowTree.Services.DataAccess
             }
 
             return numberOfQuestList;
-        }
-
-        private int ReadSkills(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var skillsCount = ReadInt32(reader, endianWsg);
-
-            var tempSkillNames = new string[skillsCount];
-            var tempLevelOfSkills = new int[skillsCount];
-            var tempExpOfSkills = new int[skillsCount];
-            var tempInUse = new int[skillsCount];
-
-            for (var progress = 0x0; progress < skillsCount; progress++)
-            {
-                tempSkillNames[progress] = ReadString(reader, endianWsg);
-                tempLevelOfSkills[progress] = ReadInt32(reader, endianWsg);
-                tempExpOfSkills[progress] = ReadInt32(reader, endianWsg);
-                tempInUse[progress] = ReadInt32(reader, endianWsg);
-            }
-
-            this.SkillNames = tempSkillNames;
-            this.LevelOfSkills = tempLevelOfSkills;
-            this.ExpOfSkills = tempExpOfSkills;
-            this.InUse = tempInUse;
-
-            return skillsCount;
         }
 
         public void DiscardRawData()

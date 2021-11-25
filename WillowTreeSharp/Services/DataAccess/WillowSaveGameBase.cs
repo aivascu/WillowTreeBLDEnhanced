@@ -774,5 +774,23 @@ namespace WillowTree.Services.DataAccess
                 yield return new AmmoPool(resource, name, remaining, level);
             }
         }
+
+        protected static IEnumerable<Skill> ReadSkills(BinaryReader reader, ByteOrder byteOrder)
+        {
+            var skillsCount = ReadInt32(reader, byteOrder);
+            for (var progress = 0; progress < skillsCount; progress++)
+            {
+                yield return ReadSkill(reader, byteOrder);
+            }
+        }
+
+        private static Skill ReadSkill(BinaryReader reader, ByteOrder byteOrder)
+        {
+            var name = ReadString(reader, byteOrder);
+            var level = ReadInt32(reader, byteOrder);
+            var experience = ReadInt32(reader, byteOrder);
+            var inUse = ReadInt32(reader, byteOrder);
+            return new Skill(name, level, experience, inUse);
+        }
     }
 }
