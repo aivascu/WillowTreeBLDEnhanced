@@ -57,6 +57,7 @@
     <Compile Include="QuestObjective.cs" />
     <Compile Include="QuestTable.cs" />
     <Compile Include="Weapon.cs" />
+    <Compile Include="XBoxId.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
