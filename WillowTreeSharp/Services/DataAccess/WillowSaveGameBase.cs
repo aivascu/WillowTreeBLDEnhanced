@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WillowTreeSharp;
 using WillowTreeSharp.Domain;
 
 namespace WillowTree.Services.DataAccess
@@ -384,8 +383,10 @@ namespace WillowTree.Services.DataAccess
                     {
                         case 0x545407E7:
                             return "X360";
+
                         case 0x54540866:
                             return "X360JP";
+
                         default:
                             return "unknown";
                     }
@@ -1152,6 +1153,22 @@ namespace WillowTree.Services.DataAccess
                 {
                     saveGame.Weapons2.Add(weapon);
                 }
+            }
+        }
+
+        protected static IEnumerable<T> ReadObjects<T>(BinaryReader reader, int groupSize, ByteOrder byteOrder, int revisionNumber, IObjectReader valueReader)
+            where T : WillowObject, new()
+        {
+            for (var progress = 0; progress < groupSize; progress++)
+            {
+                var strings = valueReader.ReadStrings(reader, byteOrder).ToList();
+                var values = valueReader.ReadValues(reader, byteOrder, revisionNumber).ToList();
+                var item = new T
+                {
+                    Strings = strings
+                };
+                item.SetValues(values);
+                yield return item;
             }
         }
     }

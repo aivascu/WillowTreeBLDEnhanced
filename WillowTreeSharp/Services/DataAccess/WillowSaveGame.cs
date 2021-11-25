@@ -270,22 +270,6 @@ namespace WillowTree.Services.DataAccess
             wtIcon.Close();
         }
 
-        private static IEnumerable<T> ReadObjects<T>(BinaryReader reader, int groupSize, ByteOrder byteOrder, int revisionNumber, IObjectReader valueReader)
-            where T : WillowObject, new()
-        {
-            for (var progress = 0; progress < groupSize; progress++)
-            {
-                var strings = valueReader.ReadStrings(reader, byteOrder).ToList();
-                var values = valueReader.ReadValues(reader, byteOrder, revisionNumber).ToList();
-                var item = new T
-                {
-                    Strings = strings
-                };
-                item.SetValues(values);
-                yield return item;
-            }
-        }
-
         public void SaveWsg(string filename)
         {
             switch (this.Platform)
