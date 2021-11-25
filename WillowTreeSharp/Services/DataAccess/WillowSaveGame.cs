@@ -370,7 +370,7 @@ namespace WillowTree.Services.DataAccess
             this.FinishedPlaythrough1 = ReadInt32(testReader, this.EndianWsg);
 
             var skills = ReadSkills(testReader, this.EndianWsg).ToList();
-            
+
             this.SkillNames = new string[skills.Count];
             this.LevelOfSkills = new int[skills.Count];
             this.ExpOfSkills = new int[skills.Count];
@@ -618,82 +618,6 @@ namespace WillowTree.Services.DataAccess
 
                 this.Unknown3 = temp.ToArray();
             }
-        }
-
-        private static IEnumerable<QuestTable> ReadQuestTables(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var numberOfQuestList = ReadInt32(reader, endianWsg);
-            for (var listIndex = 0; listIndex < numberOfQuestList; listIndex++)
-            {
-                yield return ReadQuestTable(reader, endianWsg);
-            }
-        }
-
-        private static QuestTable ReadQuestTable(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var questTable = new QuestTable
-            {
-                Index = ReadInt32(reader, endianWsg),
-                CurrentQuest = ReadString(reader, endianWsg),
-                TotalQuests = ReadInt32(reader, endianWsg),
-                Quests = new List<QuestEntry>()
-            };
-
-            var questCount = questTable.TotalQuests;
-            for (var questIndex = 0; questIndex < questCount; questIndex++)
-            {
-                var questEntry = ReadQuestEntry(reader, endianWsg);
-                questTable.Quests.Add(questEntry);
-            }
-
-            if (questTable.CurrentQuest == "None" & questTable.Quests.Count > 0)
-            {
-                questTable.CurrentQuest = questTable.Quests[0].Name;
-            }
-
-            return questTable;
-        }
-
-        private static QuestEntry ReadQuestEntry(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var name = ReadString(reader, endianWsg);
-            var progress = ReadInt32(reader, endianWsg);
-            var dlcValue1 = ReadInt32(reader, endianWsg);
-            var dlcValue2 = ReadInt32(reader, endianWsg);
-            var objectives = ReadQuestObjectives(reader, endianWsg).ToArray();
-
-            var questEntry = new QuestEntry
-            {
-                Name = name,
-                Progress = progress,
-                DlcValue1 = dlcValue1,
-                DlcValue2 = dlcValue2,
-                NumberOfObjectives = objectives.Length,
-                Objectives = objectives
-            };
-
-            return questEntry;
-        }
-
-        private static IEnumerable<QuestObjective> ReadQuestObjectives(BinaryReader reader, ByteOrder byteOrder)
-        {
-            var count = ReadInt32(reader, byteOrder);
-            for (var i = 0; i < count; i++)
-            {
-                yield return ReadQuestObjective(reader, byteOrder);
-            }
-        }
-
-        private static QuestObjective ReadQuestObjective(BinaryReader reader, ByteOrder endianWsg)
-        {
-            var description = ReadString(reader, endianWsg);
-            var progress = ReadInt32(reader, endianWsg);
-            var objective = new QuestObjective
-            {
-                Description = description,
-                Progress = progress
-            };
-            return objective;
         }
 
         public void DiscardRawData()
