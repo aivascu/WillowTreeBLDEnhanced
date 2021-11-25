@@ -193,9 +193,13 @@
     </Compile>
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="Common\StringExtensions.cs" />
+    <Compile Include="Services\DataAccess\IObjectReader.cs" />
+    <Compile Include="Services\DataAccess\ItemsReader.cs" />
     <Compile Include="Services\DataAccess\IXmlCache.cs" />
+    <Compile Include="Services\DataAccess\ObjectReader.cs" />
     <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
     <Compile Include="Services\DataAccess\SaveEncoding.cs" />
+    <Compile Include="Services\DataAccess\WeaponsReader.cs" />
     <Compile Include="Services\DataAccess\WillowSaveGame.cs" />
     <Compile Include="Services\DataAccess\WillowSaveGameBase.cs" />
     <Compile Include="Services\DataAccess\XmlCache.cs" />

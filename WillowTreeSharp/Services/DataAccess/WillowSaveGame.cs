@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using WillowTreeSharp;
 using WillowTreeSharp.Domain;
 using X360.IO;
 using X360.Other;
@@ -150,8 +149,8 @@ namespace WillowTree.Services.DataAccess
         ///<summary>Extracts a WSG from a CON (Xbox 360 Container File).</summary>
         public MemoryStream OpenXboxWsgStream(Stream inputX360File)
         {
-            var br = new BinaryReader(inputX360File);
-            var fileInMemory = br.ReadBytes((int)inputX360File.Length);
+            var reader = new BinaryReader(inputX360File);
+            var fileInMemory = reader.ReadBytes((int)inputX360File.Length);
             if (fileInMemory.Length != inputX360File.Length)
             {
                 throw new EndOfStreamException();
@@ -192,7 +191,7 @@ namespace WillowTree.Services.DataAccess
             using (var fileStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 this.Platform = ReadPlatform(fileStream);
-                fileStream.Seek(0x0, SeekOrigin.Begin);
+                fileStream.Seek(0, SeekOrigin.Begin);
 
                 switch (this.Platform)
                 {
@@ -202,7 +201,6 @@ namespace WillowTree.Services.DataAccess
                         {
                             this.ReadWsg(x360FileStream);
                         }
-
                         break;
 
                     case "PS3":
@@ -278,7 +276,7 @@ namespace WillowTree.Services.DataAccess
             for (var progress = 0; progress < groupSize; progress++)
             {
                 var strings = valueReader.ReadStrings(reader, byteOrder).ToList();
-                var values =  valueReader.ReadValues(reader, byteOrder, revisionNumber).ToList();
+                var values = valueReader.ReadValues(reader, byteOrder, revisionNumber).ToList();
                 var item = new T
                 {
                     Strings = strings
@@ -994,34 +992,5 @@ namespace WillowTree.Services.DataAccess
                 }
             }
         }
-    }
-
-
-
-    public interface IObjectReader
-    {
-        IEnumerable<string> ReadStrings(BinaryReader reader, ByteOrder byteOrder);
-
-        IEnumerable<int> ReadValues(BinaryReader reader, ByteOrder byteOrder, int revision);
-    }
-
-    public class WeaponsReader : ObjectReader
-    {
-        public override IEnumerable<string> ReadStrings(BinaryReader reader, ByteOrder byteOrder)
-            => WillowSaveGameBase.ReadWeaponStrings(reader, byteOrder);
-    }
-    
-    public class ItemsReader : ObjectReader
-    {
-        public override IEnumerable<string> ReadStrings(BinaryReader reader, ByteOrder byteOrder)
-            => WillowSaveGameBase.ReadItemStrings(reader, byteOrder);
-    }
-
-    public abstract class ObjectReader : IObjectReader
-    {
-        public abstract IEnumerable<string> ReadStrings(BinaryReader reader, ByteOrder byteOrder);
-
-        public virtual IEnumerable<int> ReadValues(BinaryReader reader, ByteOrder byteOrder, int revision)
-            => WillowSaveGameBase.ReadObjectValues(reader, byteOrder, revision);
     }
 }
