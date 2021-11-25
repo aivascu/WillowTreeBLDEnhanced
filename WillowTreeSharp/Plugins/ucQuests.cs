@@ -295,7 +295,7 @@ namespace WillowTree.Plugins
 
         public void MergeFromSaveQuests(string filename, int index)
         {
-            var otherSave = WillowSaveGameBase.ReadFile(filename);
+            var otherSave = WillowSaveGameSerializer.ReadFile(filename);
 
             if (otherSave.NumberOfQuestLists - 1 < index)
             {
@@ -715,7 +715,7 @@ namespace WillowTree.Plugins
 
                 try
                 {
-                    otherSave = WillowSaveGameBase.ReadFile(tempOpen.FileName());
+                    otherSave = WillowSaveGameSerializer.ReadFile(tempOpen.FileName());
                 }
                 catch { return; }
 

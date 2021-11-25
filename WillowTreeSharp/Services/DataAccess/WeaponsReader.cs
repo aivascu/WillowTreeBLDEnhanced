@@ -7,6 +7,6 @@ namespace WillowTree.Services.DataAccess
     public class WeaponsReader : ObjectReader
     {
         public override IEnumerable<string> ReadStrings(BinaryReader reader, ByteOrder byteOrder)
-            => WillowSaveGameBase.ReadWeaponStrings(reader, byteOrder);
+            => WillowSaveGameSerializer.ReadWeaponStrings(reader, byteOrder);
     }
 }

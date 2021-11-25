@@ -218,7 +218,7 @@ namespace WillowTree.Plugins
         }
         public void MergeFromSaveEchoes(string filename, int index)
         {
-            var otherSave = WillowSaveGameBase.ReadFile(filename);
+            var otherSave = WillowSaveGameSerializer.ReadFile(filename);
 
             if (otherSave.NumberOfEchoLists - 1 < index)
             {
@@ -455,7 +455,7 @@ namespace WillowTree.Plugins
 
                 try
                 {
-                    otherSave = WillowSaveGameBase.ReadFile(tempOpen.FileName());
+                    otherSave = WillowSaveGameSerializer.ReadFile(tempOpen.FileName());
                 }
                 catch { MessageBox.Show("Couldn't open the other save file."); return; }
 

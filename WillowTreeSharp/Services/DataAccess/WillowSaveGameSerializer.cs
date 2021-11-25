@@ -14,7 +14,7 @@ using X360.STFS;
 
 namespace WillowTree.Services.DataAccess
 {
-    public class WillowSaveGameBase
+    public class WillowSaveGameSerializer
     {
         public const byte SubPart = 0x20;
         public const int Section1Id = 0x43211234;

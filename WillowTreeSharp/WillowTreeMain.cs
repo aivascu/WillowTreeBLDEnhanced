@@ -246,7 +246,7 @@ namespace WillowTree
 
             this.pluginManager.OnGameLoading(new PluginEventArgs(this, fileName));
             Application.DoEvents();
-            this.currentWsg = WillowSaveGameBase.ReadFile(fileName, true);
+            this.currentWsg = WillowSaveGameSerializer.ReadFile(fileName, true);
 
             if (this.currentWsg.RequiredRepair)
             {
@@ -447,7 +447,7 @@ namespace WillowTree
             this.RepopulateListForSaving(this.gameData.WeaponList, ref this.currentWsg.Weapons);
             this.RepopulateListForSaving(this.gameData.ItemList, ref this.currentWsg.Items);
             this.RepopulateListForSaving(this.gameData.BankList, ref this.currentWsg.Dlc.BankInventory);
-            WillowSaveGameBase.WriteToFile(this.currentWsg, filename);
+            WillowSaveGameSerializer.WriteToFile(this.currentWsg, filename);
             this.currentWsg.OpenedWsg = filename;
 
             // Release the WillowSaveGame inventory data now that saving is complete.  The
@@ -532,7 +532,7 @@ namespace WillowTree
                 return false;
             }
 
-            WillowSaveGameBase.DiscardRawData(this.currentWsg);
+            WillowSaveGameSerializer.DiscardRawData(this.currentWsg);
             return true;
         }
 

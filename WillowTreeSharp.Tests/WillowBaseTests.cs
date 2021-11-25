@@ -35,7 +35,7 @@ namespace Test
                 consoleOutput = new ConsoleOutput();
                 try
                 {
-                    var ws = WillowSaveGameBase.ReadFile(collection.FullName, false);
+                    var ws = WillowSaveGameSerializer.ReadFile(collection.FullName, false);
                     count++;
                     consoleOutput.Dispose();
                 }
@@ -78,7 +78,7 @@ namespace Test
                 consoleOutput = new ConsoleOutput();
                 try
                 {
-                    var ws = WillowSaveGameBase.ReadFile(collection.FullName, false);
+                    var ws = WillowSaveGameSerializer.ReadFile(collection.FullName, false);
                     count++;
                     consoleOutput.Dispose();
                 }
@@ -121,11 +121,11 @@ namespace Test
                 consoleOutput = new ConsoleOutput();
                 try
                 {
-                    var ws = WillowSaveGameBase.ReadFile(collection.FullName, false);
+                    var ws = WillowSaveGameSerializer.ReadFile(collection.FullName, false);
                     var output = outputDir.FullName + @"\" + collection.Name;
-                    WillowSaveGameBase.WriteToFile(ws, output);
+                    WillowSaveGameSerializer.WriteToFile(ws, output);
 
-                    ws = WillowSaveGameBase.ReadFile(output, false);
+                    ws = WillowSaveGameSerializer.ReadFile(output, false);
                     count++;
                     consoleOutput.Dispose();
                 }

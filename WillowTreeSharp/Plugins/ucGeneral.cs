@@ -218,7 +218,7 @@ namespace WillowTree.Plugins
 
             try
             {
-                otherSave = WillowSaveGameBase.ReadFile(tempOpen.FileName());
+                otherSave = WillowSaveGameSerializer.ReadFile(tempOpen.FileName());
             }
             catch
             {
@@ -355,7 +355,7 @@ namespace WillowTree.Plugins
 
         private void MergeFromSaveLocations(string filename)
         {
-            var otherSave = WillowSaveGameBase.ReadFile(filename);
+            var otherSave = WillowSaveGameSerializer.ReadFile(filename);
 
             if (otherSave.LocationStrings.Length == 0)
             {

@@ -199,7 +199,7 @@
     <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
     <Compile Include="Services\DataAccess\SaveEncoding.cs" />
     <Compile Include="Services\DataAccess\WeaponsReader.cs" />
-    <Compile Include="Services\DataAccess\WillowSaveGameBase.cs" />
+    <Compile Include="Services\DataAccess\WillowSaveGameSerializer.cs" />
     <Compile Include="Services\DataAccess\XmlCache.cs" />
     <Compile Include="Services\DataAccess\XmlCacheWrapper.cs" />
     <Compile Include="Services\DataAccess\XmlNodeExtensions.cs" />
