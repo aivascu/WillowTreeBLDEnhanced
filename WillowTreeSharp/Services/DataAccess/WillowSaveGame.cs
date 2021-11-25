@@ -3,7 +3,7 @@ using WillowTreeSharp.Domain;
 
 namespace WillowTree.Services.DataAccess
 {
-    public class WillowSaveGame : WillowSaveGameBase
+    public class WillowSaveGame
     {
         public ByteOrder EndianWsg;
 
