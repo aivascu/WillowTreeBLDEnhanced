@@ -270,53 +270,6 @@ namespace WillowTree.Services.DataAccess
             wtIcon.Close();
         }
 
-        public static List<int> ReadObjectValues(BinaryReader reader, ByteOrder byteOrder, int revisionNumber)
-        {
-            var ammoQuantityCount = ReadInt32(reader, byteOrder);
-            var tempLevelQuality = (uint)ReadInt32(reader, byteOrder);
-            var quality = (short)(tempLevelQuality % 0x10000);
-            var level = (short)(tempLevelQuality / 0x10000);
-            var equippedSlot = ReadInt32(reader, byteOrder);
-
-            var values = new List<int>()
-            {
-                ammoQuantityCount,
-                quality,
-                equippedSlot,
-                level
-            };
-
-            if (revisionNumber < EnhancedVersion)
-            {
-                return values;
-            }
-
-            var junk = ReadInt32(reader, byteOrder);
-            var locked = ReadInt32(reader, byteOrder);
-
-            if (locked != 0x0 && locked != 0x1)
-            {
-                reader.BaseStream.Position -= 0x4;
-                values.Add(0x0);
-            }
-            else
-            {
-                values.Add(junk);
-            }
-
-            if (locked != 0x0 && locked != 0x1)
-            {
-                reader.BaseStream.Position -= 0x4;
-                values.Add(0x0);
-            }
-            else
-            {
-                values.Add(locked);
-            }
-
-            return values;
-        }
-
         private T ReadObject<T>(BinaryReader reader) where T : WillowObject, new()
         {
             var item = new T();
