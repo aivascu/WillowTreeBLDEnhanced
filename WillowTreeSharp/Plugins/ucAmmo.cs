@@ -1,8 +1,9 @@
-﻿using Aga.Controls.Tree;
-using Microsoft.VisualBasic;
 using System;
 using System.Windows.Forms;
+using Aga.Controls.Tree;
+using Microsoft.VisualBasic;
 using WillowTree.Common;
+using WillowTree.Controls;
 using WillowTreeSharp.Domain;
 
 namespace WillowTree.Plugins
@@ -11,10 +12,13 @@ namespace WillowTree.Plugins
     {
         private WillowSaveGame currentWsg;
 
-        public UcAmmo()
+        public UcAmmo(IMessageBox messageBox)
         {
+            this.MessageBox = messageBox;
             this.InitializeComponent();
         }
+
+        public IMessageBox MessageBox { get; }
 
         private void DoAmmoTree()
         {
@@ -38,34 +42,26 @@ namespace WillowTree.Plugins
                 case "d_resources.AmmoResources.Ammo_Sniper_Rifle":
                     return "Sniper Rifle";
 
-
                 case "d_resources.AmmoResources.Ammo_Repeater_Pistol":
                     return "Repeater Pistol";
-
 
                 case "d_resources.AmmoResources.Ammo_Grenade_Protean":
                     return "Protean Grenades";
 
-
                 case "d_resources.AmmoResources.Ammo_Patrol_SMG":
                     return "Patrol SMG";
-
 
                 case "d_resources.AmmoResources.Ammo_Combat_Shotgun":
                     return "Combat Shotgun";
 
-
                 case "d_resources.AmmoResources.Ammo_Combat_Rifle":
                     return "Combat Rifle";
-
 
                 case "d_resources.AmmoResources.Ammo_Revolver_Pistol":
                     return "Revolver Pistol";
 
-
                 case "d_resources.AmmoResources.Ammo_Rocket_Launcher":
                     return "Rocket Launcher";
-
 
                 default:
                     return resource;
@@ -164,7 +160,7 @@ namespace WillowTree.Plugins
             }
             catch
             {
-                MessageBox.Show("Couldn't add new ammo pool.");
+                this.MessageBox.Show("Couldn't add new ammo pool.");
             }
         }
     }

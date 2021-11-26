@@ -1,10 +1,10 @@
-using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using Aga.Controls.Tree;
 using WillowTree.Controls;
 using WillowTree.Services.DataAccess;
 using WillowTreeSharp.Domain;
@@ -18,10 +18,15 @@ namespace WillowTree.Plugins
         private WillowSaveGame currentWsg;
         private XmlFile questsXml;
 
-        public UcQuests()
+        public UcQuests(IGameData gameData, IMessageBox messageBox)
         {
+            this.GameData = gameData;
+            this.MessageBox = messageBox;
             this.InitializeComponent();
         }
+
+        public IGameData GameData { get; }
+        public IMessageBox MessageBox { get; }
 
         public void DeleteAllQuests(int index)
         {

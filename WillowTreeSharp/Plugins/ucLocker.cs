@@ -1,8 +1,9 @@
-﻿using Aga.Controls.Tree;
+using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Windows.Forms;
 using WillowTree.Controls;
@@ -21,10 +22,19 @@ namespace WillowTree.Plugins
 
         public InventoryTreeList lockerTl;
 
-        public ucLocker()
+        public ucLocker(IGlobalSettings globalSettings, IGameData gameData, IMessageBox messageBox, IFile file)
         {
             this.InitializeComponent();
+            this.GlobalSettings = globalSettings;
+            this.GameData = gameData;
+            this.MessageBox = messageBox;
+            this.File = file;
         }
+
+        public IGlobalSettings GlobalSettings { get; }
+        public IGameData GameData { get; }
+        public IMessageBox MessageBox { get; }
+        public IFile File { get; }
 
         public void InitializePlugin(PluginComponentManager pm)
         {
@@ -41,10 +51,10 @@ namespace WillowTree.Plugins
             // The index translators control the caption that goes over the top of each
             // level or quality SlideSelector.  Attach each translator then signal the
             // value changed event to cause the translator to update the caption.
-            this.QualityLocker.IndexTranslator += QualityTranslator;
-            this.LevelIndexLocker.IndexTranslator += LevelTranslator;
-            this.LevelIndexOverride.IndexTranslator += LevelTranslator;
-            this.QualityOverride.IndexTranslator += QualityTranslator;
+            this.QualityLocker.IndexTranslator += this.QualityTranslator;
+            this.LevelIndexLocker.IndexTranslator += this.LevelTranslator;
+            this.LevelIndexOverride.IndexTranslator += this.LevelTranslator;
+            this.QualityOverride.IndexTranslator += this.QualityTranslator;
             this.LevelIndexLocker.OnValueChanged(EventArgs.Empty);
             this.QualityLocker.OnValueChanged(EventArgs.Empty);
             this.LevelIndexOverride.OnValueChanged(EventArgs.Empty);
@@ -57,37 +67,37 @@ namespace WillowTree.Plugins
 
             this.lockerTl = new InventoryTreeList(this.LockerTree, InventoryData.LockerList);
 
-            string lockerFilename = GameData.OpenedLockerFilename();
-            if (!File.Exists(lockerFilename))
+            string lockerFilename = this.GameData.OpenedLockerFilename();
+            if (!this.File.Exists(lockerFilename))
             {
-                GameData.OpenedLockerFilename($"{GameData.DataPath}default.xml");
+                this.GameData.OpenedLockerFilename($"{this.GameData.DataPath}default.xml");
             }
 
             try
             {
-                this.LoadLocker(GameData.OpenedLockerFilename());
+                this.LoadLocker(this.GameData.OpenedLockerFilename());
                 this.lockerTl.UpdateTree();
             }
             catch (ApplicationException)
             {
-                MessageBox.Show(
-                    $"The locker file \"{GameData.OpenedLockerFilename()} could not be loaded.  It may be corrupt.  If you delete or rename it the program will make a new one and you may be able to start the program successfully.  Shutting down now.");
+                this.MessageBox.Show(
+                    $"The locker file \"{this.GameData.OpenedLockerFilename()} could not be loaded.  It may be corrupt.  If you delete or rename it the program will make a new one and you may be able to start the program successfully.  Shutting down now.");
                 Application.Exit();
             }
         }
 
         public void ReleasePlugin()
         {
-            this.QualityLocker.IndexTranslator -= QualityTranslator;
-            this.LevelIndexLocker.IndexTranslator -= LevelTranslator;
-            this.LevelIndexOverride.IndexTranslator -= LevelTranslator;
-            this.QualityOverride.IndexTranslator -= QualityTranslator;
+            this.QualityLocker.IndexTranslator -= this.QualityTranslator;
+            this.LevelIndexLocker.IndexTranslator -= this.LevelTranslator;
+            this.LevelIndexOverride.IndexTranslator -= this.LevelTranslator;
+            this.QualityOverride.IndexTranslator -= this.QualityTranslator;
 
             this.pluginManager = null;
             this.highlightFont = null;
 
             this.lockerTl = null;
-            GameData.OpenedLockerFilename(null);
+            this.GameData.OpenedLockerFilename(null);
         }
 
         public void OnGameLoaded(object sender, PluginEventArgs e)
@@ -99,7 +109,7 @@ namespace WillowTree.Plugins
 
         public void OnGameSaving(object sender, PluginEventArgs e)
         {
-            this.lockerTl.SaveToXml(GameData.OpenedLockerFilename());
+            this.lockerTl.SaveToXml(this.GameData.OpenedLockerFilename());
         }
 
         public void OnPluginCommand(object sender, PluginCommandEventArgs e)
@@ -237,7 +247,7 @@ namespace WillowTree.Plugins
             }
             catch
             {
-                MessageBox.Show("Export to clipboard failed.");
+                this.MessageBox.Show("Export to clipboard failed.");
             }
         }
 
@@ -246,13 +256,13 @@ namespace WillowTree.Plugins
             WTSaveFileDialog toFile = new WTSaveFileDialog("txt", this.LockerPartsGroup.Text);
             if (toFile.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(toFile.FileName(), this.ExportToTextLocker());
+                this.File.WriteAllText(toFile.FileName(), this.ExportToTextLocker());
             }
         }
 
         private void ExportToXmlLocker_Click(object sender, EventArgs e)
         {
-            WTSaveFileDialog fileDlg = new WTSaveFileDialog("xml", GameData.OpenedLockerFilename());
+            WTSaveFileDialog fileDlg = new WTSaveFileDialog("xml", this.GameData.OpenedLockerFilename());
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
@@ -284,7 +294,7 @@ namespace WillowTree.Plugins
             }
             catch
             {
-                MessageBox.Show("Invalid clipboard data.  Import failed.");
+                this.MessageBox.Show("Invalid clipboard data.  Import failed.");
             }
         }
 
@@ -299,14 +309,14 @@ namespace WillowTree.Plugins
                 {
                     try
                     {
-                        if (this.ImportFromTextLocker(File.ReadAllText(file)))
+                        if (this.ImportFromTextLocker(this.File.ReadAllText(file)))
                         {
                             this.LockerTree.SelectedNode = this.LockerTree.AllNodes.Last();
                         }
                     }
                     catch (IOException)
                     {
-                        MessageBox.Show($"Unable to read file \"{file}\".");
+                        this.MessageBox.Show($"Unable to read file \"{file}\".");
                     }
                 }
             }
@@ -331,7 +341,7 @@ namespace WillowTree.Plugins
             }
 
             this.LockerTree.EndUpdate();
-            this.lockerTl.SaveToXml(GameData.OpenedLockerFilename());
+            this.lockerTl.SaveToXml(this.GameData.OpenedLockerFilename());
         }
 
         private void ImportAllFromWeaponsLocker_Click(object sender, EventArgs e)
@@ -343,7 +353,7 @@ namespace WillowTree.Plugins
             }
 
             this.LockerTree.EndUpdate();
-            this.lockerTl.SaveToXml(GameData.OpenedLockerFilename());
+            this.lockerTl.SaveToXml(this.GameData.OpenedLockerFilename());
         }
 
         private void LockerTree_SelectionChanged(object sender, EventArgs e)
@@ -478,7 +488,7 @@ namespace WillowTree.Plugins
 
         private void OpenLocker_Click(object sender, EventArgs e)
         {
-            WTOpenFileDialog fromFile = new WTOpenFileDialog("xml", GameData.OpenedLockerFilename());
+            WTOpenFileDialog fromFile = new WTOpenFileDialog("xml", this.GameData.OpenedLockerFilename());
 
             try
             {
@@ -487,11 +497,11 @@ namespace WillowTree.Plugins
                     return;
                 }
                 this.LoadLocker(fromFile.FileName());
-                GameData.OpenedLockerFilename(fromFile.FileName());
+                this.GameData.OpenedLockerFilename(fromFile.FileName());
             }
             catch
             {
-                MessageBox.Show("Could not load the selected WillowTree Locker.");
+                this.MessageBox.Show("Could not load the selected WillowTree Locker.");
             }
         }
 
@@ -522,12 +532,12 @@ namespace WillowTree.Plugins
             }
         }
 
-        private static string LevelTranslator(object obj)
+        private string LevelTranslator(object obj)
         {
             WTSlideSelector levelindex = (WTSlideSelector)obj;
 
             return levelindex.InputMode == InputMode.Advanced
-                ? GlobalSettings.UseHexInAdvancedMode
+                ? this.GlobalSettings.UseHexInAdvancedMode
                     ? "Level Index (hexadecimal)"
                     : "Level Index (decimal)"
                 : levelindex.Value == 0
@@ -535,12 +545,12 @@ namespace WillowTree.Plugins
                     : $"Level: {levelindex.Value - 2}";
         }
 
-        private static string QualityTranslator(object obj)
+        private string QualityTranslator(object obj)
         {
             WTSlideSelector qualityindex = (WTSlideSelector)obj;
 
             return qualityindex.InputMode == InputMode.Advanced
-                ? GlobalSettings.UseHexInAdvancedMode
+                ? this.GlobalSettings.UseHexInAdvancedMode
                     ? "Quality Index (hexadecimal)"
                     : "Quality Index (decimal)"
                 : $"Quality: {qualityindex.Value}";

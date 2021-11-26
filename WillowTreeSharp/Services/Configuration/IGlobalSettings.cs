@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 
 namespace WillowTree.Services.Configuration
 {
@@ -23,6 +23,6 @@ namespace WillowTree.Services.Configuration
 
         void Load(string filename);
 
-        void Save();
+        void Save(string filePath);
     }
 }

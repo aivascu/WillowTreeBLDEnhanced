@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.IO.Abstractions;
 using System.Text;
 using System.Xml;
@@ -82,10 +81,8 @@ namespace WillowTree.Services.Configuration
         public static int MaxSkillPoints { get => maxSkillPoints; set => maxSkillPoints = value; }
         public static Color[] RarityColor { get => rarityColor; set => rarityColor = value; }
 
-        public static void Save()
+        public static void Save(string filename)
         {
-            string filename = Path.Combine(GameData.XmlPath, "options.xml");
-
             using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
             {
                 writer.WriteStartDocument();

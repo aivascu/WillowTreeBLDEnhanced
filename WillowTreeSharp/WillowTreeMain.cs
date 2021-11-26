@@ -24,6 +24,7 @@ namespace WillowTree
         private readonly IGlobalSettings settings;
         private readonly AppThemes themes;
         private readonly IInventoryData inventoryData;
+        private readonly string settingsFilePath;
 
         public WillowTreeMain(
             IFile file,
@@ -45,7 +46,8 @@ namespace WillowTree
             this.themes = themes;
             this.MessageBox = messageBox;
 
-            this.settings.Load(Path.Combine(this.gameData.XmlPath, "options.xml"));
+            this.settingsFilePath = Path.Combine(this.gameData.XmlPath, "options.xml");
+            this.settings.Load(this.settingsFilePath);
 
             if (!this.directory.Exists(this.gameData.DataPath))
             {
@@ -71,11 +73,11 @@ namespace WillowTree
             this.CreatePluginAsTab("Weapons", new ucGears(this.gameData, this.inventoryData, this.settings, xmlCache, this.file));
             this.CreatePluginAsTab("Items", new ucGears(this.gameData, this.inventoryData, this.settings, xmlCache, this.file));
             this.CreatePluginAsTab("Skills", new UcSkills(this.gameData));
-            this.CreatePluginAsTab("Quest", new UcQuests());
-            this.CreatePluginAsTab("Ammo Pools", new UcAmmo());
+            this.CreatePluginAsTab("Quest", new UcQuests(this.gameData, this.MessageBox));
+            this.CreatePluginAsTab("Ammo Pools", new UcAmmo(this.MessageBox));
             this.CreatePluginAsTab("Echo Logs", new ucEchoes());
             this.CreatePluginAsTab("Bank", new ucGears(this.gameData, this.inventoryData, this.settings, xmlCache, this.file));
-            this.CreatePluginAsTab("Locker", new ucLocker());
+            this.CreatePluginAsTab("Locker", new ucLocker(this.settings,this.gameData, this.MessageBox, this.file));
             this.CreatePluginAsTab("About", new UcAbout());
 
             try
@@ -207,7 +209,7 @@ namespace WillowTree
 
         private void ExitWT_Click(object sender, EventArgs e)
         {
-            this.settings.Save();
+            this.settings.Save(this.settingsFilePath);
             Application.Exit();
         }
 
@@ -435,7 +437,7 @@ namespace WillowTree
 
         private void SaveOptions_Click(object sender, EventArgs e)
         {
-            this.settings.Save();
+            this.settings.Save(this.settingsFilePath);
         }
 
         private void SaveToFile(string filename)
@@ -547,7 +549,7 @@ namespace WillowTree
 
         private void WillowTreeMain_FormClosing(object sender, EventArgs e)
         {
-            this.settings.Save();
+            this.settings.Save(this.settingsFilePath);
         }
 
         private void XBoxFormat_Click(object sender, EventArgs e)

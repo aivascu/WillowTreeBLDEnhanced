@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -163,11 +163,6 @@ namespace WillowTree.Inventory
 
                 this.BuildName();
             }
-        }
-
-        public static bool ItemgradePartUsesBigLevel(string itemgradePart)
-        {
-            return itemgradePart == "gd_itemgrades.Weapons.ItemGrade_Weapon_Scorpio";
         }
 
         public InventoryEntry(byte inType, List<string> inParts, List<int> inValues)
@@ -439,29 +434,39 @@ namespace WillowTree.Inventory
 
         public int GetPartCount()
         {
-            int partcount;
             if (this.Type == InventoryType.Weapon)
             {
-                partcount = 14;
-            }
-            else if (this.Type == InventoryType.Item)
-            {
-                partcount = 9;
-            }
-            else if ((this.Parts.Count == 10) && (this.Parts[9] == ""))
-            {
-                partcount = 9;
-            }
-            else if ((this.Parts.Count == 15) && (this.Parts[14] == ""))
-            {
-                partcount = 14;
-            }
-            else
-            {
-                throw new InvalidDataException("Entry type is invalid in GetPartCount.  name = " + this.Name + ", type = " + this.Type);
+                return 14;
             }
 
-            return partcount;
+            if (this.Type == InventoryType.Item)
+            {
+                return 9;
+            }
+
+            if ((this.Parts.Count == 10) && (this.Parts[9] == ""))
+            {
+                return 9;
+            }
+
+            if ((this.Parts.Count == 15) && (this.Parts[14] == ""))
+            {
+                return 14;
+            }
+
+            throw new InvalidDataException("Entry type is invalid in GetPartCount.  name = " + this.Name + ", type = " + this.Type);
+        }
+
+        public List<int> GetValues()
+        {
+            return CalculateValues(
+                this.Quantity,
+                this.QualityIndex,
+                this.EquippedSlot,
+                this.LevelIndex,
+                this.UsesBigLevel,
+                this.IsJunk,
+                this.IsLocked);
         }
 
         public static void ConvertValues(List<int> values, string itemgradePart, out bool usesBigLevel, out int quantity, out int qualityIndex, out int equippedSlot, out int levelIndex, out int isJunk, out int isLocked)
@@ -526,22 +531,15 @@ namespace WillowTree.Inventory
             }
         }
 
-        public List<int> GetValues()
+        public static bool ItemgradePartUsesBigLevel(string itemgradePart)
         {
-            return CalculateValues(
-                this.Quantity,
-                this.QualityIndex,
-                this.EquippedSlot,
-                this.LevelIndex,
-                this.UsesBigLevel,
-                this.IsJunk,
-                this.IsLocked);
+            return itemgradePart == "gd_itemgrades.Weapons.ItemGrade_Weapon_Scorpio";
         }
 
         public static InventoryEntry ImportFromText(string text, byte inType)
         {
-            var InOutParts = new List<string>();
-            InOutParts.AddRange(text.Split(new string[] { "\r\n" }, StringSplitOptions.None));
+            var inOutParts = new List<string>();
+            inOutParts.AddRange(text.Split(new string[] { "\r\n" }, StringSplitOptions.None));
 
             // Create new lists
             var parts = new List<string>();
@@ -551,14 +549,14 @@ namespace WillowTree.Inventory
             {
                 int tempInt;
                 int Progress;
-                for (Progress = 0; Progress < InOutParts.Count; Progress++)
+                for (Progress = 0; Progress < inOutParts.Count; Progress++)
                 {
-                    if (int.TryParse(InOutParts[Progress], out tempInt))
+                    if (int.TryParse(inOutParts[Progress], out tempInt))
                     {
                         break;
                     }
 
-                    parts.Add(InOutParts[Progress]);
+                    parts.Add(inOutParts[Progress]);
                 }
 
                 if (Progress != 9 && Progress != 14)
@@ -576,11 +574,11 @@ namespace WillowTree.Inventory
                     return null;
                 }
 
-                if (InOutParts.Count == Progress + WillowSaveGame.ExportValuesCount)
+                if (inOutParts.Count == Progress + WillowSaveGame.ExportValuesCount)
                 {
                     for (var i = 0; i < WillowSaveGame.ExportValuesCount; i++)
                     {
-                        values.Add(Parse.AsInt(InOutParts[Progress + i]));
+                        values.Add(Parse.AsInt(inOutParts[Progress + i]));
                     }
 
                     if (values.Count > 4)
@@ -589,7 +587,7 @@ namespace WillowTree.Inventory
                         values[5] = (values[5] != 0 && values[5] != 1) ? 0 : values[5];
                     }
                 }
-                else if (InOutParts.Count < Progress + 4)
+                else if (inOutParts.Count < Progress + 4)
                 {
                     throw new FormatException();
                 }
@@ -606,7 +604,7 @@ namespace WillowTree.Inventory
                     {
                         for (var i = 0; i < 4; i++)
                         {
-                            values.Add(Parse.AsInt(InOutParts[Progress + i]));
+                            values.Add(Parse.AsInt(inOutParts[Progress + i]));
                         }
 
                         values.Add(0);
@@ -716,6 +714,5 @@ namespace WillowTree.Inventory
 
             return color;
         }
-
     }
 }

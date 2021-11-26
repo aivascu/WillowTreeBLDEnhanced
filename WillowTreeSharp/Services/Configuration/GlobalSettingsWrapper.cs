@@ -100,14 +100,14 @@ namespace WillowTree.Services.Configuration
             set => GlobalSettings.UseHexInAdvancedMode = value;
         }
 
-        public void Load(string filename)
+        public void Load(string filePath)
         {
-            GlobalSettings.Load(filename);
+            GlobalSettings.Load(filePath);
         }
 
-        public void Save()
+        public void Save(string filePath)
         {
-            GlobalSettings.Save();
+            GlobalSettings.Save(filePath);
         }
     }
 }
