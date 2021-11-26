@@ -3,11 +3,18 @@ using System.Reflection;
 
 namespace WillowTree.Services.DataAccess
 {
-    static internal class Constants
+    internal static class Constants
     {
-        public static readonly string AppPath = (Assembly.GetEntryAssembly() != null ? Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) : string.Empty) +
-                                                Path.DirectorySeparatorChar;
+        public static readonly string DataPath = Path.Combine(GetAppPath(), "Data") + Path.DirectorySeparatorChar;
 
-        public static readonly string DataPath = Constants.AppPath + "Data" + Path.DirectorySeparatorChar;
+        private static string GetAppPath()
+        {
+            if (Assembly.GetEntryAssembly() == null)
+            {
+                return string.Empty;
+            }
+
+            return Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+        }
     }
 }

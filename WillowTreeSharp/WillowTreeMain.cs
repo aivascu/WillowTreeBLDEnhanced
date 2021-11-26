@@ -8,7 +8,6 @@ using WillowTree.Controls;
 using WillowTree.Inventory;
 using WillowTree.Plugins;
 using WillowTree.Services.DataAccess;
-using WillowTreeSharp;
 using WillowTreeSharp.Domain;
 
 namespace WillowTree
@@ -45,7 +44,7 @@ namespace WillowTree
             this.themes = themes;
             this.MessageBox = messageBox;
 
-            this.settings.Load(this.gameData.XmlPath + "options.xml");
+            this.settings.Load(Path.Combine(this.gameData.XmlPath, "options.xml"));
 
             if (!this.directory.Exists(this.gameData.DataPath))
             {
@@ -55,10 +54,10 @@ namespace WillowTree
                 return;
             }
 
-            if (!this.file.Exists($"{this.gameData.DataPath}default.xml"))
+            var filePath = Path.Combine(this.gameData.DataPath, "default.xml");
+            if (!this.file.Exists(filePath))
             {
-                this.file.WriteAllText($"{this.gameData.DataPath}default.xml",
-                    "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
+                this.file.WriteAllText(filePath, "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\r\n<INI></INI>\r\n");
             }
 
             this.InitializeComponent();

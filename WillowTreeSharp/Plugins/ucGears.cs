@@ -1,4 +1,4 @@
-﻿using Aga.Controls.Tree;
+using Aga.Controls.Tree;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -190,7 +190,7 @@ namespace WillowTree.Plugins
         {
             this.PartSelectorGear.Clear();
 
-            string TabsLine = this.File.ReadAllText(this.GameData.DataPath + textFile);
+            string TabsLine = this.File.ReadAllText(Path.Combine(this.GameData.DataPath, textFile));
             string[] TabsList = TabsLine.Split(';');
             for (int Progress = 0; Progress < TabsList.Length; Progress++)
             {
@@ -578,11 +578,12 @@ namespace WillowTree.Plugins
             try
             {
                 // Read ALL subsections of a given XML section
-                XmlFile Category = this.XmlCache.XmlFileFromCache(
-                    $"{this.GameData.DataPath}{this.PartSelectorGear.SelectedNode.Parent.GetKey()}.txt");
+                var fileName = this.PartSelectorGear.SelectedNode.Parent.GetKey();
+                var filePath = Path.Combine(this.GameData.DataPath, $"{fileName}.txt");
+                XmlFile category = this.XmlCache.XmlFileFromCache(filePath);
 
                 // XML Section: PartCategories.SelectedNode.Text
-                List<string> xmlSection = Category.XmlReadSection(this.PartSelectorGear.SelectedNode.GetText());
+                List<string> xmlSection = category.XmlReadSection(this.PartSelectorGear.SelectedNode.GetText());
 
                 this.PartInfoGear.Lines = xmlSection.ToArray();
             }
@@ -773,17 +774,18 @@ namespace WillowTree.Plugins
             tree.EnsureVisible(node);
         }
 
-        private void DoPartsCategory(string Category, TreeViewAdv Tree)
+        private void DoPartsCategory(string category, TreeViewAdv tree)
         {
-            XmlFile PartList = this.XmlCache.XmlFileFromCache($"{this.GameData.DataPath}{Category}.txt");
-            TreeModel model = Tree.Model as TreeModel;
+            var filePath = Path.Combine(this.GameData.DataPath, $"{category}.txt");
+            XmlFile PartList = this.XmlCache.XmlFileFromCache(filePath);
+            TreeModel model = tree.Model as TreeModel;
 
-            Tree.BeginUpdate();
-            Tree.Model = model;
+            tree.BeginUpdate();
+            tree.Model = model;
 
-            ColoredTextNode parent = new ColoredTextNode(Category)
+            ColoredTextNode parent = new ColoredTextNode(category)
             {
-                Tag = Category
+                Tag = category
             };
             model.Nodes.Add(parent);
 
@@ -796,7 +798,7 @@ namespace WillowTree.Plugins
                 };
                 parent.Nodes.Add(child);
             }
-            Tree.EndUpdate();
+            tree.EndUpdate();
         }
 
         private string LevelTranslator(object obj)

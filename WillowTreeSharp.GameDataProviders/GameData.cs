@@ -32,24 +32,24 @@ namespace WillowTree.Services.DataAccess
             DataPath = path;
             skillFiles = new List<string>
             {
-                DataPath + "gd_skills_common.txt",
-                DataPath + "gd_Skills2_Roland.txt",
-                DataPath + "gd_Skills2_Lilith.txt",
-                DataPath + "gd_skills2_Mordecai.txt",
-                DataPath + "gd_Skills2_Brick.txt"
+                Path.Combine(DataPath, "gd_skills_common.txt"),
+                Path.Combine(DataPath, "gd_Skills2_Roland.txt"),
+                Path.Combine(DataPath, "gd_Skills2_Lilith.txt"),
+                Path.Combine(DataPath, "gd_skills2_Mordecai.txt"),
+                Path.Combine(DataPath, "gd_Skills2_Brick.txt")
             };
 
-            XmlPath = Path.Combine(DataPath, "Xml") + Path.DirectorySeparatorChar;
-            EchoesXml = new XmlFile(DataPath + "Echos.ini");
-            LocationsXml = new XmlFile(DataPath + "Locations.ini");
-            QuestsXml = new XmlFile(DataPath + "Quests.ini");
-            SkillsCommonXml = new XmlFile(DataPath + "gd_skills_common.txt");
-            SkillsSoldierXml = new XmlFile(DataPath + "gd_skills2_Roland.txt");
-            SkillsSirenXml = new XmlFile(DataPath + "gd_Skills2_Lilith.txt");
-            SkillsHunterXml = new XmlFile(DataPath + "gd_skills2_Mordecai.txt");
-            SkillsBerserkerXml = new XmlFile(DataPath + "gd_Skills2_Brick.txt");
-            SkillsAllXml = new XmlFile(skillFiles, XmlPath + "gd_skills.xml");
-            PartNamesXml = new XmlFile(DataPath + "partnames.ini");
+            XmlPath = Path.Combine(DataPath, "Xml");
+            EchoesXml = new XmlFile(Path.Combine(DataPath, "Echos.ini"));
+            LocationsXml = new XmlFile(Path.Combine(DataPath, "Locations.ini"));
+            QuestsXml = new XmlFile(Path.Combine(DataPath, "Quests.ini"));
+            SkillsCommonXml = new XmlFile(Path.Combine(DataPath, "gd_skills_common.txt"));
+            SkillsSoldierXml = new XmlFile(Path.Combine(DataPath, "gd_skills2_Roland.txt"));
+            SkillsSirenXml = new XmlFile(Path.Combine(DataPath, "gd_Skills2_Lilith.txt"));
+            SkillsHunterXml = new XmlFile(Path.Combine(DataPath, "gd_skills2_Mordecai.txt"));
+            SkillsBerserkerXml = new XmlFile(Path.Combine(DataPath, "gd_Skills2_Brick.txt"));
+            SkillsAllXml = new XmlFile(skillFiles, Path.Combine(XmlPath, "gd_skills.xml"));
+            PartNamesXml = new XmlFile(Path.Combine(DataPath, "partnames.ini"));
             SetXpChart();
             InitializeNameLookup();
         }
@@ -210,7 +210,7 @@ namespace WillowTree.Services.DataAccess
 
             string partName = part.After('.');
 
-            string dbFileName = XmlPath + database + ".xml";
+            string dbFileName = Path.Combine(XmlPath, $"{database}.xml");
             if (!File.Exists(dbFileName))
             {
                 return null;

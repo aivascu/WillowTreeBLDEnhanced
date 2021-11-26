@@ -50,7 +50,7 @@ namespace WillowTree.Services.DataAccess
                     // C:\Data\Quests\Part1.ini would produce an XML file named
                     // C:\Xml\Quests\Part1.xml.  The code below would produce a file named
                     // C:\Data\Quests\Xml\Part1.xml
-                    folder = xmlPath + folder.Substring(dataPath.Length);
+                    folder = this.Path.Combine(xmlPath, folder.Substring(dataPath.Length));
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace WillowTree.Services.DataAccess
                     // the Data folder, so this code line is probably never executed.  It might
                     // have some use if an application other than WT# was to use the XML
                     // code though.
-                    folder = folder + "Xml" + this.Path.DirectorySeparatorChar;
+                    folder = this.Path.Combine(folder, "Xml");
                 }
 
                 string targetFile = this.Path.Combine(folder, $"{filename}.xml");

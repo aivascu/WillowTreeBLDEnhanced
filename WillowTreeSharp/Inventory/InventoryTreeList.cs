@@ -1,4 +1,4 @@
-﻿using Aga.Controls.Tree;
+using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -552,8 +552,6 @@ namespace WillowTree.Inventory
                     {
                         this._next = this._next.Children[0];
                     }
-                    //while (newnode.Children.Count > 0)
-                    //    newnode = newnode.Children[0];
                 }
             }
 
@@ -605,8 +603,6 @@ namespace WillowTree.Inventory
                     {
                         this._next = this._next.Children[0];
                     }
-                    //while (newnode.Children.Count > 0)
-                    //    newnode = newnode.Children[0];
                 }
             }
 

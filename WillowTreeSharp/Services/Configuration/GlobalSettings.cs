@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.IO.Abstractions;
 using System.Text;
 using System.Xml;
@@ -82,7 +83,7 @@ namespace WillowTree
 
         public static void Save()
         {
-            string filename = GameData.XmlPath + "options.xml";
+            string filename = Path.Combine(GameData.XmlPath, "options.xml");
 
             using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
             {
