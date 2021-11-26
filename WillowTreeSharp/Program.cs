@@ -28,7 +28,7 @@ namespace WillowTree
                 Application.SetCompatibleTextRenderingDefault(false);
 
                 WillowSaveGameSerializer.SetKVFilePath(Path.Combine(Constants.DataPath, "KV.bin"));
-
+                GameData.Initialize(Constants.DataPath);
 
                 FileSystem fileSystem = new FileSystem();
                 WillowTreeMain mainForm = new WillowTreeMain(

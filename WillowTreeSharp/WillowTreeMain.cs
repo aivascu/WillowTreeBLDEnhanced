@@ -63,8 +63,6 @@ namespace WillowTree
 
             this.InitializeComponent();
 
-            this.gameData.InitializeNameLookup();
-
             this.Save.Enabled = false;
             this.SaveAs.Enabled = false;
             this.SelectFormat.Enabled = false;

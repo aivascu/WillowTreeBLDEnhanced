@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using WillowTree.Inventory;
 
 namespace WillowTree.Services.DataAccess
 {
@@ -10,34 +9,52 @@ namespace WillowTree.Services.DataAccess
     {
         private static string openedLocker; //Keep tracking of last open locker file
         private static Dictionary<string, string> nameLookup;
+        private static int keyIndex;
+        private static List<string> skillFiles;
 
-        public static string DataPath { get; } = Constants.DataPath;
-
-        private static readonly List<string> skillFiles = new List<string>
-        {
-            DataPath + "gd_skills_common.txt",
-            DataPath + "gd_Skills2_Roland.txt",
-            DataPath + "gd_Skills2_Lilith.txt",
-            DataPath + "gd_skills2_Mordecai.txt",
-            DataPath + "gd_Skills2_Brick.txt"
-        };
-
-        public static string XmlPath { get; } = Path.Combine(DataPath, "Xml") + Path.DirectorySeparatorChar;
-
-        public static XmlFile EchoesXml { get; } = new XmlFile(DataPath + "Echos.ini");
-        public static XmlFile LocationsXml { get; } = new XmlFile(DataPath + "Locations.ini");
-        public static XmlFile QuestsXml { get; } = new XmlFile(DataPath + "Quests.ini");
-        public static XmlFile SkillsCommonXml { get; } = new XmlFile(DataPath + "gd_skills_common.txt");
-        public static XmlFile SkillsSoldierXml { get; } = new XmlFile(DataPath + "gd_skills2_Roland.txt");
-        public static XmlFile SkillsSirenXml { get; } = new XmlFile(DataPath + "gd_Skills2_Lilith.txt");
-        public static XmlFile SkillsHunterXml { get; } = new XmlFile(DataPath + "gd_skills2_Mordecai.txt");
-        public static XmlFile SkillsBerserkerXml { get; } = new XmlFile(DataPath + "gd_Skills2_Brick.txt");
-        public static XmlFile SkillsAllXml { get; } = new XmlFile(skillFiles, XmlPath + "gd_skills.xml");
-        public static XmlFile PartNamesXml { get; } = new XmlFile(DataPath + "partnames.ini");
+        public static string DataPath { get; set; }
+        public static string XmlPath { get; private set; }
+        public static XmlFile EchoesXml { get; private set; }
+        public static XmlFile LocationsXml { get; private set; }
+        public static XmlFile QuestsXml { get; private set; }
+        public static XmlFile SkillsCommonXml { get; private set; }
+        public static XmlFile SkillsSoldierXml { get; private set; }
+        public static XmlFile SkillsSirenXml { get; private set; }
+        public static XmlFile SkillsHunterXml { get; private set; }
+        public static XmlFile SkillsBerserkerXml { get; private set; }
+        public static XmlFile SkillsAllXml { get; private set; }
+        public static XmlFile PartNamesXml { get; private set; }
 
         public static int[] XPChart { get; } = new int[71];
 
-        public static void SetXPchart()
+        public static void Initialize(string path)
+        {
+            DataPath = path;
+            skillFiles = new List<string>
+            {
+                DataPath + "gd_skills_common.txt",
+                DataPath + "gd_Skills2_Roland.txt",
+                DataPath + "gd_Skills2_Lilith.txt",
+                DataPath + "gd_skills2_Mordecai.txt",
+                DataPath + "gd_Skills2_Brick.txt"
+            };
+
+            XmlPath = Path.Combine(DataPath, "Xml") + Path.DirectorySeparatorChar;
+            EchoesXml = new XmlFile(DataPath + "Echos.ini");
+            LocationsXml = new XmlFile(DataPath + "Locations.ini");
+            QuestsXml = new XmlFile(DataPath + "Quests.ini");
+            SkillsCommonXml = new XmlFile(DataPath + "gd_skills_common.txt");
+            SkillsSoldierXml = new XmlFile(DataPath + "gd_skills2_Roland.txt");
+            SkillsSirenXml = new XmlFile(DataPath + "gd_Skills2_Lilith.txt");
+            SkillsHunterXml = new XmlFile(DataPath + "gd_skills2_Mordecai.txt");
+            SkillsBerserkerXml = new XmlFile(DataPath + "gd_Skills2_Brick.txt");
+            SkillsAllXml = new XmlFile(skillFiles, XmlPath + "gd_skills.xml");
+            PartNamesXml = new XmlFile(DataPath + "partnames.ini");
+            SetXpChart();
+            InitializeNameLookup();
+        }
+
+        public static void SetXpChart()
         {
             XPChart[0] = 0;
             XPChart[1] = 0;
@@ -115,7 +132,24 @@ namespace WillowTree.Services.DataAccess
             XPChart[70] = 2147483647;
         }
 
-        private static int keyIndex;
+        public static void InitializeNameLookup()
+        {
+            nameLookup = new Dictionary<string, string>();
+            {
+                XmlFile names = PartNamesXml;
+
+                foreach (string section in names.StListSectionNames())
+                {
+                    foreach (string entry in names.XmlReadSection(section))
+                    {
+                        int index = entry.IndexOf(':');
+                        string part = entry.Substring(0, index);
+                        string name = entry.Substring(index + 1);
+                        nameLookup.Add(part, name);
+                    }
+                }
+            }
+        }
 
         public static string CreateUniqueKey()
         {
@@ -364,25 +398,6 @@ namespace WillowTree.Services.DataAccess
             }
 
             return weaponInfo;
-        }
-
-        public static void InitializeNameLookup()
-        {
-            nameLookup = new Dictionary<string, string>();
-            {
-                XmlFile names = PartNamesXml;
-
-                foreach (string section in names.StListSectionNames())
-                {
-                    foreach (string entry in names.XmlReadSection(section))
-                    {
-                        int index = entry.IndexOf(':');
-                        string part = entry.Substring(0, index);
-                        string name = entry.Substring(index + 1);
-                        nameLookup.Add(part, name);
-                    }
-                }
-            }
         }
     }
 }

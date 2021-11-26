@@ -1,4 +1,4 @@
-﻿using Aga.Controls.Tree;
+using Aga.Controls.Tree;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,7 +42,6 @@ namespace WillowTree.Plugins
 
             this.Enabled = false;
             this.locationsXml = this.GameData.LocationsXml;
-            this.GameData.SetXPchart();
             this.DoLocationsList();
             this.Cash.Maximum = this.GlobalSettings.MaxCash;
             this.Experience.Maximum = this.GlobalSettings.MaxExperience;

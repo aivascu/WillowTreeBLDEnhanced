@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ArrayHelper.cs" />
+    <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Controls\IMessageBox.cs" />
     <Compile Include="Controls\MessageBoxWrapper.cs" />
     <Compile Include="Controls\StrictNumericUpDown.cs">
@@ -132,7 +133,6 @@
     <Compile Include="Inventory\InventoryTreeList.cs" />
     <Compile Include="Inventory\InventoryType.cs" />
     <Compile Include="Plugins\PluginComponentManager.cs" />
-    <Compile Include="Common\ParseString.cs" />
     <Compile Include="Services\Configuration\GlobalSettings.cs" />
     <Compile Include="Plugins\ucAbout.cs">
       <SubType>UserControl</SubType>
@@ -188,19 +188,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Common\StringExtensions.cs" />
-    <Compile Include="Services\DataAccess\GameData.cs" />
-    <Compile Include="Services\DataAccess\GameDataWrapper.cs" />
-    <Compile Include="Services\DataAccess\IGameData.cs" />
     <Compile Include="Services\DataAccess\IInventoryData.cs" />
     <Compile Include="Services\DataAccess\InventoryData.cs" />
     <Compile Include="Services\DataAccess\InventoryDataWrapper.cs" />
-    <Compile Include="Services\DataAccess\IXmlCache.cs" />
     <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
-    <Compile Include="Services\DataAccess\XmlCache.cs" />
-    <Compile Include="Services\DataAccess\XmlCacheWrapper.cs" />
-    <Compile Include="Services\DataAccess\XmlFile.cs" />
-    <Compile Include="Services\DataAccess\XmlNodeExtensions.cs" />
     <Compile Include="WillowTreeMain.cs">
       <SubType>Form</SubType>
     </Compile>

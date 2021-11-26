@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using WillowTree.Inventory;
+using System.Collections.Generic;
 
 namespace WillowTree.Services.DataAccess
 {

@@ -1,21 +1,14 @@
-﻿using System.Collections.Generic;
-using WillowTree.Inventory;
+using System.Collections.Generic;
 
 namespace WillowTree.Services.DataAccess
 {
     public class GameDataWrapper : IGameData
     {
-        public InventoryList BankList => InventoryData.BankList;
-
         public string DataPath => GameData.DataPath;
 
         public XmlFile EchoesXml => GameData.EchoesXml;
 
-        public InventoryList ItemList => InventoryData.ItemList;
-
         public XmlFile LocationsXml => GameData.LocationsXml;
-
-        public InventoryList LockerList => InventoryData.LockerList;
 
         public XmlFile PartNamesXml => GameData.PartNamesXml;
 
@@ -32,8 +25,6 @@ namespace WillowTree.Services.DataAccess
         public XmlFile SkillsSirenXml => GameData.SkillsSirenXml;
 
         public XmlFile SkillsSoldierXml => GameData.SkillsSoldierXml;
-
-        public InventoryList WeaponList => InventoryData.WeaponList;
 
         public string XmlPath => GameData.XmlPath;
 
@@ -91,7 +82,7 @@ namespace WillowTree.Services.DataAccess
 
         public void SetXPchart()
         {
-            GameData.SetXPchart();
+            GameData.SetXpChart();
         }
 
         public string WeaponInfo(string[] parts, int qualityIndex, int levelIndex)
