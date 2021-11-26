@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Autofac;
@@ -25,7 +26,9 @@ namespace WillowTree
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
                 Application.EnableVisualStyles();
+                Application.SetHighDpiMode(HighDpiMode.SystemAware);
                 Application.SetCompatibleTextRenderingDefault(false);
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
                 WillowSaveGameSerializer.SetKVFilePath(Path.Combine(Constants.DataPath, "KV.bin"));
                 GameData.Initialize(Constants.DataPath);

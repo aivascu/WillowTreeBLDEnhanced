@@ -1,27 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D15E6A8F-E4CD-4E0C-A953-ABE3320D98DA}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WillowTree</RootNamespace>
     <AssemblyName>WillowTree#</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ApplicationIcon>Resources\WillowTreeOld.ico</ApplicationIcon>
     <StartupObject>WillowTree.Program</StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -36,72 +21,38 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
-  <PropertyGroup />
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="PresentationCore">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core">
+    <Reference Update="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Design" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq">
+    <Reference Update="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase">
+    <Reference Update="UIAutomationProvider">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="X360, Version=1.0.0.41, Culture=neutral, processorArchitecture=MSIL">
@@ -110,148 +61,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ArrayHelper.cs" />
-    <Compile Include="Common\FileSystemModule.cs" />
-    <Compile Include="Common\PresentationModule.cs" />
-    <Compile Include="Common\ServicesModule.cs" />
-    <Compile Include="Common\StringExtensions.cs" />
-    <Compile Include="Controls\IMessageBox.cs" />
-    <Compile Include="Controls\MessageBoxWrapper.cs" />
-    <Compile Include="Controls\StrictNumericUpDown.cs">
+    <Compile Update="Controls\StrictNumericUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Plugins\IPlugin.cs" />
-    <Compile Include="Plugins\PluginCommand.cs" />
-    <Compile Include="Plugins\PluginCommandEventArgs.cs" />
-    <Compile Include="Plugins\PluginEventArgs.cs" />
-    <Compile Include="Plugins\PluginEvents.cs" />
-    <Compile Include="Presenters\AboutViewPresenter.cs" />
-    <Compile Include="Services\DataAccess\Constants.cs" />
-    <Compile Include="Services\Configuration\GlobalSettingsWrapper.cs" />
-    <Compile Include="Services\Configuration\IGlobalSettings.cs" />
-    <Compile Include="Inventory\InventoryComparer.cs" />
-    <Compile Include="Inventory\InventoryComparers.cs" />
-    <Compile Include="Inventory\InventoryComparisonIterator.cs" />
-    <Compile Include="Inventory\InventoryEntry.cs" />
-    <Compile Include="Inventory\InventoryList.cs" />
-    <Compile Include="Inventory\InventoryTreeList.cs" />
-    <Compile Include="Inventory\InventoryType.cs" />
-    <Compile Include="Plugins\PluginComponentManager.cs" />
-    <Compile Include="Services\Configuration\GlobalSettings.cs" />
-    <Compile Include="Plugins\AboutView.cs">
+    <Compile Update="Plugins\AboutView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\AboutView.Designer.cs">
-      <DependentUpon>AboutView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\ucAmmo.cs">
+    <Compile Update="Plugins\ucAmmo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucAmmo.Designer.cs">
-      <DependentUpon>ucAmmo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\ucEchoes.cs">
+    <Compile Update="Plugins\ucEchoes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucEchoes.Designer.cs">
-      <DependentUpon>ucEchoes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\ucGears.cs">
+    <Compile Update="Plugins\ucGears.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucGears.Designer.cs">
-      <DependentUpon>ucGears.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\ucGeneral.cs">
+    <Compile Update="Plugins\ucGeneral.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucGeneral.Designer.cs">
-      <DependentUpon>ucGeneral.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\ucLocker.cs">
+    <Compile Update="Plugins\ucLocker.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucLocker.Designer.cs">
-      <DependentUpon>ucLocker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\ucQuests.cs">
+    <Compile Update="Plugins\ucQuests.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucQuests.Designer.cs">
-      <DependentUpon>ucQuests.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\ucSkills.cs">
+    <Compile Update="Plugins\ucSkills.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucSkills.Designer.cs">
-      <DependentUpon>ucSkills.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Inventory\IInventoryData.cs" />
-    <Compile Include="Inventory\InventoryData.cs" />
-    <Compile Include="Inventory\InventoryDataWrapper.cs" />
-    <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
-    <Compile Include="WillowTreeMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WillowTreeMain.Designer.cs">
-      <DependentUpon>WillowTreeMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\WTOpenFileDialog.cs" />
-    <Compile Include="Controls\WTSaveFileDialog.cs" />
-    <Compile Include="XBoxIDDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="XBoxIDDialog.Designer.cs">
-      <DependentUpon>XBoxIDDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="COPYING.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Plugins\AboutView.resx">
-      <DependentUpon>AboutView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucAmmo.resx">
-      <DependentUpon>ucAmmo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucEchoes.resx">
-      <DependentUpon>ucEchoes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucGears.resx">
-      <DependentUpon>ucGears.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucGeneral.resx">
-      <DependentUpon>ucGeneral.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucLocker.resx">
-      <DependentUpon>ucLocker.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucQuests.resx">
-      <DependentUpon>ucQuests.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\ucSkills.resx">
-      <DependentUpon>ucSkills.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WillowTreeMain.resx">
-      <DependentUpon>WillowTreeMain.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="XBoxIDDialog.resx">
-      <DependentUpon>XBoxIDDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="app.config" />
     <Content Include="Data\dlc2_gd_Bank.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -423,15 +262,6 @@
     <Content Include="Data\titles.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\WT_Background.png" />
@@ -445,38 +275,27 @@
     <Content Include="Resources\WillowTreeOld.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Aga.Controls\Aga.Controls.csproj">
-      <Project>{e73bb233-d88b-44a7-a98f-d71ee158381d}</Project>
-      <Name>Aga.Controls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WillowTreeSharp.Controls\WillowTreeSharp.Controls.csproj">
-      <Project>{9cac0af9-f039-4f22-963d-52eb5bab7f55}</Project>
-      <Name>WillowTreeSharp.Controls</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WillowTreeSharp.Domain\WillowTreeSharp.Domain.csproj">
-      <Project>{fe2326a6-b36c-4adc-92d1-ec3ffea21e93}</Project>
-      <Name>WillowTreeSharp.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WillowTreeSharp.GameDataProviders\WillowTreeSharp.GameDataProviders.csproj">
-      <Project>{78f8995a-4c1a-4f1d-9e77-7b41d84a1152}</Project>
-      <Name>WillowTreeSharp.GameDataProviders</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WillowTreeSharp.Serialization\WillowTreeSharp.Serialization.csproj">
-      <Project>{68243f21-2706-421b-a193-5d7ac570615a}</Project>
-      <Name>WillowTreeSharp.Serialization</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Aga.Controls\Aga.Controls.csproj" />
+    <ProjectReference Include="..\WillowTreeSharp.Controls\WillowTreeSharp.Controls.csproj" />
+    <ProjectReference Include="..\WillowTreeSharp.Domain\WillowTreeSharp.Domain.csproj" />
+    <ProjectReference Include="..\WillowTreeSharp.GameDataProviders\WillowTreeSharp.GameDataProviders.csproj" />
+    <ProjectReference Include="..\WillowTreeSharp.Serialization\WillowTreeSharp.Serialization.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac">
       <Version>6.3.0</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="NLog.Config">
       <Version>4.7.12</Version>
     </PackageReference>
-    <PackageReference Include="System.IO.Abstractions">
-      <Version>13.2.47</Version>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.9.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.9.0" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="4.9.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.256001">
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

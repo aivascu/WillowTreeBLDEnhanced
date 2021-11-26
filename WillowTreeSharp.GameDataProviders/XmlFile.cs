@@ -320,7 +320,7 @@ namespace WillowTree.Services.DataAccess
                                 }
                                 else
                                 {
-                                    throw new FileFormatException("File format is invalid on line " + lineNumber + "\r\nFile: " + iniName);
+                                    throw new FormatException("File format is invalid on line " + lineNumber + "\r\nFile: " + iniName);
                                 }
                             }
                         }
