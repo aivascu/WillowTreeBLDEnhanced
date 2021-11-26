@@ -54,12 +54,7 @@ namespace WillowTreeSharp.Domain
         public int Vehi2Type;
 
         //Ammo Pool Arrays
-        public int NumberOfPools;
-
-        public string[] ResourcePools;
-        public string[] AmmoPools;
-        public float[] RemainingPools;
-        public int[] PoolLevels;
+        public List<AmmoPool> AmmoPools { get; set; } = new List<AmmoPool>();
 
         //Delegate for read String and Value
 

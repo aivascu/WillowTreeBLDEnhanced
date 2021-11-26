@@ -915,14 +915,15 @@ namespace WillowTree.Services.DataAccess
             Write(writer, saveGame.Vehi2Color, saveGame.EndianWsg);
             Write(writer, saveGame.Vehi1Type, saveGame.EndianWsg);
             Write(writer, saveGame.Vehi2Type, saveGame.EndianWsg);
-            Write(writer, saveGame.NumberOfPools, saveGame.EndianWsg);
 
-            for (var progress = 0x0; progress < saveGame.NumberOfPools; progress++) //Write Ammo Pools
+            //Write Ammo Pools
+            Write(writer, saveGame.AmmoPools.Count, saveGame.EndianWsg);
+            foreach (var pool in saveGame.AmmoPools)
             {
-                Write(writer, saveGame.ResourcePools[progress], saveGame.EndianWsg);
-                Write(writer, saveGame.AmmoPools[progress], saveGame.EndianWsg);
-                Write(writer, saveGame.RemainingPools[progress], saveGame.EndianWsg);
-                Write(writer, saveGame.PoolLevels[progress], saveGame.EndianWsg);
+                Write(writer, pool.Resource, saveGame.EndianWsg);
+                Write(writer, pool.Name, saveGame.EndianWsg);
+                Write(writer, pool.Remaining, saveGame.EndianWsg);
+                Write(writer, pool.Level, saveGame.EndianWsg);
             }
 
             WriteObjects(writer, saveGame.Items1, saveGame.EndianWsg, saveGame.RevisionNumber); //Write Items
@@ -1321,20 +1322,9 @@ namespace WillowTree.Services.DataAccess
             saveGame.Vehi2Type = ReadInt32(testReader, saveGame.EndianWsg);
 
             var pools = ReadAmmoPools(testReader, saveGame.EndianWsg).ToArray();
-            saveGame.ResourcePools = new string[pools.Length];
-            saveGame.AmmoPools = new string[pools.Length];
-            saveGame.RemainingPools = new float[pools.Length];
-            saveGame.PoolLevels = new int[pools.Length];
+            saveGame.AmmoPools.AddRange(pools);
 
-            for (var ammoPoolIndex = 0; ammoPoolIndex < pools.Length; ammoPoolIndex++)
-            {
-                saveGame.ResourcePools[ammoPoolIndex] = pools[ammoPoolIndex].Resource;
-                saveGame.AmmoPools[ammoPoolIndex] = pools[ammoPoolIndex].Name;
-                saveGame.RemainingPools[ammoPoolIndex] = pools[ammoPoolIndex].Remaining;
-                saveGame.PoolLevels[ammoPoolIndex] = pools[ammoPoolIndex].Level;
-            }
 
-            saveGame.NumberOfPools = pools.Length;
             Console.WriteLine("====== ENTER ITEM ======");
             var itemCount = ReadInt32(testReader, saveGame.EndianWsg);
             var items = ReadObjects<Item>(testReader, itemCount, saveGame.EndianWsg, saveGame.RevisionNumber, new ItemsReader());

@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Aga.Controls.Tree;
 using Microsoft.VisualBasic;
-using WillowTree.Common;
 using WillowTree.Controls;
 using WillowTreeSharp.Domain;
 
@@ -11,6 +11,30 @@ namespace WillowTree.Plugins
     public partial class UcAmmo : UserControl, IPlugin
     {
         private WillowSaveGame currentWsg;
+
+        private Dictionary<string, string> namesLookup = new Dictionary<string, string>
+        {
+            { "d_resources.AmmoResources.Ammo_Sniper_Rifle",  "Sniper Rifle" },
+            { "d_resources.AmmoResources.Ammo_Repeater_Pistol", "Repeater Pistol" },
+            { "d_resources.AmmoResources.Ammo_Grenade_Protean", "Protean Grenades" },
+            { "d_resources.AmmoResources.Ammo_Patrol_SMG", "Patrol SMG" },
+            { "d_resources.AmmoResources.Ammo_Combat_Shotgun", "Combat Shotgun" },
+            { "d_resources.AmmoResources.Ammo_Combat_Rifle", "Combat Rifle" },
+            { "d_resources.AmmoResources.Ammo_Revolver_Pistol", "Revolver Pistol" },
+            { "d_resources.AmmoResources.Ammo_Rocket_Launcher", "Rocket Launcher" },
+        };
+
+        private Dictionary<string, string> resourceLookup = new Dictionary<string, string>
+        {
+            {  "Sniper Rifle" , "d_resources.AmmoResources.Ammo_Sniper_Rifle"},
+            { "Repeater Pistol" , "d_resources.AmmoResources.Ammo_Repeater_Pistol"},
+            { "Protean Grenades" , "d_resources.AmmoResources.Ammo_Grenade_Protean"},
+            { "Patrol SMG" , "d_resources.AmmoResources.Ammo_Patrol_SMG"},
+            { "Combat Shotgun" , "d_resources.AmmoResources.Ammo_Combat_Shotgun"},
+            { "Combat Rifle" , "d_resources.AmmoResources.Ammo_Combat_Rifle"},
+            { "Revolver Pistol" , "d_resources.AmmoResources.Ammo_Revolver_Pistol"},
+            { "Rocket Launcher" , "d_resources.AmmoResources.Ammo_Rocket_Launcher"},
+        };
 
         public UcAmmo(IMessageBox messageBox)
         {
@@ -26,9 +50,9 @@ namespace WillowTree.Plugins
             TreeModel model = new TreeModel();
             this.AmmoTree.Model = model;
 
-            for (int build = 0; build < this.currentWsg.NumberOfPools; build++)
+            foreach (var item in this.currentWsg.AmmoPools)
             {
-                string ammoName = this.GetAmmoName(this.currentWsg.ResourcePools[build]);
+                string ammoName = this.GetAmmoName(item.Resource);
                 ColoredTextNode node = new ColoredTextNode(ammoName);
                 model.Nodes.Add(node);
             }
@@ -37,35 +61,16 @@ namespace WillowTree.Plugins
 
         private string GetAmmoName(string resource)
         {
-            switch (resource)
-            {
-                case "d_resources.AmmoResources.Ammo_Sniper_Rifle":
-                    return "Sniper Rifle";
+            return this.namesLookup.TryGetValue(resource, out var value)
+                ? value
+                : resource;
+        }
 
-                case "d_resources.AmmoResources.Ammo_Repeater_Pistol":
-                    return "Repeater Pistol";
-
-                case "d_resources.AmmoResources.Ammo_Grenade_Protean":
-                    return "Protean Grenades";
-
-                case "d_resources.AmmoResources.Ammo_Patrol_SMG":
-                    return "Patrol SMG";
-
-                case "d_resources.AmmoResources.Ammo_Combat_Shotgun":
-                    return "Combat Shotgun";
-
-                case "d_resources.AmmoResources.Ammo_Combat_Rifle":
-                    return "Combat Rifle";
-
-                case "d_resources.AmmoResources.Ammo_Revolver_Pistol":
-                    return "Revolver Pistol";
-
-                case "d_resources.AmmoResources.Ammo_Rocket_Launcher":
-                    return "Rocket Launcher";
-
-                default:
-                    return resource;
-            }
+        private string GetAmmoResource(string name)
+        {
+            return this.resourceLookup.TryGetValue(name, out var value)
+                ? value
+                : name;
         }
 
         public void InitializePlugin(PluginComponentManager pluginManager)
@@ -96,7 +101,7 @@ namespace WillowTree.Plugins
             TreeNodeAdv selectedNode = this.AmmoTree.SelectedNode;
             if (selectedNode != null)
             {
-                this.currentWsg.RemainingPools[selectedNode.Index] = (float)this.AmmoPoolRemaining.Value;
+                this.currentWsg.AmmoPools[selectedNode.Index].Remaining = (float)this.AmmoPoolRemaining.Value;
             }
         }
 
@@ -105,7 +110,7 @@ namespace WillowTree.Plugins
             TreeNodeAdv selectedNode = this.AmmoTree.SelectedNode;
             if (selectedNode != null)
             {
-                this.currentWsg.PoolLevels[selectedNode.Index] = (int)this.AmmoSDULevel.Value;
+                this.currentWsg.AmmoPools[selectedNode.Index].Level = (int)this.AmmoSDULevel.Value;
             }
         }
 
@@ -122,20 +127,18 @@ namespace WillowTree.Plugins
             TreeNodeAdv selectedNode = this.AmmoTree.SelectedNode;
             if (selectedNode != null)
             {
-                this.AmmoPoolRemaining.Value = (decimal)this.currentWsg.RemainingPools[selectedNode.Index];
-                this.AmmoSDULevel.Value = this.currentWsg.PoolLevels[selectedNode.Index];
+                this.AmmoPoolRemaining.Value = (decimal)this.currentWsg.AmmoPools[selectedNode.Index].Remaining;
+                this.AmmoSDULevel.Value = this.currentWsg.AmmoPools[selectedNode.Index].Level;
             }
         }
 
         private void DeleteAmmo_Click(object sender, EventArgs e)
         {
-            if (this.AmmoTree.SelectedNode != null)
+            var selectedNode = this.AmmoTree.SelectedNode;
+            if (selectedNode != null)
             {
-                this.currentWsg.NumberOfPools--;
-                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.AmmoPools, this.currentWsg.NumberOfPools);
-                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.ResourcePools, this.currentWsg.NumberOfPools);
-                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.RemainingPools, this.currentWsg.NumberOfPools);
-                ArrayHelper.ResizeArraySmaller(ref this.currentWsg.PoolLevels, this.currentWsg.NumberOfPools);
+                var resource = this.GetAmmoResource(selectedNode.Text());
+                this.currentWsg.AmmoPools.RemoveAll(x => x.Resource == resource);
                 this.DoAmmoTree();
             }
         }
@@ -144,17 +147,12 @@ namespace WillowTree.Plugins
         {
             try
             {
-                string newDResources = Interaction.InputBox("Enter the 'd_resources' for the new Ammo Pool", "New Ammo Pool", "", 10, 10);
-                string newDResourcepools = Interaction.InputBox("Enter the 'd_resourcepools' for the new Ammo Pool", "New Ammo Pool", "", 10, 10);
-                if (newDResourcepools != "" && newDResources != "")
+                string resource = Interaction.InputBox("Enter the 'd_resources' for the new Ammo Pool", "New Ammo Pool", "", 10, 10);
+                string resourcePool = Interaction.InputBox("Enter the 'd_resourcepools' for the new Ammo Pool", "New Ammo Pool", "", 10, 10);
+                if (resourcePool != "" && resource != "")
                 {
-                    this.currentWsg.NumberOfPools++;
-                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.AmmoPools, this.currentWsg.NumberOfPools);
-                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.ResourcePools, this.currentWsg.NumberOfPools);
-                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.RemainingPools, this.currentWsg.NumberOfPools);
-                    ArrayHelper.ResizeArrayLarger(ref this.currentWsg.PoolLevels, this.currentWsg.NumberOfPools);
-                    this.currentWsg.AmmoPools[this.currentWsg.NumberOfPools - 1] = newDResourcepools;
-                    this.currentWsg.ResourcePools[this.currentWsg.NumberOfPools - 1] = newDResources;
+                    var newPool = new AmmoPool(resource, resourcePool, 0, 0);
+                    this.currentWsg.AmmoPools.Add(newPool);
                     this.DoAmmoTree();
                 }
             }

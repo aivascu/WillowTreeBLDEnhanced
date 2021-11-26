@@ -10,9 +10,9 @@ namespace WillowTreeSharp.Domain
             this.Level = level;
         }
 
-        public string Resource { get; private set; }
-        public string Name { get; private set; }
-        public float Remaining { get; private set; }
-        public int Level { get; private set; }
+        public string Resource { get; set; }
+        public string Name { get; set; }
+        public float Remaining { get; set; }
+        public int Level { get; set; }
     }
 }
