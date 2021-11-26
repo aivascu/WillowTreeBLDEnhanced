@@ -122,6 +122,7 @@
     <Compile Include="Plugins\PluginCommandEventArgs.cs" />
     <Compile Include="Plugins\PluginEventArgs.cs" />
     <Compile Include="Plugins\PluginEvents.cs" />
+    <Compile Include="Presenters\AboutViewPresenter.cs" />
     <Compile Include="Services\DataAccess\Constants.cs" />
     <Compile Include="Services\Configuration\GlobalSettingsWrapper.cs" />
     <Compile Include="Services\Configuration\IGlobalSettings.cs" />
@@ -470,6 +471,8 @@
       <Version>13.2.47</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Presenters\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
