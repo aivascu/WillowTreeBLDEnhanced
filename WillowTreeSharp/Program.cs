@@ -1,14 +1,12 @@
-using NLog;
 using System;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using System.IO.Abstractions;
-using WillowTree.Plugins;
+using Autofac;
+using NLog;
+using WillowTree.Common;
+using WillowTree.Presenters;
 using WillowTree.Services.DataAccess;
-using WillowTree.Controls;
-using System.IO;
-using WillowTree.Inventory;
-using WillowTree.Services.Configuration;
 
 namespace WillowTree
 {
@@ -32,17 +30,15 @@ namespace WillowTree
                 WillowSaveGameSerializer.SetKVFilePath(Path.Combine(Constants.DataPath, "KV.bin"));
                 GameData.Initialize(Constants.DataPath);
 
-                FileSystem fileSystem = new FileSystem();
-                WillowTreeMain mainForm = new WillowTreeMain(
-                    new FileWrapper(fileSystem),
-                    new DirectoryWrapper(fileSystem),
-                    new GameDataWrapper(),
-                    new InventoryDataWrapper(),
-                    new GlobalSettingsWrapper(),
-                    new XmlCacheWrapper(),
-                    new MessageBoxWrapper(),
-                    new PluginComponentManager(),
-                    new AppThemes());
+                var builder = new ContainerBuilder();
+                builder.RegisterModule<FileSystemModule>();
+                builder.RegisterModule<ServicesModule>();
+                builder.RegisterModule<PresentationModule>();
+                var container = builder.Build();
+
+                var aboutPresenter = container.Resolve<AboutViewPresenter>();
+                var mainForm = container.Resolve<WillowTreeMain>();
+
                 Application.Run(mainForm);
             }
             catch (Exception e)

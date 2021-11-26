@@ -25,6 +25,7 @@ namespace WillowTree
         private readonly AppThemes themes;
         private readonly IInventoryData inventoryData;
         private readonly string settingsFilePath;
+        private readonly AboutView aboutView;
 
         public WillowTreeMain(
             IFile file,
@@ -35,7 +36,8 @@ namespace WillowTree
             IXmlCache xmlCache,
             IMessageBox messageBox,
             PluginComponentManager pluginManager,
-            AppThemes themes)
+            AppThemes themes,
+            AboutView aboutView)
         {
             this.file = file;
             this.directory = directory;
@@ -45,6 +47,7 @@ namespace WillowTree
             this.pluginManager = pluginManager;
             this.themes = themes;
             this.MessageBox = messageBox;
+            this.aboutView = aboutView;
 
             this.settingsFilePath = Path.Combine(this.gameData.XmlPath, "options.xml");
             this.settings.Load(this.settingsFilePath);
@@ -78,11 +81,11 @@ namespace WillowTree
             this.CreatePluginAsTab("Echo Logs", new ucEchoes());
             this.CreatePluginAsTab("Bank", new ucGears(this.gameData, this.inventoryData, this.settings, xmlCache, this.file));
             this.CreatePluginAsTab("Locker", new ucLocker(this.settings,this.gameData, this.MessageBox, this.file));
-            this.CreatePluginAsTab("About", new AboutView());
+            this.CreatePluginAsTab("About", aboutView);
 
             try
             {
-                this.tabControl1.SelectTab("ucAbout");
+                this.tabControl1.SelectTab("AboutView");
             }
             catch
             {
