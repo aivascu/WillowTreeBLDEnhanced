@@ -188,9 +188,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Services\DataAccess\IInventoryData.cs" />
-    <Compile Include="Services\DataAccess\InventoryData.cs" />
-    <Compile Include="Services\DataAccess\InventoryDataWrapper.cs" />
+    <Compile Include="Inventory\IInventoryData.cs" />
+    <Compile Include="Inventory\InventoryData.cs" />
+    <Compile Include="Inventory\InventoryDataWrapper.cs" />
     <Compile Include="Services\DataAccess\PurgeDuplicateNodesCommand.cs" />
     <Compile Include="WillowTreeMain.cs">
       <SubType>Form</SubType>
