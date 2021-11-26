@@ -2,9 +2,9 @@
 {
     public static class InventoryType
     {
-        public static byte Weapon = 0;
-        public static byte Item = 1;
-        public static byte Any = 2;
-        public static byte Unknown = 3;
+        public const byte Weapon = 0;
+        public const byte Item = 1;
+        public const byte Any = 2;
+        public const byte Unknown = 3;
     }
 }

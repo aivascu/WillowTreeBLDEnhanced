@@ -1,6 +1,4 @@
-﻿using WillowTree.Inventory;
-
-namespace WillowTree.Services.DataAccess
+﻿namespace WillowTree.Inventory
 {
     public interface IInventoryData
     {

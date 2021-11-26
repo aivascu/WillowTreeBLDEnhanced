@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using WillowTree.Controls;
 using WillowTree.Inventory;
 using WillowTree.Plugins;
+using WillowTree.Services.Configuration;
 using WillowTree.Services.DataAccess;
 using WillowTreeSharp.Domain;
 

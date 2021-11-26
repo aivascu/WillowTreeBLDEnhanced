@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WillowTree
+namespace WillowTree.Common
 {
     public static class ArrayHelper
     {

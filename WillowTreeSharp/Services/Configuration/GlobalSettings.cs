@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.Abstractions;
 using System.Text;
 using System.Xml;
+using WillowTree.Common;
 using WillowTree.Services.DataAccess;
 
-namespace WillowTree
+namespace WillowTree.Services.Configuration
 {
     public static class GlobalSettings
     {

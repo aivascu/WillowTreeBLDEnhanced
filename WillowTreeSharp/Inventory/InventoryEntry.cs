@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using WillowTree.Services.Configuration;
 using WillowTree.Services.DataAccess;
 using WillowTreeSharp.Domain;
 
@@ -70,7 +71,7 @@ namespace WillowTree.Inventory
             int i;
             for (i = 0; i < 14; i++)
             {
-                string part = node.GetElement("Part" + (i + 1), "");
+                var part = node.GetElement("Part" + (i + 1), "");
                 if (part == "")
                 {
                     break;
@@ -114,7 +115,7 @@ namespace WillowTree.Inventory
                     this.Category = "none";
                 }
 
-                List<string> nameparts = new List<string>();
+                var nameparts = new List<string>();
                 string namepart;
                 for (i = 0; true; i++)
                 {
@@ -244,17 +245,17 @@ namespace WillowTree.Inventory
             //      Title string
             //      Rarity string
             //      Level string
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            var sb = new System.Text.StringBuilder();
 
-            bool showManufacturer = GlobalSettings.ShowManufacturer;
-            bool showRarity = GlobalSettings.ShowRarity;
-            bool showLevel = GlobalSettings.ShowLevel;
-            bool nameIsEmpty = true;
+            var showManufacturer = GlobalSettings.ShowManufacturer;
+            var showRarity = GlobalSettings.ShowRarity;
+            var showLevel = GlobalSettings.ShowLevel;
+            var nameIsEmpty = true;
 
-            int namePartCount = this.NameParts.Length;
-            for (int i = 0; i < namePartCount; i++)
+            var namePartCount = this.NameParts.Length;
+            for (var i = 0; i < namePartCount; i++)
             {
-                string namePart = this.NameParts[i];
+                var namePart = this.NameParts[i];
                 if (namePart.Length == 0)
                 {
                     continue;
@@ -317,16 +318,16 @@ namespace WillowTree.Inventory
             // and naming items that is determined from the parts and values.
             // This function is used to fetch them all.
 
-            string BodyText = GameData.GetName(this.Parts[5]); // Body text
-            string MaterialText = GameData.GetName(this.Parts[2]); // Material text
+            var BodyText = GameData.GetName(this.Parts[5]); // Body text
+            var MaterialText = GameData.GetName(this.Parts[2]); // Material text
 
-            int Model = Parse.AsInt(GameData.GetPartAttribute(this.Parts[4], "PartNumberAddend"), 0);        // Number from stock
+            var Model = Parse.AsInt(GameData.GetPartAttribute(this.Parts[4], "PartNumberAddend"), 0);        // Number from stock
             Model += Parse.AsInt(GameData.GetPartAttribute(this.Parts[3], "PartNumberAddend"), 0);           // Number from mag
 
             this.Rarity = Parse.AsInt(GameData.GetPartAttribute(this.Parts[1], "BaseRarity"), 0);
-            for (int i = 2; i < 9; i++)
+            for (var i = 2; i < 9; i++)
             {
-                int partrarity = GameData.GetPartRarity(this.Parts[i]);
+                var partrarity = GameData.GetPartRarity(this.Parts[i]);
 
                 this.Rarity += partrarity;
             }
@@ -337,18 +338,18 @@ namespace WillowTree.Inventory
                 Model = Model * 10;
             }
 
-            string ModelText = (Model != 0 ? Model.ToString() : "");
+            var ModelText = (Model != 0 ? Model.ToString() : "");
 
-            string MfgText = GameData.GetPartAttribute(this.Parts[6], "Manufacturer"); // Mfg Name
+            var MfgText = GameData.GetPartAttribute(this.Parts[6], "Manufacturer"); // Mfg Name
             if (MfgText == "")
             {
                 MfgText = GameData.GetPartAttribute(this.Parts[1], "NoManufacturerName");
             }
 
-            string ModelName = BodyText + ModelText + MaterialText;
+            var ModelName = BodyText + ModelText + MaterialText;
 
-            string Prefix = GameData.GetName(this.Parts[7]);
-            string Title = GameData.GetName(this.Parts[8]);
+            var Prefix = GameData.GetName(this.Parts[7]);
+            var Title = GameData.GetName(this.Parts[8]);
 
             if ((Title == "") && (Prefix == ""))
             {
@@ -383,16 +384,16 @@ namespace WillowTree.Inventory
             // and naming items that is determined from the parts and values.
             // This function is used to fetch them all.
 
-            string BodyText = GameData.GetName(this.Parts[3]); // Body text
-            string MaterialText = GameData.GetName(this.Parts[11]); // Material text
+            var BodyText = GameData.GetName(this.Parts[3]); // Body text
+            var MaterialText = GameData.GetName(this.Parts[11]); // Material text
 
-            int Model = Parse.AsInt(GameData.GetPartAttribute(this.Parts[8], "PartNumberAddend"), 0);        // Number from stock
+            var Model = Parse.AsInt(GameData.GetPartAttribute(this.Parts[8], "PartNumberAddend"), 0);        // Number from stock
             Model += Parse.AsInt(GameData.GetPartAttribute(this.Parts[5], "PartNumberAddend"), 0);           // Number from mag
 
             this.Rarity = Parse.AsInt(GameData.GetPartAttribute(this.Parts[2], "BaseRarity"), 0);
-            for (int i = 3; i < 14; i++)
+            for (var i = 3; i < 14; i++)
             {
-                int partrarity = GameData.GetPartRarity(this.Parts[i]);
+                var partrarity = GameData.GetPartRarity(this.Parts[i]);
                 // There are several parts that dont use the part rarity that I found
                 // in the data.  This attempts to detect them and deal with them.
                 if ((partrarity == 50) && (i < 10) && (!this.Parts[i].StartsWith("dlc3")))
@@ -409,12 +410,12 @@ namespace WillowTree.Inventory
                 Model = Model * 10;
             }
 
-            string ModelText = (Model != 0 ? Model.ToString() : "");
+            var ModelText = (Model != 0 ? Model.ToString() : "");
 
-            string MfgText = GameData.GetName(this.Parts[1]); // Mfg Name
-            string ModelName = BodyText + ModelText + MaterialText;
-            string Prefix = GameData.GetName(this.Parts[12]);
-            string Title = GameData.GetName(this.Parts[13]);
+            var MfgText = GameData.GetName(this.Parts[1]); // Mfg Name
+            var ModelName = BodyText + ModelText + MaterialText;
+            var Prefix = GameData.GetName(this.Parts[12]);
+            var Title = GameData.GetName(this.Parts[13]);
 
             this.Category = GameData.GetPartAttribute(this.Parts[2], "Presentation");
             if (this.Category == "")
@@ -495,7 +496,7 @@ namespace WillowTree.Inventory
 
         public static List<int> CalculateValues(int quantity, int qualityIndex, int equippedSlot, int levelIndex, int isJunk, int isLocked, string itemgradePart)
         {
-            bool usesBigLevel = ItemgradePartUsesBigLevel(itemgradePart);
+            var usesBigLevel = ItemgradePartUsesBigLevel(itemgradePart);
             return CalculateValues(quantity, qualityIndex, equippedSlot, levelIndex, usesBigLevel, isJunk, isLocked);
         }
 
@@ -539,12 +540,12 @@ namespace WillowTree.Inventory
 
         public static InventoryEntry ImportFromText(string text, byte inType)
         {
-            List<string> InOutParts = new List<string>();
+            var InOutParts = new List<string>();
             InOutParts.AddRange(text.Split(new string[] { "\r\n" }, StringSplitOptions.None));
 
             // Create new lists
-            List<string> parts = new List<string>();
-            List<int> values = new List<int>();
+            var parts = new List<string>();
+            var values = new List<int>();
 
             try
             {
@@ -565,7 +566,7 @@ namespace WillowTree.Inventory
                     throw new FormatException();
                 }
 
-                byte t = Progress == 9 ? InventoryType.Item : InventoryType.Weapon;
+                var t = Progress == 9 ? InventoryType.Item : InventoryType.Weapon;
 
                 if (t != inType)
                 {
@@ -577,7 +578,7 @@ namespace WillowTree.Inventory
 
                 if (InOutParts.Count == Progress + WillowSaveGame.ExportValuesCount)
                 {
-                    for (int i = 0; i < WillowSaveGame.ExportValuesCount; i++)
+                    for (var i = 0; i < WillowSaveGame.ExportValuesCount; i++)
                     {
                         values.Add(Parse.AsInt(InOutParts[Progress + i]));
                     }
@@ -594,16 +595,16 @@ namespace WillowTree.Inventory
                 }
                 else
                 {
-                    string message = "Item is in old format, do you want to convert it to the new format?";
-                    string caption = "Ignoring imported item";
-                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                    var message = "Item is in old format, do you want to convert it to the new format?";
+                    var caption = "Ignoring imported item";
+                    var buttons = MessageBoxButtons.YesNo;
                     DialogResult result;
 
                     // Displays the MessageBox.
                     result = MessageBox.Show(message, caption, buttons);
                     if (result == DialogResult.Yes)
                     {
-                        for (int i = 0; i < 4; i++)
+                        for (var i = 0; i < 4; i++)
                         {
                             values.Add(Parse.AsInt(InOutParts[Progress + i]));
                         }
@@ -632,8 +633,8 @@ namespace WillowTree.Inventory
         // indentation sent as a parameter so it is not fixed.
         public string ToXmlText()
         {
-            StringWriter sw = new StringWriter();
-            XmlTextWriter writer = new XmlTextWriter(sw)
+            var sw = new StringWriter();
+            var writer = new XmlTextWriter(sw)
             {
                 Formatting = Formatting.Indented,
                 Indentation = 2
@@ -644,8 +645,8 @@ namespace WillowTree.Inventory
             writer.WriteElementString("Rating", this.Rating);
             writer.WriteElementString("Description", this.Description);
 
-            int partcount = this.GetPartCount();
-            for (int i = 0; i < partcount; i++)
+            var partcount = this.GetPartCount();
+            for (var i = 0; i < partcount; i++)
             {
                 writer.WriteElementString("Part" + (i + 1), this.Parts[i]);
             }
@@ -660,8 +661,8 @@ namespace WillowTree.Inventory
             writer.WriteElementString("EffectiveLevel", this.EffectiveLevel.ToString());
             writer.WriteElementString("Category", this.Category);
 
-            int namepartcount = this.NameParts.Length;
-            for (int i = 0; i < namepartcount; i++)
+            var namepartcount = this.NameParts.Length;
+            for (var i = 0; i < namepartcount; i++)
             {
                 writer.WriteElementString("NamePart" + (i + 1), this.NameParts[i]);
             }
@@ -670,7 +671,7 @@ namespace WillowTree.Inventory
             return sw.ToString();
         }
 
-        public static Color RarityToColorItem(int rarity)
+        private static Color RarityToColorItem(int rarity)
         {
             Color color;
 
@@ -693,7 +694,7 @@ namespace WillowTree.Inventory
             return color;
         }
 
-        public static Color RarityToColorWeapon(int rarity)
+        private static Color RarityToColorWeapon(int rarity)
         {
             Color color;
 

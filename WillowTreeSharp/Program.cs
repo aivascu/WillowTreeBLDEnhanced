@@ -7,6 +7,8 @@ using WillowTree.Plugins;
 using WillowTree.Services.DataAccess;
 using WillowTree.Controls;
 using System.IO;
+using WillowTree.Inventory;
+using WillowTree.Services.Configuration;
 
 namespace WillowTree
 {

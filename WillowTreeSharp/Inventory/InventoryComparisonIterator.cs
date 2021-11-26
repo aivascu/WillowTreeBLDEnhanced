@@ -2,8 +2,8 @@
 {
     public class InventoryComparisonIterator
     {
-        public int ComparerIndex;
-        public InventoryComparer[] Comparers;
+        public int ComparerIndex { get; set; }
+        public InventoryComparer[] Comparers { get; }
 
         public InventoryComparisonIterator(InventoryComparer[] comparers)
         {

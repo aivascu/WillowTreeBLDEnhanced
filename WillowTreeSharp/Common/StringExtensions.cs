@@ -1,4 +1,4 @@
-﻿namespace WillowTree
+﻿namespace WillowTree.Common
 {
     internal static class StringExtensions
     {

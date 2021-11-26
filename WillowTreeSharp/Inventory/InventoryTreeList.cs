@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using WillowTree.CustomControls;
+using WillowTree.Services.Configuration;
 using WillowTree.Services.DataAccess;
 
 namespace WillowTree.Inventory
@@ -66,35 +67,16 @@ namespace WillowTree.Inventory
 
         private TreeNodeAdv _parent;
 
-        private readonly string[] itemParts = new string[]
+        private readonly string[] itemParts =
         {
-            "Item Grade",
-            "Item Type",
-            "Body",
-            "Left Side",
-            "Right Side",
-            "Material",
-            "Manufacturer",
-            "Prefix",
+            "Item Grade", "Item Type", "Body", "Left Side", "Right Side", "Material", "Manufacturer", "Prefix",
             "Title"
         };
 
-        private readonly string[] weaponParts = new string[]
+        private readonly string[] weaponParts =
         {
-            "Item Grade",
-            "Manufacturer",
-            "Weapon Type",
-            "Body",
-            "Grip",
-            "Mag",
-            "Barrel",
-            "Sight",
-            "Stock",
-            "Action",
-            "Accessory",
-            "Material",
-            "Prefix",
-            "Title"
+            "Item Grade", "Manufacturer", "Weapon Type", "Body", "Grip", "Mag", "Barrel", "Sight", "Stock",
+            "Action", "Accessory", "Material", "Prefix", "Title"
         };
 
         public InventoryTreeList(WTTreeView tree, InventoryList ilist)
@@ -110,8 +92,6 @@ namespace WillowTree.Inventory
             this.Unsorted.ListReload += this.OnListReload;
             this.Unsorted.NameFormatChanged += this.OnNameFormatChanged;
             this.Unsorted.TreeThemeChanged += this.OnTreeThemeChanged;
-            //Unsorted.NavigationDepthChanged += OnNavigationDepthChanged;
-            //Unsorted.SortModeChanged += OnSortModeChanged;
         }
 
         public void Add(InventoryEntry entry)
@@ -145,12 +125,7 @@ namespace WillowTree.Inventory
         {
             this._parent = this.CreateNavigationNodes(entry);
 
-            this._node = new ColoredTextNode
-            {
-                Tag = entry,
-                ForeColor = entry.Color,
-                Text = entry.Name
-            };
+            this._node = new ColoredTextNode { Tag = entry, ForeColor = entry.Color, Text = entry.Name };
 
             Collection<Node> nodes;
             if (this._parent == null)
@@ -174,6 +149,7 @@ namespace WillowTree.Inventory
                     return;
                 }
             }
+
             nodes.Insert(0, this._node);
             this._lastNodeIndex = 0;
         }
@@ -226,6 +202,7 @@ namespace WillowTree.Inventory
 
                 dest.Add(entry);
             }
+
             this.Tree.EndUpdate();
         }
 
@@ -264,6 +241,7 @@ namespace WillowTree.Inventory
                             currentcategory = "(Unknown)";
                             categorytext = "(Unknown)";
                         }
+
                         break;
 
                     case 6:
@@ -334,8 +312,7 @@ namespace WillowTree.Inventory
                     // This category does not exist yet.  Create a node for it.
                     ColoredTextNode data = new ColoredTextNode
                     {
-                        Tag = currentcategory,
-                        ForeColor = Color.LightSkyBlue
+                        Tag = currentcategory, ForeColor = Color.LightSkyBlue
                     };
                     if (GlobalSettings.UseColor)
                     {
@@ -358,10 +335,12 @@ namespace WillowTree.Inventory
 
                     newbranch = navnode.Children[navnode.Children.Count - 1];
                 }
+
                 // Update the navnode then iterate again for the next tier of
                 // category nodes until all category nodes are present
                 navnode = newbranch;
             }
+
             return navnode;
         }
 
@@ -430,6 +409,7 @@ namespace WillowTree.Inventory
                     this.Add(entry);
                 }
             }
+
             this.Tree.EndUpdate();
         }
 
@@ -498,14 +478,14 @@ namespace WillowTree.Inventory
 
         public void PurgeDuplicates()
         {
-            string lastGoodFile = GameData.OpenedLockerFilename();    //Keep last valid locker path file
+            string lastGoodFile = GameData.OpenedLockerFilename(); //Keep last valid locker path file
             string tempfile = GameData.DataPath + "purgeduplicates.temp";
             this.SaveToXml(tempfile);
             new PurgeDuplicateNodesCommand(tempfile).Execute();
             this.LoadFromXml(tempfile, InventoryType.Any);
             File.Delete(tempfile);
 
-            GameData.OpenedLockerFilename(lastGoodFile);  //Restore last valid locker path file
+            GameData.OpenedLockerFilename(lastGoodFile); //Restore last valid locker path file
         }
 
         public void Remove(TreeNodeAdv nodeAdv, bool updateSelection)
@@ -527,6 +507,7 @@ namespace WillowTree.Inventory
                     this.Remove(node, false);
                 }
             }
+
             this.Tree.EndUpdate();
         }
 
@@ -643,6 +624,7 @@ namespace WillowTree.Inventory
                         writer.WriteRaw(entry.ToXmlText());
                         writer.WriteEndElement();
                     }
+
                     writer.WriteEndElement();
                     writer.WriteEndDocument();
 

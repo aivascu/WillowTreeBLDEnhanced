@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace WillowTree
+namespace WillowTree.Services.Configuration
 {
     public class GlobalSettingsWrapper : IGlobalSettings
     {

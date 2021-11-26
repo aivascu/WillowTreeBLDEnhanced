@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using WillowTree.Inventory;
-
-namespace WillowTree.Services.DataAccess
+﻿namespace WillowTree.Inventory
 {
-
     public class InventoryDataWrapper : IInventoryData
     {
         public InventoryList BankList => InventoryData.BankList;
