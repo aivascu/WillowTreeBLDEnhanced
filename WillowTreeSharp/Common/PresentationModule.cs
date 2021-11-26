@@ -17,10 +17,12 @@ namespace WillowTree.Common
             builder
                 .RegisterAssemblyTypes(this.ThisAssembly)
                 .Where(x => x.IsAssignableTo<IPlugin>())
-                .AsSelf().SingleInstance();
+                .AsSelf().AsImplementedInterfaces()
+                .SingleInstance();
 
             builder
-                .RegisterType<AboutViewPresenter>()
+                .RegisterAssemblyTypes(this.ThisAssembly)
+                .InNamespaceOf<AboutViewPresenter>()
                 .AsSelf().SingleInstance();
         }
     }

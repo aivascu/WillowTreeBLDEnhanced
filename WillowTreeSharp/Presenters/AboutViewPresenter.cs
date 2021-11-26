@@ -10,11 +10,12 @@ namespace WillowTree.Presenters
         private string downloadUrlFromServer;
         private string versionFromServer;
 
-        private readonly AboutView aboutView;
+        private readonly IAboutView aboutView;
 
-        public AboutViewPresenter(AboutView aboutView)
+        public AboutViewPresenter(IAboutView aboutView)
         {
-            this.aboutView = aboutView;
+            this.aboutView = aboutView ?? throw new ArgumentNullException(nameof(aboutView));
+
             this.aboutView.Tick += this.OnTick;
             this.aboutView.UpdateRequest += this.OnUpdateRequested;
             this.aboutView.ViewSelect += this.OnViewSelected;

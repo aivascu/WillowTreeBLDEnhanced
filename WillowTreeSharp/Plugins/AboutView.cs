@@ -1,9 +1,21 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 
 namespace WillowTree.Plugins
 {
-    public partial class AboutView : UserControl, IPlugin
+    public interface IAboutView
+    {
+        event EventHandler Tick;
+        event EventHandler UpdateRequest;
+        event EventHandler ViewSelect;
+
+        void DisableTimer();
+        void EnableTimer();
+        void SetUpdateButtonText(string text);
+        void ShowUpdateButton();
+    }
+
+    public partial class AboutView : UserControl, IPlugin, IAboutView
     {
         public AboutView()
         {
