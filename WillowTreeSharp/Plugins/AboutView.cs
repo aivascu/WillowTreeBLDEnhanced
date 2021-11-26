@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace WillowTree.Plugins
 {
-    public partial class UcAbout : UserControl, IPlugin
+    public partial class AboutView : UserControl, IPlugin
     {
-        public UcAbout()
+        public AboutView()
         {
             this.InitializeComponent();
         }

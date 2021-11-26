@@ -10,9 +10,9 @@ namespace WillowTree.Presenters
         private string downloadUrlFromServer;
         private string versionFromServer;
 
-        private readonly UcAbout aboutView;
+        private readonly AboutView aboutView;
 
-        public AboutViewPresenter(UcAbout aboutView)
+        public AboutViewPresenter(AboutView aboutView)
         {
             this.aboutView = aboutView;
             this.aboutView.Tick += this.OnTick;

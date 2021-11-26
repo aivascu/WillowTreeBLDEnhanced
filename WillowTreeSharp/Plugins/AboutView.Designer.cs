@@ -20,7 +20,7 @@
  */
 namespace WillowTree.Plugins
 {
-    partial class UcAbout
+    partial class AboutView
     {
         /// <summary> 
         /// Required designer variable.
@@ -49,7 +49,7 @@ namespace WillowTree.Plugins
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UcAbout));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutView));
             this.MainTab = new WillowTree.CustomControls.CCPanel();
             this.groupPanel7 = new WillowTree.CustomControls.WTGroupBox();
             this.textBoxX1 = new WillowTree.CustomControls.WTTextBox();
@@ -133,7 +133,7 @@ namespace WillowTree.Plugins
             // ucAbout
             // 
             this.Controls.Add(this.MainTab);
-            this.Name = "UcAbout";
+            this.Name = "AboutView";
             this.Size = new System.Drawing.Size(956, 591);
             this.MainTab.ResumeLayout(false);
             this.groupPanel7.ResumeLayout(false);

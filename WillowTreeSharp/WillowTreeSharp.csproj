@@ -135,11 +135,11 @@
     <Compile Include="Inventory\InventoryType.cs" />
     <Compile Include="Plugins\PluginComponentManager.cs" />
     <Compile Include="Services\Configuration\GlobalSettings.cs" />
-    <Compile Include="Plugins\ucAbout.cs">
+    <Compile Include="Plugins\AboutView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Plugins\ucAbout.Designer.cs">
-      <DependentUpon>ucAbout.cs</DependentUpon>
+    <Compile Include="Plugins\AboutView.Designer.cs">
+      <DependentUpon>AboutView.cs</DependentUpon>
     </Compile>
     <Compile Include="Plugins\ucAmmo.cs">
       <SubType>UserControl</SubType>
@@ -212,8 +212,8 @@
     <Content Include="COPYING.TXT">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Plugins\ucAbout.resx">
-      <DependentUpon>ucAbout.cs</DependentUpon>
+    <EmbeddedResource Include="Plugins\AboutView.resx">
+      <DependentUpon>AboutView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Plugins\ucAmmo.resx">
       <DependentUpon>ucAmmo.cs</DependentUpon>
