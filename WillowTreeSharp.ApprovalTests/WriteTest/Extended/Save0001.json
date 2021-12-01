@@ -1,0 +1,2390 @@
+{
+  "EndianWsg": 0,
+  "Platform": "PC",
+  "OpenedWsg": ".\\ReadTest\\Extended\\Save0001.sav",
+  "ContainsRawData": true,
+  "AutoRepair": false,
+  "RequiredRepair": false,
+  "MagicHeader": "WSG",
+  "VersionNumber": 2,
+  "Plyr": "PLYR",
+  "RevisionNumber": 39,
+  "Class": "gd_Brick.Character.CharacterClass_Brick",
+  "Level": 23,
+  "Experience": 398217,
+  "SkillPoints": 19,
+  "Unknown1": 0,
+  "Cash": 10000139,
+  "FinishedPlaythrough1": 0,
+  "NumberOfSkills": 4,
+  "SkillNames": [
+    "gd_skills_common.WeaponProficiencySkills.Skill_PistolProficiency",
+    "gd_skills_common.WeaponProficiencySkills.Skill_SMGProficiency",
+    "gd_skills_common.WeaponProficiencySkills.Skill_CombatRifleProficiency",
+    "gd_skills_common.WeaponProficiencySkills.Skill_SniperRifleProficiency"
+  ],
+  "LevelOfSkills": [
+    20,
+    20,
+    20,
+    20
+  ],
+  "ExpOfSkills": [
+    10315,
+    16131,
+    6369,
+    16348
+  ],
+  "InUse": [
+    -1,
+    -1,
+    -1,
+    -1
+  ],
+  "Vehi1Color": 2,
+  "Vehi2Color": 6,
+  "Vehi1Type": 0,
+  "Vehi2Type": 0,
+  "Items": [
+    {
+      "Quantity": 1,
+      "Strings": [
+        "gd_itemgrades.Ammo.ItemGrade_HealthPacks_2",
+        "gd_HealthDrops.A_Item.HealthPack_1",
+        "None",
+        "None",
+        "None",
+        "None",
+        "gd_manufacturers.Manufacturers.Stock",
+        "None",
+        "None"
+      ],
+      "Quality": 0,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Quantity": 1,
+      "Strings": [
+        "gd_itemgrades.Gear.ItemGrade_Gear_GrenadeMODs",
+        "gd_tunercuffs.A_Item.Item_GrenadeModulator",
+        "gd_tunercuffs.Body.body1_explosive",
+        "gd_tunercuffs.LeftSide.leftsidenone",
+        "gd_tunercuffs.RightSide.rightsidenone",
+        "gd_tunercuffs.ManufacturerMaterials.Material_Torgue_1",
+        "gd_manufacturers.Manufacturers.Torgue",
+        "gd_tunercuffs.Prefix.Prefix_Explosive",
+        "gd_tunercuffs.Title.Title_MIRV"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Quantity": 1,
+      "Strings": [
+        "gd_itemgrades.Gear.ItemGrade_Gear_ComDeck_Lilith",
+        "gd_CommandDecks.A_Item.Item_CommandDeck_Lilith",
+        "gd_CommandDecks.Body_Lilith.Lilith_Firefly",
+        "gd_CommandDecks.LeftSide.leftside5c",
+        "gd_CommandDecks.RightSide.rightside1",
+        "gd_CommandDecks.ManufacturerMaterials.Material_Maliwan_1",
+        "gd_manufacturers.Manufacturers.Maliwan",
+        "gd_CommandDecks.Prefix.Prefix_Lilith_Firefly",
+        "gd_CommandDecks.Title.Title_ComDeckLilith"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Quantity": 1,
+      "Strings": [
+        "gd_itemgrades.Gear.ItemGrade_Gear_Shield",
+        "gd_shields.A_Item.Item_Shield",
+        "gd_shields.Body.body3",
+        "gd_shields.LeftSide.leftside4",
+        "gd_shields.RightSide.rightside1",
+        "gd_shields.ManufacturerMaterials.Material_Pangolin_1",
+        "gd_manufacturers.Manufacturers.Pangolin",
+        "gd_shields.Prefix.Prefix_Max2_Hardened",
+        "gd_shields.Title.Title_Pangolin1_UnyieldingShield"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Quantity": 1,
+      "Strings": [
+        "gd_itemgrades.Gear.ItemGrade_Gear_GrenadeMODs",
+        "gd_tunercuffs.A_Item.Item_GrenadeModulator",
+        "gd_tunercuffs.Body.body1_explosive",
+        "gd_tunercuffs.LeftSide.leftsidenone",
+        "gd_tunercuffs.RightSide.rightsidenone",
+        "gd_tunercuffs.ManufacturerMaterials.Material_Hyperion_1",
+        "gd_manufacturers.Manufacturers.Hyperion",
+        "gd_tunercuffs.Prefix.Prefix_Explosive",
+        "gd_tunercuffs.Title.Title_LongBow"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 1,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Quantity": 1,
+      "Strings": [
+        "dlc3_gd_customitems.Items.CustomItem_Shield_Pangolin_Ironclad",
+        "gd_shields.A_Item.Item_Shield",
+        "dlc3_gd_item_UniqueParts.Shield.body3_Pangolin_Ironclad",
+        "gd_shields.LeftSide.leftside4",
+        "gd_shields.RightSide.rightside4",
+        "gd_shields.ManufacturerMaterials.Material_Pangolin_3",
+        "gd_manufacturers.Manufacturers.Pangolin",
+        "gd_shields.Prefix.Prefix_Max2_Hardened",
+        "dlc3_gd_item_UniqueParts.Title.Title_P_Pangolin_Ironclad"
+      ],
+      "Quality": 0,
+      "EquippedSlot": 1,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    }
+  ],
+  "Weapons": [
+    {
+      "Ammo": 0,
+      "Strings": [
+        "gd_itemgrades.Weapons.ItemGrade_Weapon_PatrolSMG",
+        "gd_manufacturers.Manufacturers.Maliwan",
+        "gd_weap_patrol_smg.A_Weapon.WeaponType_patrol_smg",
+        "gd_weap_patrol_smg.Body.body2",
+        "gd_weap_patrol_smg.Grip.grip3",
+        "gd_weap_patrol_smg.mag.mag3",
+        "gd_weap_patrol_smg.Barrel.barrel1",
+        "gd_weap_patrol_smg.Sight.sight_none",
+        "gd_weap_patrol_smg.Stock.stock1",
+        "None",
+        "gd_weap_patrol_smg.acc.acc5_Incendiary",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Maliwan_1",
+        "gd_weap_names_shared.Prefix_Tech.Prefix_DTIncendiary3_Burning",
+        "gd_weap_patrol_smg.Title.Title__SMG"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 2,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 0,
+      "Strings": [
+        "gd_customweapons.Reward_Weapons.CustomWeap_reward_CombatRifle",
+        "gd_manufacturers.Manufacturers.Hyperion",
+        "gd_weap_combat_rifle.A_Weapon.WeaponType_combat_rifle",
+        "gd_weap_combat_rifle.Body.body5",
+        "gd_weap_combat_rifle.Grip.grip3",
+        "gd_weap_combat_rifle.mag.mag1",
+        "gd_weap_combat_rifle.Barrel.barrel5",
+        "gd_weap_combat_rifle.Sight.sight1",
+        "gd_weap_combat_rifle.Stock.stock1",
+        "None",
+        "gd_weap_combat_rifle.acc.acc_none",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Hyperion_3",
+        "gd_weap_shared_materialparts.Prefix.Prefix_Hyperion2_Crimson",
+        "gd_weap_combat_rifle.Title.Title_Accuracy1_Cobra"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 1,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 12,
+      "Strings": [
+        "gd_itemgrades.Weapons.ItemGrade_Weapon_RepeaterPistol",
+        "gd_manufacturers.Manufacturers.Dahl",
+        "gd_weap_repeater_pistol.A_Weapon.WeaponType_repeater_pistol",
+        "gd_weap_repeater_pistol.Body.body4",
+        "gd_weap_repeater_pistol.Grip.grip4_Dahl",
+        "gd_weap_repeater_pistol.mag.mag2",
+        "gd_weap_repeater_pistol.Barrel.barrel1",
+        "gd_weap_repeater_pistol.Sight.sight_none",
+        "None",
+        "gd_weap_repeater_pistol.Action.action1",
+        "gd_weap_repeater_pistol.acc.acc5_Shock",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Dahl_1",
+        "gd_weap_names_shared.Prefix_Tech.Prefix_DTShock2_Static",
+        "gd_weap_repeater_pistol.Title.Title__Repeater"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 28,
+      "Strings": [
+        "gd_itemgrades.Weapons.ItemGrade_Weapon_PatrolSMG",
+        "gd_manufacturers.Manufacturers.Maliwan",
+        "gd_weap_patrol_smg.A_Weapon.WeaponType_patrol_smg",
+        "gd_weap_patrol_smg.Body.body1",
+        "gd_weap_patrol_smg.Grip.grip3",
+        "gd_weap_patrol_smg.mag.mag2",
+        "gd_weap_patrol_smg.Barrel.barrel2",
+        "gd_weap_patrol_smg.Sight.sight_none",
+        "gd_weap_patrol_smg.Stock.stock1",
+        "None",
+        "gd_weap_patrol_smg.acc.acc3_Shock",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Maliwan_2",
+        "gd_weap_names_shared.Prefix_Tech.Prefix_DTShock2_Static",
+        "gd_weap_patrol_smg.Title.Title__SMG"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 6,
+      "Strings": [
+        "gd_itemgrades.Weapons.ItemGrade_Weapon_SniperRifle",
+        "gd_manufacturers.Manufacturers.Jakobs",
+        "gd_weap_sniper_rifle.A_Weapon.WeaponType_sniper_rifle",
+        "gd_weap_sniper_rifle.Body.body1",
+        "gd_weap_sniper_rifle.Grip.grip4",
+        "gd_weap_sniper_rifle.mag.mag4",
+        "gd_weap_sniper_rifle.Barrel.barrel2",
+        "gd_weap_sniper_rifle.Sight.sight1",
+        "gd_weap_sniper_rifle.Stock.stock1",
+        "None",
+        "gd_weap_sniper_rifle.acc.accnone",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Jakobs_3",
+        "gd_weap_sniper_rifle.Prefix.Prefix_Quality2_Hard",
+        "gd_weap_sniper_rifle.Title.Title_LowAccuracy1_Gamble"
+      ],
+      "Quality": 2,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 28,
+      "Strings": [
+        "gd_itemgrades.Weapons.ItemGrade_Weapon_PatrolSMG",
+        "gd_manufacturers.Manufacturers.Maliwan",
+        "gd_weap_patrol_smg.A_Weapon.WeaponType_patrol_smg",
+        "gd_weap_patrol_smg.Body.body1",
+        "gd_weap_patrol_smg.Grip.grip3",
+        "gd_weap_patrol_smg.mag.mag2",
+        "gd_weap_patrol_smg.Barrel.barrel1",
+        "gd_weap_patrol_smg.Sight.sight_none",
+        "gd_weap_patrol_smg.Stock.stock1",
+        "None",
+        "gd_weap_patrol_smg.acc.acc3_Corrosive",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Maliwan_1",
+        "gd_weap_names_shared.Prefix_Tech.Prefix_DTCorrosive2_Caustic",
+        "gd_weap_patrol_smg.Title.Title__SMG"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 6,
+      "Strings": [
+        "gd_itemgrades.Weapons.ItemGrade_Weapon_RevolverPistol",
+        "gd_manufacturers.Manufacturers.Maliwan",
+        "gd_weap_revolver_pistol.A_Weapon.WeaponType_revolver_pistol",
+        "gd_weap_revolver_pistol.Body.body4",
+        "gd_weap_revolver_pistol.Grip.grip3",
+        "gd_weap_revolver_pistol.mag.mag2",
+        "gd_weap_revolver_pistol.Barrel.barrel1",
+        "gd_weap_revolver_pistol.Sight.sight3",
+        "gd_weap_revolver_pistol.Stock.stock_none",
+        "None",
+        "gd_weap_revolver_pistol.acc.acc5_Explosive",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Maliwan_2",
+        "gd_weap_names_shared.Prefix_Tech.Prefix_DTExplosive2_Blast",
+        "gd_weap_revolver_pistol.Title.Title__Revolver"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 6,
+      "Strings": [
+        "gd_customweapons.Reward_Weapons.CustomWeap_reward_RevolverPistol",
+        "gd_manufacturers.Manufacturers.Maliwan",
+        "gd_weap_revolver_pistol.A_Weapon.WeaponType_revolver_pistol",
+        "gd_weap_revolver_pistol.Body.body2",
+        "gd_weap_revolver_pistol.Grip.grip3",
+        "gd_weap_revolver_pistol.mag.mag4",
+        "gd_weap_revolver_pistol.Barrel.barrel2",
+        "gd_weap_revolver_pistol.Sight.sight5",
+        "gd_weap_revolver_pistol.Stock.stock1",
+        "None",
+        "gd_weap_revolver_pistol.acc.acc5_Incendiary",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Maliwan_3",
+        "gd_weap_shared_materialparts.Prefix.Prefix_Maliwan2_Cobalt",
+        "gd_weap_revolver_pistol.Title.Title__Revolver"
+      ],
+      "Quality": 1,
+      "EquippedSlot": 0,
+      "Level": 0,
+      "Junk": 0,
+      "Locked": 0
+    },
+    {
+      "Ammo": 0,
+      "Strings": [
+        "gd_itemgrades.Weapons.ItemGrade_Weapon_SniperRifle",
+        "gd_manufacturers.Manufacturers.Maliwan",
+        "gd_weap_sniper_rifle.A_Weapon.WeaponType_sniper_rifle",
+        "gd_weap_sniper_rifle.Body.body4",
+        "gd_weap_sniper_rifle.Grip.grip3",
+        "gd_weap_sniper_rifle.mag.mag4",
+        "gd_weap_sniper_rifle.Barrel.barrel4",
+        "gd_weap_sniper_rifle.Sight.sight5",
+        "gd_weap_sniper_rifle.Stock.stock5",
+        "None",
+        "gd_weap_sniper_rifle.acc.acc2_Explosive",
+        "gd_weap_shared_materialparts.ManufacturerMaterials.Material_Maliwan_3",
+        "gd_weap_sniper_rifle.Prefix.Prefix_Quality3_Fearsome",
+        "gd_weap_sniper_rifle.Title.Title_Accuracy1_Hawkeye"
+      ],
+      "Quality": 0,
+      "EquippedSlot": 3,
+      "Level": 23,
+      "Junk": 0,
+      "Locked": 0
+    }
+  ],
+  "BackpackSize": 18,
+  "EquipSlots": 3,
+  "ChallengeDataBlockLength": 1326,
+  "ChallengeDataBlockId": 3,
+  "ChallengeDataLength": 1318,
+  "ChallengeDataEntries": 188,
+  "challenges": [
+    {
+      "Id": 1621,
+      "TypeId": 1,
+      "Value": 8975
+    },
+    {
+      "Id": 1622,
+      "TypeId": 1,
+      "Value": 1989
+    },
+    {
+      "Id": 1623,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1624,
+      "TypeId": 1,
+      "Value": 3092
+    },
+    {
+      "Id": 1625,
+      "TypeId": 1,
+      "Value": 785
+    },
+    {
+      "Id": 1626,
+      "TypeId": 1,
+      "Value": 4
+    },
+    {
+      "Id": 1627,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1629,
+      "TypeId": 1,
+      "Value": 1639
+    },
+    {
+      "Id": 1630,
+      "TypeId": 1,
+      "Value": 103
+    },
+    {
+      "Id": 1679,
+      "TypeId": 1,
+      "Value": 1466
+    },
+    {
+      "Id": 1680,
+      "TypeId": 1,
+      "Value": 177
+    },
+    {
+      "Id": 1681,
+      "TypeId": 1,
+      "Value": 19
+    },
+    {
+      "Id": 1682,
+      "TypeId": 1,
+      "Value": 2002
+    },
+    {
+      "Id": 1683,
+      "TypeId": 1,
+      "Value": 3783
+    },
+    {
+      "Id": 1684,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1685,
+      "TypeId": 1,
+      "Value": 133
+    },
+    {
+      "Id": 1686,
+      "TypeId": 1,
+      "Value": 537
+    },
+    {
+      "Id": 1687,
+      "TypeId": 1,
+      "Value": 858
+    },
+    {
+      "Id": 1688,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1689,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1690,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1691,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1692,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1631,
+      "TypeId": 1,
+      "Value": 608
+    },
+    {
+      "Id": 1632,
+      "TypeId": 1,
+      "Value": 311
+    },
+    {
+      "Id": 1633,
+      "TypeId": 1,
+      "Value": 86
+    },
+    {
+      "Id": 1634,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1635,
+      "TypeId": 1,
+      "Value": 50
+    },
+    {
+      "Id": 1636,
+      "TypeId": 1,
+      "Value": 123
+    },
+    {
+      "Id": 1637,
+      "TypeId": 1,
+      "Value": 90
+    },
+    {
+      "Id": 1638,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1639,
+      "TypeId": 1,
+      "Value": 2
+    },
+    {
+      "Id": 1640,
+      "TypeId": 1,
+      "Value": 56
+    },
+    {
+      "Id": 1641,
+      "TypeId": 1,
+      "Value": 23
+    },
+    {
+      "Id": 1740,
+      "TypeId": 1,
+      "Value": 40
+    },
+    {
+      "Id": 1642,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1643,
+      "TypeId": 1,
+      "Value": 228
+    },
+    {
+      "Id": 1644,
+      "TypeId": 1,
+      "Value": 22
+    },
+    {
+      "Id": 1645,
+      "TypeId": 1,
+      "Value": 56
+    },
+    {
+      "Id": 1646,
+      "TypeId": 1,
+      "Value": 91
+    },
+    {
+      "Id": 1714,
+      "TypeId": 1,
+      "Value": 6
+    },
+    {
+      "Id": 1647,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1648,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1649,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1650,
+      "TypeId": 1,
+      "Value": 12
+    },
+    {
+      "Id": 1651,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1652,
+      "TypeId": 1,
+      "Value": 14
+    },
+    {
+      "Id": 1653,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1654,
+      "TypeId": 1,
+      "Value": 11
+    },
+    {
+      "Id": 1655,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1656,
+      "TypeId": 1,
+      "Value": 246
+    },
+    {
+      "Id": 1657,
+      "TypeId": 1,
+      "Value": 20
+    },
+    {
+      "Id": 1658,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1675,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1676,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1693,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1694,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1695,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1696,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1702,
+      "TypeId": 1,
+      "Value": 9
+    },
+    {
+      "Id": 1659,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1660,
+      "TypeId": 1,
+      "Value": 4
+    },
+    {
+      "Id": 1661,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1662,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1663,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1664,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1665,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1666,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1667,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1668,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1669,
+      "TypeId": 1,
+      "Value": 16
+    },
+    {
+      "Id": 1670,
+      "TypeId": 1,
+      "Value": 214
+    },
+    {
+      "Id": 1671,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1672,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1673,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1674,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1677,
+      "TypeId": 1,
+      "Value": 86
+    },
+    {
+      "Id": 1678,
+      "TypeId": 1,
+      "Value": 130
+    },
+    {
+      "Id": 1697,
+      "TypeId": 1,
+      "Value": 201585
+    },
+    {
+      "Id": 1698,
+      "TypeId": 1,
+      "Value": 2634
+    },
+    {
+      "Id": 1699,
+      "TypeId": 1,
+      "Value": 43
+    },
+    {
+      "Id": 1700,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1701,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1703,
+      "TypeId": 1,
+      "Value": 52
+    },
+    {
+      "Id": 1704,
+      "TypeId": 1,
+      "Value": 19
+    },
+    {
+      "Id": 1705,
+      "TypeId": 1,
+      "Value": 37
+    },
+    {
+      "Id": 1706,
+      "TypeId": 1,
+      "Value": 28
+    },
+    {
+      "Id": 1707,
+      "TypeId": 1,
+      "Value": 11
+    },
+    {
+      "Id": 1708,
+      "TypeId": 1,
+      "Value": 7
+    },
+    {
+      "Id": 1709,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1710,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1711,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1712,
+      "TypeId": 1,
+      "Value": 8
+    },
+    {
+      "Id": 1713,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1719,
+      "TypeId": 1,
+      "Value": 6
+    },
+    {
+      "Id": 1715,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1716,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1717,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1720,
+      "TypeId": 1,
+      "Value": 4
+    },
+    {
+      "Id": 1721,
+      "TypeId": 1,
+      "Value": 7
+    },
+    {
+      "Id": 1722,
+      "TypeId": 1,
+      "Value": 11
+    },
+    {
+      "Id": 1723,
+      "TypeId": 1,
+      "Value": 15
+    },
+    {
+      "Id": 1724,
+      "TypeId": 1,
+      "Value": 46
+    },
+    {
+      "Id": 1725,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1726,
+      "TypeId": 1,
+      "Value": 3
+    },
+    {
+      "Id": 1727,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1728,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1729,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1730,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1731,
+      "TypeId": 1,
+      "Value": 78
+    },
+    {
+      "Id": 1732,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1733,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1734,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1735,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1739,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1736,
+      "TypeId": 1,
+      "Value": 2
+    },
+    {
+      "Id": 1737,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1738,
+      "TypeId": 1,
+      "Value": 1
+    },
+    {
+      "Id": 1741,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1742,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1743,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1744,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1745,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1746,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1747,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1748,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1749,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1750,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1751,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1752,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1753,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1754,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1755,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1756,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1757,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1758,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1759,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1760,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1761,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1762,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1763,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1764,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1765,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1766,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1767,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1768,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1769,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1770,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1771,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1772,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1773,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1774,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1775,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1776,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1777,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1778,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1779,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1780,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1781,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1782,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1783,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1784,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1785,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1786,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1787,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1788,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1789,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1790,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1791,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1792,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1793,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1794,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1795,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1796,
+      "TypeId": 1,
+      "Value": 0
+    },
+    {
+      "Id": 1797,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1798,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1799,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1800,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1801,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1802,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1803,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1804,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1805,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1806,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1807,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1808,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1809,
+      "TypeId": 5,
+      "Value": 0
+    },
+    {
+      "Id": 1810,
+      "TypeId": 5,
+      "Value": 0
+    }
+  ],
+  "ChallengeData": null,
+  "TotalLocations": 20,
+  "LocationStrings": [
+    "Fyrestone",
+    "PitArena",
+    "TBoneJunc",
+    "EntranceToSkagGully",
+    "SkagGully",
+    "AridHillsEntrance",
+    "Tunnel",
+    "DryEntranceSave",
+    "BunkerEntrance",
+    "Bunker",
+    "MineEntrance",
+    "TheLostCave",
+    "HeadstoneMine",
+    "SkullBandit",
+    "LuckysLastChanceWateringHole",
+    "HeadlandElectricalStation",
+    "Devil'sGateHill",
+    "LudicrousSpeedway",
+    "NewHaven",
+    "TetanusWarren"
+  ],
+  "CurrentLocation": "NewHaven",
+  "SaveInfo1To5": [
+    0,
+    0,
+    0,
+    20647261,
+    26
+  ],
+  "SaveNumber": 1,
+  "SaveInfo7To10": [
+    39,
+    24,
+    0,
+    0
+  ],
+  "NumberOfQuestLists": 3,
+  "QuestLists": [
+    {
+      "Quests": [
+        {
+          "Name": "Z0_Missions.Missions.M_IntroStateSaver",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_AccessStores",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_KillSkags_Zed",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_RepairClapTrap_02",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_FixHealthVending",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_KillBandits",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_OpenGatetoSkag",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_MeetAl",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_ExterminateSkag",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_BuyGrenades",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_InvestigateVSS",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_NineToesGetReward",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_BountyBoard",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_FixVSS",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_TKHasMoreWork",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_JumpTheGap",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_GetMyLegBack",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_GatherSeeds",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_BanditPresence1",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_BackToZed",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_MeetShep",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_BloodOnTheTires",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_RecoverLostData_1",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_HarvestCrystals_Electrical",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_SubstationKey",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_RakkMenace",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_WindTurbine_Activate",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_KillSledge1",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_CircleMeatAndGreet",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_MoeMarley",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_Scavenger2",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_CircleOfDeath01",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_CircleOfDeath02",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_CircleOfDeath03",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_ClaptrapRescueSafehouse",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_KillSledge2",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_Scavenger1",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_ClaptrapRescueLostCave",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_TravelToNH",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_OwedMoneyDebt",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_OwedMoneyInvestigate",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_TheSkulls",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_Saboteur",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_RakkDebris",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_BanditConvoy01",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_RoadBlocks",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_Assassinate_SkagZilla",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_Powerlines",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_RepairGasPipes",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_FuelSupply",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_BanditConvoy03",
+          "Progress": 2,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 2,
+          "Objectives": [
+            {
+              "Progress": 1,
+              "Description": "None"
+            },
+            {
+              "Progress": 1,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "I1_Missions.Missions.M_AbandonedDig",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_Scavenger3",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "I1_Missions.Missions.M_OpeningTheRaceTrack",
+          "Progress": 4,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_MissingTools",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 1,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "dlc3_MainMissions.MainMissions.M_dlc3_MeetScooter",
+          "Progress": 1,
+          "DlcValue1": 1,
+          "DlcValue2": 4,
+          "NumberOfObjectives": 1,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z0_Missions.Missions.M_Mothrak",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 4,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z1_Missions.Missions.M_KingWeeWee",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 1,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z1_Missions.Missions.M_GreenCrystalHarvest",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 1,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z1_Missions.Missions.M_Scavenger4",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 4,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z1_Missions.Missions.M_RecoverLostData_2",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 5,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z1_Missions.Missions.M_ScootersUsedCarParts",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 4,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z1_Missions.Missions.M_TurnOnTheStank",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 2,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            },
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        },
+        {
+          "Name": "Z1_Missions.Missions.M_ClaptrapRescueTrashCave",
+          "Progress": 1,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 1,
+          "Objectives": [
+            {
+              "Progress": 0,
+              "Description": "None"
+            }
+          ]
+        }
+      ],
+      "Index": 0,
+      "CurrentQuest": "Z1_Missions.Missions.M_ClaptrapRescueTrashCave",
+      "TotalQuests": 64
+    },
+    {
+      "Quests": [
+        {
+          "Name": "Z0_Missions.Missions.M_IntroStateSaver",
+          "Progress": 2,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        }
+      ],
+      "Index": 1,
+      "CurrentQuest": "Z0_Missions.Missions.M_IntroStateSaver",
+      "TotalQuests": 1
+    },
+    {
+      "Quests": [
+        {
+          "Name": "Z0_Missions.Missions.M_IntroStateSaver",
+          "Progress": 2,
+          "DlcValue1": 0,
+          "DlcValue2": 0,
+          "NumberOfObjectives": 0,
+          "Objectives": []
+        }
+      ],
+      "Index": 2,
+      "CurrentQuest": "Z0_Missions.Missions.M_IntroStateSaver",
+      "TotalQuests": 1
+    }
+  ],
+  "TotalPlayTime": 46842,
+  "LastPlayedDate": "20131008223542",
+  "CharacterName": "Babiole",
+  "Color1": -13738916,
+  "Color2": -7317901,
+  "Color3": -3388096,
+  "Head": -1,
+  "Unknown2": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+  "PromoCodesUsed": [],
+  "PromoCodesRequiringNotification": [],
+  "NumberOfEchoLists": 1,
+  "EchoLists": [
+    {
+      "Index": 0,
+      "TotalEchoes": 46,
+      "Echoes": [
+        {
+          "Name": "Z0_Echos.Zed.Z0E_LetMeOut",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Zed.Z0E_UnderNineToesSkin",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Zed.Z0E_ThatOughtToDoIt",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "dlc3_echos.Athena.dlc3E_Athena_MeetScooter",
+          "DlcValue1": 1,
+          "DlcValue2": 4
+        },
+        {
+          "Name": "Z0_Echos.TKBaha.Z0E_KillNineToes",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Bandits.Z0E_BanditPresence01",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Bandits.Z0E_BanditPresence03",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Bandits.Z0E_BanditPresence02",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Zed.Z0E_ComeOnBack",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Tannis.Z1E_LookingForWork",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_VoG_FyrestoneCustom01",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_Claptrap_Down",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_Claptrap_GotBetter",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_HelpingDrZed",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_FirstRealChallenge",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_FirstStepComplete",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_Sledge_GotMission",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_Sledge_GotKey",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_Sledge_OpenedMine",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_Sledge_Approach",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_WellDone",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Steele.Z0E_IntroducingSteele",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Markus.Z0E_OpeningFyrestone",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.ClapTrap.Z0E_EnemyLevels",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.ClapTrap.Z0E_GrenadeMods",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.ClapTrap.Z0E_ShockWeapons",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.ClapTrap.Z0E_ExplosiveWeapons",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.ClapTrap.Z0E_CorrosiveWeapons",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Scooter.Z0E_TakeALookAtVSS",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Scooter.Z0E_SummonedVehicle",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.Scooter.Z0E_JumpedPissWash",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z0_Echos.VoG.Z0E_VeryHappy",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.ClapTrap.Z1E_ClassMod",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Helena.Z1E_SanctuaryClosed",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Markus.Z1E_VaultIsReal",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Scooter.Z1E_GoingToLucky",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Scooter.Z1E_ThanksForSavingLucky",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Scooter.Z1E_BlowingUpRides02",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Scooter.Z1E_BlowingUpRides01",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Scooter.Z1E_MadMel_Warning",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.Scooter.Z1E_MadMel_Victory",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.TannisLogs.Z1E_TannisLogDay01",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.TannisLogs.Z1E_TannisLogDay09",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.TannisLogs.Z1E_TannisLogDay21",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.TannisLogs.Z1E_TannisLogDay37",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        },
+        {
+          "Name": "Z1_Echos.TannisLogs.Z1E_TannisLogDay53",
+          "DlcValue1": 0,
+          "DlcValue2": 0
+        }
+      ]
+    }
+  ],
+  "Items1": [],
+  "Weapons1": [],
+  "Items2": [],
+  "Weapons2": [],
+  "Unknown3": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+  "Dlc": {
+    "HasSection1": true,
+    "HasSection2": true,
+    "HasSection3": true,
+    "HasSection4": true,
+    "DataSections": [
+      {
+        "Id": 1126240820,
+        "RawData": "",
+        "BaseData": null
+      },
+      {
+        "Id": 34937220,
+        "RawData": "",
+        "BaseData": null
+      },
+      {
+        "Id": 841177415,
+        "RawData": "",
+        "BaseData": null
+      },
+      {
+        "Id": 592161025,
+        "RawData": "",
+        "BaseData": null
+      },
+      {
+        "Id": -16441326,
+        "RawData": "nCtG5UR5ukKdMf+oB1ZWMA==",
+        "BaseData": null
+      }
+    ],
+    "DlcSize": 1167,
+    "DlcUnknown1": 1,
+    "BankSize": 12,
+    "BankInventory": [],
+    "DlcUnknown2": 0,
+    "DlcUnknown3": 0,
+    "DlcUnknown4": 0,
+    "SkipDlc2Intro": 0,
+    "DlcUnknown5": 1,
+    "SecondaryPackEnabled": 1,
+    "NumberOfWeapons": 0
+  },
+  "ProfileId": 0,
+  "DeviceId": null,
+  "ConImage": null,
+  "TitleDisplay": null,
+  "TitlePackage": null,
+  "TitleId": 1414793191,
+  "AmmoPools": [
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Patrol_SMG",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Patrol_SMG_Pool",
+      "Remaining": 892.0,
+      "Level": 3
+    },
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Repeater_Pistol",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Repeater_Pistol_Pool",
+      "Remaining": 500.0,
+      "Level": 3
+    },
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Combat_Shotgun",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Combat_Shotgun_Pool",
+      "Remaining": 80.0,
+      "Level": 0
+    },
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Combat_Rifle",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Combat_Rifle_Pool",
+      "Remaining": 560.0,
+      "Level": 2
+    },
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Sniper_Rifle",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Sniper_Rifle_Pool",
+      "Remaining": 83.0,
+      "Level": 3
+    },
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Grenade_Protean",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Grenade_Protean_Pool",
+      "Remaining": 3.0,
+      "Level": 0
+    },
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Revolver_Pistol",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Revolver_Pistol_Pool",
+      "Remaining": 109.0,
+      "Level": 3
+    },
+    {
+      "Resource": "d_resources.AmmoResources.Ammo_Rocket_Launcher",
+      "Name": "d_resourcepools.AmmoPools.Ammo_Rocket_Launcher_Pool",
+      "Remaining": 24.0,
+      "Level": 0
+    }
+  ]
+}

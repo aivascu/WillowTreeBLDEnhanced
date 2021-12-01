@@ -46,6 +46,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ApprovalTests">
+      <Version>5.7.1</Version>
+    </PackageReference>
     <PackageReference Include="ApprovalTests.WinForms">
       <Version>3.0.18</Version>
     </PackageReference>
@@ -128,17 +131,22 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReadTest\Vanilla\save0002.sav">
+    <Content Include="ReadTest\Vanilla\Save0002.sav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReadTest\Vanilla\save0001.sav">
+    <Content Include="ReadTest\Vanilla\Save0001.sav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReadTest\Vanilla\save0003.sav">
+    <Content Include="ReadTest\Vanilla\Save0003.sav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WriteTest\Extended\Save0001.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

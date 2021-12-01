@@ -6,6 +6,9 @@
 # Rider
 .idea/
 
+# ApprovalTests
+*.received.*
+
 # User-specific files
 *.rsuser
 *.suo

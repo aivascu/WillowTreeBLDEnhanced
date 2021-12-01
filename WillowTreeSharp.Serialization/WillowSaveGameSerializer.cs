@@ -231,7 +231,7 @@ namespace WillowTree.Services.DataAccess
 
                 // If the string length is over 4K assume that the string is invalid.
                 // This prevents an out of memory exception in the case of invalid data.
-                if (tempLengthValue > 4096)
+                if (tempLengthValue > 0x1000)
                 {
                     throw new InvalidDataException("String length was too long.");
                 }
@@ -252,7 +252,7 @@ namespace WillowTree.Services.DataAccess
             {
                 // If the string length is over 4K assume that the string is invalid.
                 // This prevents an out of memory exception in the case of invalid data.
-                if (tempLengthValue > 4096)
+                if (tempLengthValue > 0x1000)
                 {
                     throw new InvalidDataException("String length was too long.");
                 }
@@ -1018,13 +1018,13 @@ namespace WillowTree.Services.DataAccess
             }
 
             Write(writer, saveGame.NumberOfEchoLists, saveGame.EndianWsg);
-            for (var listIndex = 0x0; listIndex < saveGame.NumberOfEchoLists; listIndex++)
+            for (var listIndex = 0; listIndex < saveGame.NumberOfEchoLists; listIndex++)
             {
                 var et = saveGame.EchoLists[listIndex];
                 Write(writer, et.Index, saveGame.EndianWsg);
                 Write(writer, et.TotalEchoes, saveGame.EndianWsg);
 
-                for (var echoIndex = 0x0; echoIndex < et.TotalEchoes; echoIndex++) //Write Locations
+                for (var echoIndex = 0; echoIndex < et.TotalEchoes; echoIndex++) //Write Locations
                 {
                     var ee = et.Echoes[echoIndex];
                     Write(writer, ee.Name, saveGame.EndianWsg);
